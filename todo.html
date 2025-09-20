@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>px64 • TodoMVC-ish (Bootstrap 5)</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <style>
+        body { background: #f6f7fb; }
+    .todo-card { max-width: 680px; }
+    .todo-title { word-break: break-word; }
+    .filter-btns .btn.active { pointer-events: none; }
+  </style>
+</head>
+
+<body>
+    <div class="container py-5" id="app">
+        <div class="card shadow-sm mx-auto todo-card">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <h1 class="h4 mb-0 me-auto">px64 • Todos</h1>
+                    <span class="badge text-bg-secondary">
+                        <span data-bind="text:counts.total"></span> total
+                    </span>
+                </div>
+                <!-- Add form -->
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="What needs to be done?" data-bind="value:newTitle" onkeydown="if(event.key==='Enter'){ app.add(); }" autofocus />
+                    <button class="btn btn-primary" data-bind="tap:add">Add</button>
+                </div>
+                <!-- Filters + remaining -->
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <div class="btn-group filter-btns" role="group" aria-label="Filters">
+                        <button class="btn btn-outline-secondary" data-bind="tap:filters.all">All</button>
+                        <button class="btn btn-outline-secondary" data-bind="tap:filters.active">Active</button>
+                        <button class="btn btn-outline-secondary" data-bind="tap:filters.completed">Completed</button>
+                    </div>
+                    <small class="text-muted">
+                        <span data-bind="text:counts.remaining"></span> item(s) left
+                    </small>
+                </div>
+                <!-- Todo list -->
+                <ul class="list-group mb-3" data-bind="list:visible">
+                    <!-- Template for each item (list binder will clone this) -->
+                    <template>
+                        <li class="list-group-item d-flex align-items-center gap-2" data-bind="attr:data-id:id">
+                            <input type="checkbox" class="form-check-input me-1" data-bind="checked:completed, attr:data-id:id, tap:__toggle" />
+                            <span class="todo-title flex-grow-1" data-bind="text:title, class:text-decoration-line-through:completed"></span>
+                            <button class="btn btn-sm btn-outline-danger" title="Delete" data-bind="attr:data-id:id, tap:__remove">
+                                &times;
+                            </button>
+                        </li>
+                    </template>
+                </ul>
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-outline-danger btn-sm" data-bind="tap:clearCompleted">
+                        Clear completed
+                    </button>
+                    <small class="text-muted">
+                        Showing <span data-bind="text:visibleCount"></span> / <span data-bind="text:counts.total"></span>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- px64 from root -->
+    <script src="./px64.js"></script>
+    <script>
+    // Optional: add a tiny 'checked:' binder for real checkbox syncing
+    px64.addBinder('checked', ({ el, scope, arg }) => {
+        const parentPath = arg.split('.').slice(0, -1).join('.');
+        const key = arg.split('.').pop();
+        const parent = parentPath ? parentPath.split('.').reduce((acc, k) => acc && acc[k], scope) : scope;
+
+        const apply = v => { if (el.checked !== !!v) el.checked = !!v; };
+        apply(parent?.[key]);
+        parent?.$observe && parent.$observe(key, apply);
+
+        el.addEventListener('change', () => {
+            if (parent?.$set) parent.$set(key, !!el.checked);
+            else parent[key] = !!el.checked;
+        });
+    });
+
+    // App state
+    const appState = {
+        // source of truth
+        todos: px64.listState([
+            { id: 'a1', title: 'Ship px64 demo', completed: false },
+            { id: 'b2', title: 'Polish README', completed: true }
+        ]),
+        // derived list shown in UI
+        visible: px64.listState([]),
+
+        // simple fields
+        newTitle: '',
+        filter: 'all', // all | active | completed
+
+        // computed-ish counters (kept as values + refreshed)
+        counts: px64.observable({ total: 0, remaining: 0 }),
+        visibleCount: 0,
+
+        // id factory
+        _seq: 3,
+        _nextId() { return (this._seq++).toString(36); },
+
+        // actions
+        add() {
+            const title = (this.newTitle || '').trim();
+            if (!title) return;
+            const items = this.todos.items.slice();
+            items.unshift({ id: this._nextId(), title, completed: false });
+            this.todos.setItems(items);
+            this.$set('newTitle', '');
+        },
+        __toggle({ el }) {
+            const id = el.getAttribute('data-id') || el.closest('[data-id]')?.dataset.id;
+            if (!id) return;
+            const items = this.todos.items.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+            this.todos.setItems(items);
+        },
+        __remove({ el }) {
+            const id = el.getAttribute('data-id') || el.closest('[data-id]')?.dataset.id;
+            if (!id) return;
+            const items = this.todos.items.filter(t => t.id !== id);
+            this.todos.setItems(items);
+        },
+        clearCompleted() {
+            const items = this.todos.items.filter(t => !t.completed);
+            this.todos.setItems(items);
+        },
+        filters: {
+            all() { app.$set('filter', 'all'); },
+            active() { app.$set('filter', 'active'); },
+            completed() { app.$set('filter', 'completed'); }
+        }
+    };
+
+    // Bind to DOM
+    const app = px64.bind('#app', appState);
+    window.app = app; // handy for console playing
+
+    // Keep visible list and counters in sync
+    function refreshDerived() {
+        const items = app.todos.items;
+        const total = items.length;
+        const remaining = items.filter(t => !t.completed).length;
+
+        // update counters
+        app.counts.$set('total', total);
+        app.counts.$set('remaining', remaining);
+
+        // compute filter
+        let filtered = items;
+        if (app.filter === 'active') filtered = items.filter(t => !t.completed);
+        if (app.filter === 'completed') filtered = items.filter(t => t.completed);
+
+        app.visible.setItems(filtered);
+        app.$set('visibleCount', filtered.length);
+
+        // update filter button active state
+        const btns = document.querySelectorAll('.filter-btns .btn');
+        btns.forEach(btn => btn.classList.remove('active'));
+        const map = { all: 0, active: 1, completed: 2 };
+        const idx = map[app.filter];
+        if (btns[idx]) btns[idx].classList.add('active');
+    }
+
+    // Observe changes that affect derived state
+    app.$observe('*', refreshDerived);
+    app.todos.$observe('*', refreshDerived);
+
+    // Initial compute
+    refreshDerived();
+    </script>
+    <!-- Bootstrap JS (optional for components) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+
+</html>
