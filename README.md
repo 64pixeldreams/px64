@@ -66,6 +66,18 @@ Copy `px64.js` into your project (root or `public/`) and include:
 
 px64 exposes a global `px64`. It also supports CommonJS/AMD if you use bundlers.
 
+## 📁 Project Structure
+
+```
+px64/
+├── px64.js              # Main library file
+├── helloworld.html      # Hello World demo
+├── todo.html           # Todo List demo  
+├── index.html          # Project homepage/documentation
+├── README.md           # This file
+└── PX64_PRODUCTION_IMPROVEMENTS.md  # Development notes
+```
+
 ## 👋 Hello World Example
 
 > 📄 See [`helloworld.html`](helloworld.html) for the complete file.
@@ -206,127 +218,126 @@ px64.addBinder("upper", ({ el, scope, arg }) => {
 
 Binder signature receives `{ el, scope, arg, stack }`.
 
-Built-in Binders
-Binder	Purpose
-text:prop	Set textContent from scope. Also supports shorthand: data-bind="title" ⇒ text:title.
-html:prop	Set innerHTML from scope.
-value:prop	Two-way binding for inputs (input event).
-show:expr	Toggle visibility (display: none) based on truthy value.
-hide:expr	Inverse of show.
-attr:name:path	Set attribute: attr:title:user.fullName, attr:data-id:item.id, attr:checked:todo.done.
-class:className:expr	Toggle class based on truthy expression.
-tap:methodPath	Delegated click handler; calls function on scope (e.g., tap:logout, tap:user.remove).
-view:subscopePath	Starts a nested scope for the element’s children.
-list:statePath	Render a list from listState() or plain { items: [...] }. Uses <template> or first child.
-table:statePath	Render a table using data-meta="cols:...;sort:...".
-money:prop	Format a number with 2 decimals using locale toLocaleString.
+## 🎯 Built-in Binders
 
-list template resolution
+| Binder | Purpose |
+|--------|---------|
+| `text:prop` | Set `textContent` from scope. Also supports shorthand: `data-bind="title"` ⇒ `text:title`. |
+| `html:prop` | Set `innerHTML` from scope. |
+| `value:prop` | Two-way binding for inputs (`input` event). |
+| `show:expr` | Toggle visibility (`display: none`) based on truthy value. |
+| `hide:expr` | Inverse of `show`. |
+| `attr:name:path` | Set attribute: `attr:title:user.fullName`, `attr:data-id:item.id`, `attr:checked:todo.done`. |
+| `class:className:expr` | Toggle class based on truthy expression. |
+| `tap:methodPath` | Delegated click handler; calls function on scope (e.g., `tap:logout`, `tap:user.remove`). |
+| `view:subscopePath` | Starts a nested scope for the element's children. |
+| `list:statePath` | Render a list from `listState()` or plain `{ items: [...] }`. Uses `<template>` or first child. |
+| `table:statePath` | Render a table using `data-meta="cols:...;sort:..."`. |
+| `money:prop` | Format a number with 2 decimals using locale `toLocaleString`. |
 
-If element contains a <template>, its first child is used per item.
+### List Template Resolution
 
-Else the element’s first child is cloned.
+1. If element contains a `<template>`, its first child is used per item
+2. Else the element's first child is cloned  
+3. Else it falls back to `<div data-bind="text:name"></div>`
 
-Else it falls back to <div data-bind="text:name"></div>.
+## 💡 Patterns & Tips
 
-Patterns & Tips
+- **Shallow reactivity**: To make newly assigned nested objects reactive, wrap them: `obj.user = px64.observable(obj.user)`
 
-Shallow reactivity: To make newly assigned nested objects reactive, wrap them: obj.user = px64.observable(obj.user).
+- **Computed display**: Prefer simple formatting binders (e.g., `money`) or inline computed props on the scope (`get full(){...}` is fine; call `$set` on dependencies to trigger updates)
 
-Computed display: Prefer simple formatting binders (e.g., money) or inline computed props on the scope (get full(){...} is fine; call $set on dependencies to trigger updates).
+- **Event handlers**: Methods run with `this === scope`. You can attach small helpers onto scope directly
 
-Event handlers: Methods run with this === scope. You can attach small helpers onto scope directly.
+- **Avoid over-binding**: Bind once to the nearest meaningful container; use `view:` to introduce sub-scopes
 
-Avoid over-binding: Bind once to the nearest meaningful container; use view: to introduce sub-scopes.
+## ⚡ Performance Notes
 
-Performance Notes
+- Binding walks the DOM once; subsequent updates are targeted by property observers
 
-Binding walks the DOM once; subsequent updates are targeted by property observers.
+- `list` and `table` re-render their container when the list state changes. For very large lists, use paging (`pageSize`) and incremental rendering (`paged()`), or add your own virtualized binder
 
-list and table re-render their container when the list state changes. For very large lists, use paging (pageSize) and incremental rendering (paged()), or add your own virtualized binder.
+- Avoid heavy work inside `$observe('*', ...)` — prefer specific keys
 
-Avoid heavy work inside $observe('*', ...)—prefer specific keys.
+## 🔗 Integration
 
-Integration
-Module Formats (UMD)
+### Module Formats (UMD)
 
-px64.js works as:
+`px64.js` works as:
 
-Browser global: window.px64
+**Browser global:**
+```javascript
+window.px64
+```
 
-CommonJS (Node/bundlers):
-
+**CommonJS (Node/bundlers):**
+```javascript
 const px64 = require('./px64');
+```
 
-
-AMD:
-
+**AMD:**
+```javascript
 define(['px64'], px64 => { /* ... */ });
+```
 
+> We export in-file at the bottom: CommonJS + AMD + `window.px64`.
 
-(We export in-file at the bottom: CommonJS + AMD + window.px64.)
-
-With Build Tools
+### With Build Tools
 
 You can import the file directly into your bundler. No special plugins needed. The library has no runtime dependencies.
 
-Troubleshooting
+## 🔧 Troubleshooting
 
-Nothing updates when I change a value
+### Nothing updates when I change a value
 
-Ensure your scope is observable (px64.bind wraps it automatically).
+- Ensure your scope is observable (`px64.bind` wraps it automatically)
+- If updating nested objects wholesale, make the new object observable or call `$set` on parent keys
 
-If updating nested objects wholesale, make the new object observable or call $set on parent keys.
+### `tap:` doesn't fire
 
-tap: doesn’t fire
+- Ensure the element is within the bound root and the method exists on the bound scope
+- `tap:` uses delegated click on the root
 
-Ensure the element is within the bound root and the method exists on the bound scope. tap: uses delegated click on the root.
+### `list` shows nothing
 
-list shows nothing
+- If you passed a plain object, it must have an `items` array (`{ items: [...] }`)
+- Prefer `px64.listState(...)`
 
-If you passed a plain object, it must have an items array ({ items: [...] }). Prefer px64.listState(...).
+### Binding conflicts
 
-Binding conflicts
+- If you use `view:` to scope a region, remember it applies to the element's children, not the element itself
 
-If you use view: to scope a region, remember it applies to the element’s children, not the element itself.
-
-Contributing
+## 🤝 Contributing
 
 Issues and PRs welcome!
 
-Keep core minimal; prefer adding features as optional binders.
+**Guidelines:**
+- Keep core minimal; prefer adding features as optional binders
+- Add tests for new binders and edge cases  
+- Use clear, small commits and descriptive PR titles
 
-Add tests for new binders and edge cases.
+### Dev Hints
 
-Use clear, small commits and descriptive PR titles.
+**Custom binder checklist:**
+1. Resolve scope value(s)
+2. Initial apply
+3. Hook into `$observe` for specific keys
+4. Cleanly handle `null`/`undefined`
 
-Dev hints
+## 🗺️ Roadmap
 
-Custom binder checklist:
+- [ ] Optional unbind/dispose API for long-lived apps
+- [ ] Async binder helpers (loading states, errors)
+- [ ] Router binder (`route:`) for simple SPA demos
+- [ ] Docs site with cookbook patterns
 
-Resolve scope value(s)
+## 📄 License
 
-Initial apply
+**MIT** © You and contributors. Use, modify, and distribute freely.
 
-Hook into $observe for specific keys
+## 📋 Appendix: Binder Cheat Sheet
 
-Cleanly handle null/undefined
-
-Roadmap
-
-Optional unbind/dispose API for long-lived apps
-
-Async binder helpers (loading states, errors)
-
-Router binder (route:) for simple SPA demos
-
-Docs site with cookbook patterns
-
-License
-
-MIT © You and contributors. Use, modify, and distribute freely.
-
-Appendix: Binder Cheat Sheet
+```html
 <!-- text -->
 <h1 data-bind="text:title"></h1>
 <!-- shorthand -->
@@ -364,3 +375,8 @@ Appendix: Binder Cheat Sheet
 
 <!-- money -->
 <span data-bind="money:invoice.total"></span>
+```
+
+---
+
+**Made with ❤️ by INC64 LLC**
