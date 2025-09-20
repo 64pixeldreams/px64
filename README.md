@@ -19,6 +19,7 @@ Bind plain JavaScript objects ("scopes") to your HTML with `data-bind` attribute
 |---------|-------------|------|
 | **Hello World** | Dead simple binding demo | [`helloworld.html`](helloworld.html) |
 | **Todo List** | List rendering, two-way input | [`todo.html`](todo.html) |
+| **Quick Wins Demo** | Production-ready binders showcase | [`quickwins-demo.html`](quickwins-demo.html) |
 
 > 💡 **Quick Start**: Open these files directly in your browser after placing `px64.js` in your project root.
 
@@ -234,6 +235,23 @@ Binder signature receives `{ el, scope, arg, stack }`.
 | `list:statePath` | Render a list from `listState()` or plain `{ items: [...] }`. Uses `<template>` or first child. |
 | `table:statePath` | Render a table using `data-meta="cols:...;sort:..."`. |
 | `money:prop` | Format a number with 2 decimals using locale `toLocaleString`. |
+| **Loading States** | |
+| `fade:loading` | Fade element opacity when condition is true (loading states). |
+| `fadein:!loading` | Show element with fade when condition is true. |
+| `loading:isSubmitting` | Bootstrap spinner integration - disables button and shows/hides spinner. |
+| **Form Controls** | |
+| `disable:loading` | Disable form elements when condition is true. |
+| `enable:!loading` | Enable form elements when condition is true. |
+| `valid:isEmailValid` | Add Bootstrap validation classes (`is-valid`/`is-invalid`). |
+| `invalid:!isEmailValid` | Show/hide invalid feedback with Bootstrap styling. |
+| **Date Formatting** | |
+| `date:createdAt` | Format date as "Dec 15, 2024". |
+| `datetime:lastLogin` | Smart relative/absolute formatting ("2 hours ago", "Yesterday 3:45 PM"). |
+| `timeago:updatedAt` | Relative time formatting ("2 minutes ago"). |
+| **Bootstrap Components** | |
+| `alert:errorMessage` | Show/hide Bootstrap alerts with dynamic content. |
+| `badge:status` | Auto-colored badges based on status (success→green, warning→yellow, etc.). |
+| `progress:uploadPercent` | Bootstrap progress bars with percentage display. |
 
 ### List Template Resolution
 
