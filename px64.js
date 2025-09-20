@@ -433,6 +433,251 @@
         parent.$observe && parent.$observe(key, format);
     });
 
+    // fade:loading (opacity transition for loading states)
+    addBinder('fade', ({ el, scope, arg }) => {
+        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
+        const key = arg.split('.').pop();
+        const apply = () => {
+            const shouldFade = !!resolvePath(scope, arg);
+            el.style.transition = 'opacity 0.3s ease';
+            el.style.opacity = shouldFade ? '0.3' : '1';
+        };
+        apply();
+        parent.$observe && parent.$observe(key, apply);
+    });
+
+    // fadein:!loading (show with fade when condition is true)
+    addBinder('fadein', ({ el, scope, arg }) => {
+        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
+        const key = arg.split('.').pop();
+        const apply = () => {
+            const shouldShow = !!resolvePath(scope, arg);
+            el.style.transition = 'opacity 0.3s ease';
+            el.style.opacity = shouldShow ? '1' : '0';
+            el.style.pointerEvents = shouldShow ? 'auto' : 'none';
+        };
+        apply();
+        parent.$observe && parent.$observe(key, apply);
+    });
+
+    // loading:isSubmitting (Bootstrap spinner integration)
+    addBinder('loading', ({ el, scope, arg }) => {
+        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
+        const key = arg.split('.').pop();
+        const apply = () => {
+            const isLoading = !!resolvePath(scope, arg);
+            const spinner = el.querySelector('.spinner-border');
+            if (isLoading) {
+                el.disabled = true;
+                if (spinner) spinner.style.display = 'inline-block';
+            } else {
+                el.disabled = false;
+                if (spinner) spinner.style.display = 'none';
+            }
+        };
+        apply();
+        parent.$observe && parent.$observe(key, apply);
+    });
+
+    // disable:loading / enable:!loading (form control states)
+    addBinder('disable', ({ el, scope, arg }) => {
+        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
+        const key = arg.split('.').pop();
+        const apply = () => el.disabled = !!resolvePath(scope, arg);
+        apply();
+        parent.$observe && parent.$observe(key, apply);
+    });
+
+    addBinder('enable', ({ el, scope, arg }) => {
+        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
+        const key = arg.split('.').pop();
+        const apply = () => el.disabled = !resolvePath(scope, arg);
+        apply();
+        parent.$observe && parent.$observe(key, apply);
+    });
+
+    // valid:isEmailValid / invalid:!isEmailValid (Bootstrap validation)
+    addBinder('valid', ({ el, scope, arg }) => {
+        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
+        const key = arg.split('.').pop();
+        const apply = () => {
+            const isValid = !!resolvePath(scope, arg);
+            el.classList.toggle('is-valid', isValid);
+            el.classList.toggle('is-invalid', !isValid);
+        };
+        apply();
+        parent.$observe && parent.$observe(key, apply);
+    });
+
+    addBinder('invalid', ({ el, scope, arg }) => {
+        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
+        const key = arg.split('.').pop();
+        const apply = () => {
+            const isInvalid = !!resolvePath(scope, arg);
+            el.classList.toggle('is-invalid', isInvalid);
+            el.classList.toggle('is-valid', !isInvalid);
+            el.style.display = isInvalid ? 'block' : 'none';
+        };
+        apply();
+        parent.$observe && parent.$observe(key, apply);
+    });
+
+    // Date formatting binders
+    const _dateFormats = {
+        date: new Intl.DateTimeFormat(undefined, { 
+            year: 'numeric', month: 'short', day: 'numeric' 
+        }),
+        datetime: new Intl.DateTimeFormat(undefined, { 
+            year: 'numeric', month: 'short', day: 'numeric',
+            hour: 'numeric', minute: '2-digit'
+        })
+    };
+
+    // date:createdAt (format as "Dec 15, 2024")
+    addBinder('date', ({ el, scope, arg }) => {
+        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
+        const key = arg.split('.').pop();
+        const format = v => {
+            const date = v instanceof Date ? v : new Date(v);
+            el.textContent = isNaN(date) ? '' : _dateFormats.date.format(date);
+        };
+        format(resolvePath(scope, arg));
+        parent.$observe && parent.$observe(key, format);
+    });
+
+    // datetime:lastLogin (smart relative/absolute formatting)
+    addBinder('datetime', ({ el, scope, arg }) => {
+        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
+        const key = arg.split('.').pop();
+        const format = v => {
+            const date = v instanceof Date ? v : new Date(v);
+            if (isNaN(date)) {
+                el.textContent = '';
+                return;
+            }
+            const now = new Date();
+            const diffMs = now - date;
+            const diffHours = diffMs / (1000 * 60 * 60);
+            
+            if (diffHours < 24) {
+                // Less than 24 hours: "2 hours ago"
+                if (diffHours < 1) {
+                    const diffMins = Math.floor(diffMs / (1000 * 60));
+                    el.textContent = diffMins <= 1 ? 'Just now' : `${diffMins} minutes ago`;
+                } else {
+                    el.textContent = `${Math.floor(diffHours)} hours ago`;
+                }
+            } else if (diffHours < 48) {
+                // Yesterday: "Yesterday 3:45 PM"
+                const timeStr = date.toLocaleTimeString(undefined, { 
+                    hour: 'numeric', minute: '2-digit' 
+                });
+                el.textContent = `Yesterday ${timeStr}`;
+            } else {
+                // Older: "Dec 12, 2024"
+                el.textContent = _dateFormats.date.format(date);
+            }
+        };
+        format(resolvePath(scope, arg));
+        parent.$observe && parent.$observe(key, format);
+    });
+
+    // timeago:updatedAt ("2 minutes ago")
+    addBinder('timeago', ({ el, scope, arg }) => {
+        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
+        const key = arg.split('.').pop();
+        const format = v => {
+            const date = v instanceof Date ? v : new Date(v);
+            if (isNaN(date)) {
+                el.textContent = '';
+                return;
+            }
+            const now = new Date();
+            const diffMs = now - date;
+            const diffSecs = Math.floor(diffMs / 1000);
+            const diffMins = Math.floor(diffSecs / 60);
+            const diffHours = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHours / 24);
+            
+            if (diffSecs < 60) el.textContent = 'Just now';
+            else if (diffMins < 60) el.textContent = `${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;
+            else if (diffHours < 24) el.textContent = `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+            else if (diffDays < 7) el.textContent = `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
+            else el.textContent = _dateFormats.date.format(date);
+        };
+        format(resolvePath(scope, arg));
+        parent.$observe && parent.$observe(key, format);
+    });
+
+    // Bootstrap component binders
+    // alert:error (Bootstrap alert integration)
+    addBinder('alert', ({ el, scope, arg }) => {
+        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
+        const key = arg.split('.').pop();
+        const apply = () => {
+            const message = resolvePath(scope, arg);
+            if (message) {
+                el.textContent = message;
+                el.style.display = 'block';
+            } else {
+                el.style.display = 'none';
+            }
+        };
+        apply();
+        parent.$observe && parent.$observe(key, apply);
+    });
+
+    // badge:status (auto-colored badges)
+    addBinder('badge', ({ el, scope, arg }) => {
+        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
+        const key = arg.split('.').pop();
+        const colorMap = {
+            success: 'bg-success', active: 'bg-success', completed: 'bg-success', 
+            warning: 'bg-warning', pending: 'bg-warning', 
+            danger: 'bg-danger', error: 'bg-danger', failed: 'bg-danger',
+            info: 'bg-info', processing: 'bg-info',
+            secondary: 'bg-secondary', inactive: 'bg-secondary'
+        };
+        const apply = () => {
+            const value = resolvePath(scope, arg);
+            el.textContent = value || '';
+            // Remove existing bg-* classes
+            el.className = el.className.replace(/bg-\w+/g, '');
+            // Add appropriate color class
+            const colorClass = colorMap[String(value).toLowerCase()] || 'bg-secondary';
+            el.classList.add(colorClass);
+        };
+        apply();
+        parent.$observe && parent.$observe(key, apply);
+    });
+
+    // progress:uploadPercent (Bootstrap progress bars)
+    addBinder('progress', ({ el, scope, arg }) => {
+        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
+        const key = arg.split('.').pop();
+        const apply = () => {
+            const percent = Number(resolvePath(scope, arg)) || 0;
+            const clampedPercent = Math.max(0, Math.min(100, percent));
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = el.querySelector('.progress-bar');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'progress-bar';
+                progressBar.setAttribute('role', 'progressbar');
+                el.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = `${clampedPercent}%`;
+            progressBar.setAttribute('aria-valuenow', clampedPercent);
+            progressBar.setAttribute('aria-valuemin', '0');
+            progressBar.setAttribute('aria-valuemax', '100');
+            progressBar.textContent = `${Math.round(clampedPercent)}%`;
+        };
+        apply();
+        parent.$observe && parent.$observe(key, apply);
+    });
+
     // ─────────────────────────────────────────────────────────────────────────────
     // Event delegation for tap:* — install once per root
     function installTapDelegation(root) {

@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>px64 • Quick Wins Demo</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body { background: #f8f9fa; }
+        .demo-section { margin-bottom: 2rem; }
+        .demo-card { margin-bottom: 1rem; }
+        .code-preview { background: #f8f9fa; padding: 0.5rem; border-radius: 0.375rem; font-family: monospace; font-size: 0.875rem; }
+    </style>
+</head>
+
+<body>
+    <div class="container py-4" id="app">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-4">px64 Quick Wins Demo</h1>
+                <p class="lead">Testing the new essential binders from the production roadmap.</p>
+            </div>
+        </div>
+
+        <!-- Loading States Section -->
+        <div class="demo-section">
+            <h2>🔄 Loading States</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card demo-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Fade Effects</h5>
+                            <div data-bind="fade:isLoading" class="alert alert-info">
+                                This content fades when loading
+                            </div>
+                            <div data-bind="fadein:!isLoading" class="alert alert-success">
+                                This content appears when not loading
+                            </div>
+                            <button data-bind="tap:toggleLoading" class="btn btn-primary">
+                                Toggle Loading
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card demo-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Loading Button</h5>
+                            <button data-bind="loading:isSubmitting, tap:simulateSubmit" class="btn btn-success">
+                                <span class="spinner-border spinner-border-sm" role="status" style="display: none;"></span>
+                                Submit Form
+                            </button>
+                            <div class="code-preview mt-2">
+                                data-bind="loading:isSubmitting"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Controls Section -->
+        <div class="demo-section">
+            <h2>📝 Form Controls</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card demo-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Enable/Disable</h5>
+                            <div class="mb-3">
+                                <input data-bind="value:email, disable:isProcessing" class="form-control" placeholder="Enter email">
+                            </div>
+                            <div class="mb-3">
+                                <button data-bind="enable:!isProcessing, tap:toggleProcessing" class="btn btn-outline-primary">
+                                    <span data-bind="text:isProcessing ? 'Processing...' : 'Process Email'"></span>
+                                </button>
+                            </div>
+                            <div class="code-preview">
+                                data-bind="disable:isProcessing"<br>
+                                data-bind="enable:!isProcessing"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card demo-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Validation States</h5>
+                            <div class="mb-3">
+                                <input data-bind="value:testEmail, valid:isEmailValid" class="form-control" placeholder="test@example.com">
+                                <div data-bind="invalid:!isEmailValid" class="invalid-feedback">
+                                    Please enter a valid email address
+                                </div>
+                            </div>
+                            <div class="code-preview">
+                                data-bind="valid:isEmailValid"<br>
+                                data-bind="invalid:!isEmailValid"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Date Formatting Section -->
+        <div class="demo-section">
+            <h2>📅 Date Formatting</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card demo-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Date Format</h5>
+                            <p><strong>Created:</strong> <span data-bind="date:createdDate"></span></p>
+                            <div class="code-preview">data-bind="date:createdDate"</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card demo-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Smart DateTime</h5>
+                            <p><strong>Last Login:</strong> <span data-bind="datetime:lastLogin"></span></p>
+                            <div class="code-preview">data-bind="datetime:lastLogin"</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card demo-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Time Ago</h5>
+                            <p><strong>Updated:</strong> <span data-bind="timeago:updatedAt"></span></p>
+                            <div class="code-preview">data-bind="timeago:updatedAt"</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bootstrap Components Section -->
+        <div class="demo-section">
+            <h2>🎨 Bootstrap Components</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card demo-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Alerts</h5>
+                            <div data-bind="alert:errorMessage" class="alert alert-danger" style="display: none;"></div>
+                            <div data-bind="alert:successMessage" class="alert alert-success" style="display: none;"></div>
+                            <button data-bind="tap:showError" class="btn btn-outline-danger btn-sm me-2">Show Error</button>
+                            <button data-bind="tap:showSuccess" class="btn btn-outline-success btn-sm">Show Success</button>
+                            <div class="code-preview mt-2">data-bind="alert:errorMessage"</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card demo-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Auto-Colored Badges</h5>
+                            <p>Status: <span data-bind="badge:status" class="badge"></span></p>
+                            <div class="btn-group btn-group-sm">
+                                <button data-bind="tap:setStatus('success')" class="btn btn-outline-secondary">Success</button>
+                                <button data-bind="tap:setStatus('warning')" class="btn btn-outline-secondary">Warning</button>
+                                <button data-bind="tap:setStatus('danger')" class="btn btn-outline-secondary">Danger</button>
+                            </div>
+                            <div class="code-preview mt-2">data-bind="badge:status"</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card demo-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Progress Bar</h5>
+                            <div data-bind="progress:uploadProgress" class="progress mb-2"></div>
+                            <button data-bind="tap:startUpload" class="btn btn-outline-primary btn-sm">Start Upload</button>
+                            <div class="code-preview mt-2">data-bind="progress:uploadProgress"</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Debug Panel -->
+        <div class="demo-section">
+            <h2>🔍 Debug Panel</h2>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Current State</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>Loading States:</strong>
+                            <ul>
+                                <li>isLoading: <span data-bind="text:isLoading"></span></li>
+                                <li>isSubmitting: <span data-bind="text:isSubmitting"></span></li>
+                                <li>isProcessing: <span data-bind="text:isProcessing"></span></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Form Data:</strong>
+                            <ul>
+                                <li>email: <span data-bind="text:email"></span></li>
+                                <li>testEmail: <span data-bind="text:testEmail"></span></li>
+                                <li>isEmailValid: <span data-bind="text:isEmailValid"></span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- px64 library -->
+    <script src="./px64.js"></script>
+    <script>
+        // Demo state
+        const demoState = {
+            // Loading states
+            isLoading: false,
+            isSubmitting: false,
+            isProcessing: false,
+
+            // Form data
+            email: '',
+            testEmail: '',
+            
+            // Dates
+            createdDate: new Date('2024-12-15'),
+            lastLogin: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+            updatedAt: new Date(Date.now() - 5 * 60 * 1000), // 5 minutes ago
+
+            // Bootstrap components
+            errorMessage: '',
+            successMessage: '',
+            status: 'pending',
+            uploadProgress: 0,
+
+            // Computed properties
+            get isEmailValid() {
+                const email = this.testEmail || '';
+                return email.includes('@') && email.includes('.') && email.length > 5;
+            },
+
+            // Actions
+            toggleLoading() {
+                this.$set('isLoading', !this.isLoading);
+            },
+
+            simulateSubmit() {
+                this.$set('isSubmitting', true);
+                setTimeout(() => {
+                    this.$set('isSubmitting', false);
+                }, 2000);
+            },
+
+            toggleProcessing() {
+                this.$set('isProcessing', !this.isProcessing);
+                if (this.isProcessing) {
+                    setTimeout(() => this.$set('isProcessing', false), 3000);
+                }
+            },
+
+            showError() {
+                this.$set('errorMessage', 'Something went wrong! Please try again.');
+                this.$set('successMessage', '');
+                setTimeout(() => this.$set('errorMessage', ''), 5000);
+            },
+
+            showSuccess() {
+                this.$set('successMessage', 'Operation completed successfully!');
+                this.$set('errorMessage', '');
+                setTimeout(() => this.$set('successMessage', ''), 5000);
+            },
+
+            setStatus(newStatus) {
+                return () => this.$set('status', newStatus);
+            },
+
+            startUpload() {
+                this.$set('uploadProgress', 0);
+                const interval = setInterval(() => {
+                    const current = this.uploadProgress + Math.random() * 15;
+                    if (current >= 100) {
+                        this.$set('uploadProgress', 100);
+                        clearInterval(interval);
+                        setTimeout(() => this.$set('uploadProgress', 0), 2000);
+                    } else {
+                        this.$set('uploadProgress', current);
+                    }
+                }, 200);
+            }
+        };
+
+        // Bind to DOM
+        const app = px64.bind('#app', demoState);
+        window.app = app; // For console debugging
+
+        console.log('px64 Quick Wins Demo loaded successfully!');
+        console.log('Available actions: app.toggleLoading(), app.simulateSubmit(), app.startUpload()');
+    </script>
+</body>
+
+</html>
