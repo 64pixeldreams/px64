@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>px64 • Hello World</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 2rem; }
+    .row { display: flex; gap: .5rem; margin-top: 1rem; }
+    input { padding: .5rem; font-size: 1rem; }
+    button { padding: .5rem .75rem; font-size: 1rem; cursor: pointer; }
+  </style>
+</head>
+
+<body>
+    <div id="app">
+        <h1 data-bind="text:title"></h1>
+        <div class="row">
+            <input type="text" placeholder="Type something…" data-bind="value:message" onkeydown="if(event.key==='Enter'){ app.sayHello(); }" />
+            <button data-bind="tap:sayHello">Say hello</button>
+        </div>
+        <p data-bind="text:greeting"></p>
+    </div>
+    <!-- px64 from the project root -->
+    <script src="./px64.js"></script>
+    <script>
+    const state = {
+        title: "px64 • Hello World",
+        message: "",
+        greeting: "",
+        sayHello() {
+            const msg = (this.message || "").trim();
+            this.$set("greeting", msg ? `Hello, ${msg}!` : "Hello!");
+        }
+    };
+
+    // Bind and expose for console testing
+    const app = px64.bind("#app", state);
+    window.app = app;
+    </script>
+</body>
+
+</html>

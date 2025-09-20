@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- SEO -->
+    <title>px64 — Lightweight DOM Binding & Scope Engine for Vanilla JS</title>
+    <meta name="description" content="px64 is a tiny, dependency-free DOM binding & scope engine for vanilla JavaScript. Use data-bind attributes to wire plain objects to the DOM with one-way updates, optional two-way inputs, list/table rendering, and delegated events.">
+    <meta name="keywords" content="px64, DOM binding, data-bind, reactive, two-way binding, vanilla JS, minimal framework, list rendering, table rendering, observable state, lightweight library">
+    <!-- Open Graph -->
+    <meta property="og:title" content="px64 — Lightweight DOM Binding & Scope Engine">
+    <meta property="og:description" content="Tiny, dependency-free binding for real-world UIs. Bind plain JS objects to your HTML with data-bind attributes.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://px64.dev/">
+    <meta property="og:image" content="https://px64.dev/og-card.png">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="px64 — Lightweight DOM Binding & Scope Engine">
+    <meta name="twitter:description" content="Tiny, dependency-free binding for real-world UIs.">
+    <link rel="canonical" href="https://px64.dev/">
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "name": "px64",
+        "alternateName": "px64 DOM Binding & Scope Engine",
+        "codeRepository": "https://github.com/inc64/px64",
+        "programmingLanguage": "JavaScript",
+        "runtimePlatform": "Browser",
+        "license": "https://opensource.org/licenses/MIT",
+        "applicationCategory": "DeveloperApplication",
+        "description": "A lightweight, dependency-free DOM binding & scope engine for vanilla JS built around data-bind attributes, shallow observables, list/table helpers, and delegated events."
+    }
+    </script>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Prism (optional pretty code) -->
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet" />
+    <style>
+        :root { --brand: #5d5df3; }
+    .hero-bg { background: radial-gradient(1200px 600px at 10% -10%, rgba(93,93,243,.15), transparent), radial-gradient(1200px 600px at 110% 10%, rgba(93,93,243,.12), transparent); }
+    .brand { color: var(--brand); }
+    .code-card pre { margin: 0; max-height: 420px; }
+    .feature-icon { width: 44px; height: 44px; display: inline-grid; place-items: center; border-radius: .75rem; background: rgba(93,93,243,.12); color: var(--brand); }
+    .footer a { color: inherit; text-decoration: underline dotted; }
+  </style>
+</head>
+
+<body>
+    <!-- Nav -->
+    <nav class="navbar navbar-expand-md bg-white border-bottom">
+        <div class="container">
+            <a class="navbar-brand fw-semibold" href="#"><span class="brand">px64</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div id="nav" class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto align-items-md-center">
+                    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#demo">Demo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="examples/hello.html">Hello</a></li>
+                    <li class="nav-item"><a class="nav-link" href="examples/todo.html">Todo</a></li>
+                    <li class="nav-item ms-md-3">
+                        <a class="btn btn-primary" href="https://github.com/inc64/px64">GitHub Repo</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Hero -->
+    <header class="py-5 hero-bg">
+        <div class="container">
+            <div class="row align-items-center gy-4">
+                <div class="col-lg-7">
+                    <h1 class="display-5 fw-bold">px64 — Lightweight DOM Binding & Scope Engine</h1>
+                    <p class="lead text-secondary mt-3">
+                        Bind plain JavaScript objects to your HTML using <code>data-bind</code>.
+                        Tiny, dependency-free reactivity with optional two-way input, list/table rendering,
+                        and delegated events. Ship real UIs without a framework.
+                    </p>
+                    <div class="d-flex gap-2 mt-3">
+                        <a class="btn btn-primary btn-lg" href="https://github.com/inc64/px64">View on GitHub</a>
+                        <a class="btn btn-outline-secondary btn-lg" href="#demo">See Live Demo</a>
+                    </div>
+                    <p class="text-muted mt-3 mb-0">MIT licensed • Zero deps • Works in any modern browser</p>
+                </div>
+                <div class="col-lg-5">
+                    <div class="border rounded-4 p-4 bg-white shadow-sm">
+                        <h2 class="h5 mb-3">Elevator Pitch</h2>
+                        <ul class="mb-0 ps-3">
+                            <li><strong>Simple:</strong> no build, no VDOM—just HTML + JS.</li>
+                            <li><strong>Reactive:</strong> DOM updates when your data changes.</li>
+                            <li><strong>Pragmatic:</strong> two-way inputs (<code>value:</code>), delegated events (<code>tap:</code>), lists & tables.</li>
+                            <li><strong>Composable:</strong> add custom binders for your apps.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Features -->
+    <section id="features" class="py-5">
+        <div class="container">
+            <h2 class="h1 fw-bold mb-4">Why px64?</h2>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="h-100 border rounded-4 p-4">
+                        <div class="feature-icon mb-3"><span class="fw-bold">1</span></div>
+                        <h3 class="h5">Zero Dependencies</h3>
+                        <p class="text-secondary mb-0">Drop in a single script. Works as a global, CommonJS, or AMD module.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="h-100 border rounded-4 p-4">
+                        <div class="feature-icon mb-3"><span class="fw-bold">2</span></div>
+                        <h3 class="h5">Data-Bind HTML</h3>
+                        <p class="text-secondary mb-0">Use <code>data-bind</code> attributes to wire text, html, attrs, classes, inputs, lists & tables.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="h-100 border rounded-4 p-4">
+                        <div class="feature-icon mb-3"><span class="fw-bold">3</span></div>
+                        <h3 class="h5">Shallow Observables</h3>
+                        <p class="text-secondary mb-0">Plain objects become reactive via <code>px64.observable</code>. Keep your mental model simple.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="h-100 border rounded-4 p-4">
+                        <div class="feature-icon mb-3"><span class="fw-bold">4</span></div>
+                        <h3 class="h5">Two-Way Where It Matters</h3>
+                        <p class="text-secondary mb-0"><code>value:</code> binder keeps inputs synced; everything else stays predictably one-way.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="h-100 border rounded-4 p-4">
+                        <div class="feature-icon mb-3"><span class="fw-bold">5</span></div>
+                        <h3 class="h5">Lists & Tables</h3>
+                        <p class="text-secondary mb-0"><code>list:</code> and <code>table:</code> binders with paging/sorting via <code>px64.listState</code>.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="h-100 border rounded-4 p-4">
+                        <div class="feature-icon mb-3"><span class="fw-bold">6</span></div>
+                        <h3 class="h5">Custom Binders</h3>
+                        <p class="text-secondary mb-0">Extend with <code>px64.addBinder(name, fn)</code> to fit your project perfectly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Live Demo: Hello World -->
+    <section id="demo" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="h1 fw-bold mb-4">Hello World — Live & Code, Side-by-Side</h2>
+            <div class="row g-4">
+                <!-- Live -->
+                <div class="col-lg-6">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white">
+                            <strong>Live Preview</strong>
+                        </div>
+                        <div class="card-body">
+                            <div id="hello-app" class="p-2">
+                                <h3 class="mb-3" data-bind="text:title"></h3>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">Your name</span>
+                                    <input class="form-control" data-bind="value:name" placeholder="Type a name…">
+                                    <button class="btn btn-primary" data-bind="tap:greet">Greet</button>
+                                </div>
+                                <p class="fs-5" data-bind="text:greeting"></p>
+                                <hr>
+                                <p class="text-muted small mb-0">
+                                    Try typing and clicking “Greet”. This uses <code>value:</code> (two-way input)
+                                    and <code>tap:</code> (delegated click) plus <code>text:</code> bindings.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Code -->
+                <div class="col-lg-6">
+                    <div class="card shadow-sm h-100 code-card">
+                        <div class="card-header bg-white">
+                            <strong>Code</strong> (<a href="examples/hello.html">open example</a>)
+                        </div>
+                        <div class="card-body p-0">
+                            <pre class="language-html"><code>&lt;div id="hello-app"&gt;
+  &lt;h3 data-bind="text:title"&gt;&lt;/h3&gt;
+
+  &lt;input data-bind="value:name" placeholder="Your name"&gt;
+  &lt;button data-bind="tap:greet"&gt;Greet&lt;/button&gt;
+
+  &lt;p data-bind="text:greeting"&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;script src="px64.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  const state = {
+    title: "px64 • Hello",
+    name: "",
+    greeting: "",
+    greet() {
+      const who = (this.name || "").trim() || "world";
+      this.$set("greeting", `Hello, ${who}!`);
+    }
+  };
+  px64.bind("#hello-app", state);
+&lt;/script&gt;</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a class="btn btn-outline-primary me-2" href="examples/hello.html">Open Hello Example</a>
+                <a class="btn btn-outline-secondary" href="examples/todo.html">Open Todo Example</a>
+            </div>
+        </div>
+    </section>
+    <!-- CTA -->
+    <section class="py-5">
+        <div class="container text-center">
+            <h2 class="h1 fw-bold">Grab the code & start shipping</h2>
+            <p class="lead text-secondary">No build. No boilerplate. Just HTML + JS + <span class="brand fw-semibold">px64</span>.</p>
+            <a class="btn btn-primary btn-lg" href="https://github.com/inc64/px64">Go to GitHub</a>
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer class="border-top py-4 footer">
+        <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between">
+            <p class="mb-2 mb-md-0 text-muted">© <span id="year"></span> inc64 LLC • px64 is MIT licensed</p>
+            <div class="d-flex gap-3">
+                <a href="https://github.com/inc64/px64">GitHub</a>
+                <a href="examples/hello.html">Hello</a>
+                <a href="examples/todo.html">Todo</a>
+                <a href="#features">Features</a>
+            </div>
+        </div>
+    </footer>
+    <!-- px64 -->
+    <script src="px64.js"></script>
+    <!-- Bootstrap JS (optional but nice for navbar toggler) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Prism (optional pretty code) -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script>
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Bind the live Hello World demo
+    const helloState = {
+        title: "px64 • Hello",
+        name: "",
+        greeting: "",
+        greet() {
+            const who = (this.name || "").trim() || "world";
+            this.$set("greeting", `Hello, ${who}!`);
+        }
+    };
+    px64.bind("#hello-app", helloState);
+    </script>
+</body>
+
+</html>
