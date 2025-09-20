@@ -1,94 +1,87 @@
-px64 — Lightweight DOM Binding & Scope Engine
+# px64 — Lightweight DOM Binding & Scope Engine
+
+[![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![No Dependencies](https://img.shields.io/badge/Dependencies-0-green.svg)]()
+[![Size](https://img.shields.io/badge/Size-~12kb-blue.svg)]()
 
 Tiny, dependency-free binding for real-world UIs.
-Bind plain JavaScript objects (“scopes”) to your HTML with data-bind attributes. When your data changes, the DOM updates; when users type/click, your data updates. Reactive without the ceremony.
+Bind plain JavaScript objects ("scopes") to your HTML with `data-bind` attributes. When your data changes, the DOM updates; when users type/click, your data updates. Reactive without the ceremony.
 
-Size: small, no deps
+**Key Features:**
+- 📦 **Size**: Small footprint, no dependencies
+- 🎨 **Style**: Readable, minimal, pragmatic
+- 📄 **License**: MIT
+- 🚀 **Works**: Drop into any project, no build step needed
 
-Style: readable, minimal, pragmatic
+## 🚀 Demo Examples
 
-License: MIT
+| Example | Description | File |
+|---------|-------------|------|
+| **Hello World** | Dead simple binding demo | [`helloworld.html`](helloworld.html) |
+| **Todo List** | List rendering, two-way input | [`todo.html`](todo.html) |
 
-Demo Examples
+> 💡 **Quick Start**: Open these files directly in your browser after placing `px64.js` in your project root.
 
-Hello World (dead simple): examples/hello.html
+## 📚 Table of Contents
 
-Todo List (list rendering, two-way input): examples/todo.html
+- [Why px64?](#why-px64)
+- [Quick Start](#quick-start)
+- [Hello World Example](#hello-world-example)
+- [Todo List Example](#todo-list-example)
+- [Core API](#core-api)
+  - [px64.bind(root, scope)](#px64bindroot-scope)
+  - [px64.observable(obj)](#px64observableobj)
+  - [px64.listState(items)](#px64liststateitems)
+  - [px64.addBinder(name, fn)](#px64addbindername-fn)
+- [Built-in Binders](#built-in-binders)
+- [Patterns & Tips](#patterns--tips)
+- [Performance Notes](#performance-notes)
+- [Integration](#integration)
+  - [Module Formats (UMD)](#module-formats-umd)
+  - [With Build Tools](#with-build-tools)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [Roadmap](#roadmap)
+- [License](#license)
 
-Open those files directly in a browser (no build step needed) after placing px64.js in your project root.
+## ❓ Why px64?
 
-Table of Contents
+✅ **Plain JS first**: bind POJOs to DOM, no virtual-DOM, no compiler.
 
-Why px64?
+✅ **Predictable**: one-way (render) + selective two-way (`value:`) + delegated events (`tap:`).
 
-Quick Start
+✅ **Composable**: drop-in custom binders (`px64.addBinder`) for your project's needs.
 
-Hello World
+✅ **Grab-and-go**: works in a `<script>` tag or in Node/CommonJS/AMD.
 
-Todo List
+## ⚡ Quick Start
 
-Core API
+### Installation
 
-px64.bind(root, scope)
+Copy `px64.js` into your project (root or `public/`) and include:
 
-px64.observable(obj)
-
-px64.listState(items)
-
-px64.addBinder(name-fn)
-
-Built-in Binders
-
-Patterns & Tips
-
-Performance Notes
-
-Integration
-
-Module Formats (UMD)
-
-With Build Tools
-
-Troubleshooting
-
-Contributing
-
-Roadmap
-
-License
-
-Why px64?
-
-Plain JS first: bind POJOs to DOM, no virtual-DOM, no compiler.
-
-Predictable: one-way (render) + selective two-way (value:) + delegated events (tap:).
-
-Composable: drop-in custom binders (px64.addBinder) for your project’s needs.
-
-Grab-and-go: works in a <script> tag or in Node/CommonJS/AMD.
-
-Quick Start
-Install
-
-Copy px64.js into your project (root or public/) and include:
-
+```html
 <script src="./px64.js"></script>
+```
 
+px64 exposes a global `px64`. It also supports CommonJS/AMD if you use bundlers.
 
-px64 exposes a global px64. It also supports CommonJS/AMD if you use bundlers.
+## 👋 Hello World Example
 
-Hello World
+> 📄 See [`helloworld.html`](helloworld.html) for the complete file.
 
-See examples/hello.html
- for the complete file.
-
+**HTML:**
+```html
 <div id="app">
   <h1 data-bind="text:title"></h1>
   <input data-bind="value:name" placeholder="Your name" />
   <button data-bind="tap:greet">Greet</button>
   <p data-bind="text:greeting"></p>
 </div>
+```
 
+**JavaScript:**
+```html
 <script src="./px64.js"></script>
 <script>
   const state = {
@@ -103,12 +96,14 @@ See examples/hello.html
 
   px64.bind("#app", state);
 </script>
+```
 
-Todo List
+## ✅ Todo List Example
 
-See examples/todo.html
- for the complete file (with Bootstrap 5 styling).
+> 📄 See [`todo.html`](todo.html) for the complete file (with Bootstrap 5 styling).
 
+**HTML:**
+```html
 <div id="todos">
   <form onsubmit="event.preventDefault(); app.addTodo();">
     <input data-bind="value:newTodo" placeholder="New todo" />
@@ -124,7 +119,10 @@ See examples/todo.html
     </template>
   </ul>
 </div>
+```
 
+**JavaScript:**
+```html
 <script src="./px64.js"></script>
 <script>
   const state = {
@@ -146,52 +144,51 @@ See examples/todo.html
   const app = px64.bind("#todos", state);
   window.app = app; // optional for console access
 </script>
+```
 
-Core API
-px64.bind(root, scope)
+## 🔧 Core API
+
+### `px64.bind(root, scope)`
 
 Bind a DOM subtree to a reactive scope.
 
-root: CSS selector or DOM element.
+**Parameters:**
+- `root`: CSS selector or DOM element
+- `scope`: plain object; it will be wrapped (shallowly) by `px64.observable`
 
-scope: plain object; it will be wrapped (shallowly) by px64.observable.
+**Returns:** the observable scope
 
-Returns: the observable scope.
+The bound root receives a private `data-scope-id` attribute so delegated events can find the right scope.
 
-The bound root receives a private data-scope-id attribute so delegated events can find the right scope.
-
-px64.observable(obj)
+### `px64.observable(obj)`
 
 Wrap a plain object with change notifications.
 
-Adds:
+**Adds:**
+- `obj.$set(key, value)`: update and notify
+- `obj.$observe(prop, fn)` / `obj.$observe('*', fn)`: subscribe; returns an unsubscribe function
 
-obj.$set(key, value): update and notify.
+**Notes:**
+Wrapping is shallow: nested objects are wrapped once at creation. Assigning new nested objects? Either call `px64.observable(newObj)` yourself or reassign and rely on top-level observers.
 
-obj.$observe(prop, fn) / obj.$observe('*', fn): subscribe; returns an unsubscribe function.
-
-Notes:
-
-Wrapping is shallow: nested objects are wrapped once at creation. Assigning new nested objects? Either call px64.observable(newObj) yourself or reassign and rely on top-level observers.
-
-px64.listState(items)
+### `px64.listState(items)`
 
 Convenience wrapper for arrays with paging/sorting baked in.
 
-State fields:
+**State fields:**
+`items`, `page`, `pageSize`, `sortKey`, `sortDir`, `total`, `loading`
 
-items, page, pageSize, sortKey, sortDir, total, loading
+**Helpers:**
+`setItems(arr)`, `sorted()`, `paged()`, `nextPage()`, `prevPage()`, `sortBy(key, dir)`
 
-Helpers:
+Use with `data-bind="list:myList"` or `data-bind="table:myList"`.
 
-setItems(arr), sorted(), paged(), nextPage(), prevPage(), sortBy(key, dir)
-
-Use with data-bind="list:myList" or data-bind="table:myList".
-
-px64.addBinder(name, fn)
+### `px64.addBinder(name, fn)`
 
 Register a custom binder.
 
+**Example:**
+```javascript
 px64.addBinder("upper", ({ el, scope, arg }) => {
   const parent = arg.split('.').slice(0, -1).join('.');
   const key = arg.split('.').pop();
@@ -200,14 +197,14 @@ px64.addBinder("upper", ({ el, scope, arg }) => {
   apply(src[key]);
   src.$observe && src.$observe(key, apply);
 });
+```
 
-
-HTML:
-
+**HTML:**
+```html
 <span data-bind="upper:user.name"></span>
+```
 
-
-Binder signature receives { el, scope, arg, stack }.
+Binder signature receives `{ el, scope, arg, stack }`.
 
 Built-in Binders
 Binder	Purpose
