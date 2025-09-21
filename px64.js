@@ -115,6 +115,17 @@
         elementObservers.get(element).add(cleanupFn);
     }
     
+    // One-liner reactive helper - handles path resolution, initial call, and observer setup
+    function reactive(el, scope, path, applyFn) {
+        applyFn(resolvePath(scope, path));
+        const keys = path.split('.');
+        const lastKey = keys.pop();
+        const parent = keys.length ? resolvePath(scope, keys.join('.')) : scope;
+        if (parent && parent.$observe) {
+            registerObserver(el, parent.$observe(lastKey, applyFn));
+        }
+    }
+    
     function cleanupElement(element) {
         const observers = elementObservers.get(element);
         if (observers) {
@@ -312,18 +323,9 @@
     addBinder('text', ({ el, scope, arg }) => {
         const path = arg || el.getAttribute('data-bind'); // when single token w/o colon
         const targetPath = path.includes(':') ? path.split(':')[1] : path;
-        const apply = (v) => batchUpdate(() => { el.textContent = v ?? ''; });
-
-        apply(resolvePath(scope, targetPath));
-
-        // reactive hook (only if top-level key)
-        const keys = targetPath.split('.');
-        const lastKey = keys.pop();
-        const parent = keys.length ? resolvePath(scope, keys.join('.')) : scope;
-        if (parent && parent.$observe) {
-            const unsubscribe = parent.$observe(lastKey, v => apply(v));
-            registerObserver(el, unsubscribe);
-        }
+        reactive(el, scope, targetPath, (v) => batchUpdate(() => {
+            el.textContent = v ?? '';
+        }));
     });
 
     // ternary:condition:'true':'false' (dedicated ternary binder)
@@ -1093,6 +1095,13 @@
     // public API
     const px64 = {
         addBinder,
+        addBinders(binderObj) {
+            Object.keys(binderObj).forEach(name => {
+                addBinder(name, binderObj[name]);
+            });
+            return this; // For chaining
+        },
+        reactive, // Expose reactive helper for external use
         bind(root, scope) {
             const host = typeof root === 'string' ? document.querySelector(root) : root;
             if (!host) throw new Error('px64.bind: root not found');

@@ -105,11 +105,11 @@ describe('px64.bind', () => {
     it('should bind text content correctly', () => {
         // Test implementation
     });
-    
+
     it('should handle errors gracefully', () => {
         // Error handling test
     });
-    
+
     it('should clean up observers on element removal', () => {
         // Memory leak test
     });
