@@ -77,6 +77,84 @@
     };
 
     // ─────────────────────────────────────────────────────────────────────────────
+    // Performance & Memory Management Core
+    
+    // Batch DOM updates for performance
+    const updateQueue = new Set();
+    let isUpdateScheduled = false;
+    
+    function batchUpdate(updateFn) {
+        updateQueue.add(updateFn);
+        if (!isUpdateScheduled) {
+            isUpdateScheduled = true;
+            // Use requestAnimationFrame for smooth updates, fallback to setTimeout
+            const scheduleUpdate = typeof requestAnimationFrame !== 'undefined' 
+                ? requestAnimationFrame 
+                : (fn) => setTimeout(fn, 16);
+                
+            scheduleUpdate(() => {
+                // Apply all queued updates
+                updateQueue.forEach(fn => {
+                    try { fn(); } catch (e) { console.warn('px64 update error:', e); }
+                });
+                updateQueue.clear();
+                isUpdateScheduled = false;
+            });
+        }
+    }
+    
+    // Observer cleanup system for memory management
+    const elementObservers = new WeakMap(); // element -> Set of cleanup functions
+    const scopeRegistry = new Map(); // scope-id -> { scope, cleanupFns }
+    let scopeCounter = 0;
+    
+    function registerObserver(element, cleanupFn) {
+        if (!elementObservers.has(element)) {
+            elementObservers.set(element, new Set());
+        }
+        elementObservers.get(element).add(cleanupFn);
+    }
+    
+    function cleanupElement(element) {
+        const observers = elementObservers.get(element);
+        if (observers) {
+            observers.forEach(cleanup => {
+                try { cleanup(); } catch (e) { console.warn('px64 cleanup error:', e); }
+            });
+            elementObservers.delete(element);
+        }
+        
+        // Cleanup child elements recursively
+        if (element.children) {
+            Array.from(element.children).forEach(child => cleanupElement(child));
+        }
+    }
+    
+    // Automatic cleanup when elements are removed from DOM
+    if (typeof MutationObserver !== 'undefined') {
+        const observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                mutation.removedNodes.forEach(node => {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        cleanupElement(node);
+                    }
+                });
+            });
+        });
+        
+        // Start observing when first bind() is called
+        let observerStarted = false;
+        function startDOMObserver() {
+            if (!observerStarted && typeof document !== 'undefined') {
+                observer.observe(document.body, { childList: true, subtree: true });
+                observerStarted = true;
+            }
+        }
+    } else {
+        function startDOMObserver() {} // No-op for environments without MutationObserver
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────
     // tiny reactive core
     const OBS = Symbol('px64.observers');
 
@@ -218,8 +296,6 @@
 
     // ─────────────────────────────────────────────────────────────────────────────
     // We mark each scope root with an id so events can resolve the closest scope
-    const scopeRegistry = new Map();
-    let scopeCounter = 0;
 
     function assignScopeId(host, scope) {
         const sid = (++scopeCounter).toString(36);
@@ -235,7 +311,7 @@
     addBinder('text', ({ el, scope, arg }) => {
         const path = arg || el.getAttribute('data-bind'); // when single token w/o colon
         const targetPath = path.includes(':') ? path.split(':')[1] : path;
-        const apply = (v) => { el.textContent = v ?? ''; };
+        const apply = (v) => batchUpdate(() => { el.textContent = v ?? ''; });
 
         apply(resolvePath(scope, targetPath));
 
@@ -243,17 +319,23 @@
         const keys = targetPath.split('.');
         const lastKey = keys.pop();
         const parent = keys.length ? resolvePath(scope, keys.join('.')) : scope;
-        if (parent && parent.$observe) parent.$observe(lastKey, v => apply(v));
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(lastKey, v => apply(v));
+            registerObserver(el, unsubscribe);
+        }
     });
 
     // html:prop
     addBinder('html', ({ el, scope, arg }) => {
         const val = resolvePath(scope, arg);
-        const apply = v => { el.innerHTML = v ?? ''; };
+        const apply = v => batchUpdate(() => { el.innerHTML = v ?? ''; });
         apply(val);
         const lastKey = arg.split('.').pop();
         const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
-        if (parent && parent.$observe) parent.$observe(lastKey, v => apply(v));
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(lastKey, v => apply(v));
+            registerObserver(el, unsubscribe);
+        }
     });
 
     // value:prop (two-way for inputs)
@@ -348,23 +430,99 @@
             return el.firstElementChild;
         }
 
+        // Smart list rendering with diffing and batching
+        let lastRenderedItems = [];
+        let renderedNodes = [];
+        
         function render() {
-            el.innerHTML = '';
             if (state.sortBy && meta.sort) state.sortBy(meta.sort, meta.dir || 'asc');
             const rows = state.paged ? state.paged() : (state.items || []);
+            
+            // Smart diffing - only update if items actually changed
+            const itemsChanged = !arraysEqual(rows, lastRenderedItems);
+            if (!itemsChanged) return;
+            
+            // Batch the rendering operation
+            batchUpdate(() => {
+                // For large lists (>100 items), use incremental rendering
+                if (rows.length > 100) {
+                    renderIncremental(rows);
+                } else {
+                    renderFull(rows);
+                }
+                lastRenderedItems = rows.slice(); // shallow copy
+            });
+        }
+        
+        function arraysEqual(a, b) {
+            if (a.length !== b.length) return false;
+            for (let i = 0; i < a.length; i++) {
+                if (a[i] !== b[i]) return false;
+            }
+            return true;
+        }
+        
+        function renderFull(rows) {
+            // Cleanup existing nodes
+            renderedNodes.forEach(node => cleanupElement(node));
+            el.innerHTML = '';
+            
             const frag = document.createDocumentFragment();
+            renderedNodes = [];
             rows.forEach(row => {
                 const node = template.cloneNode(true);
                 bindTree(node, observable(row));
                 frag.appendChild(node);
+                renderedNodes.push(node);
             });
             el.appendChild(frag);
         }
+        
+        function renderIncremental(rows) {
+            // For large lists, render in chunks using requestIdleCallback
+            let index = 0;
+            const chunkSize = 20;
+            
+            function renderChunk() {
+                const endIndex = Math.min(index + chunkSize, rows.length);
+                const frag = document.createDocumentFragment();
+                
+                for (let i = index; i < endIndex; i++) {
+                    const row = rows[i];
+                    const node = template.cloneNode(true);
+                    bindTree(node, observable(row));
+                    frag.appendChild(node);
+                    renderedNodes.push(node);
+                }
+                
+                if (index === 0) {
+                    // First chunk - clear and append
+                    renderedNodes.forEach(node => cleanupElement(node));
+                    el.innerHTML = '';
+                    renderedNodes = [];
+                }
+                
+                el.appendChild(frag);
+                index = endIndex;
+                
+                if (index < rows.length) {
+                    // Schedule next chunk
+                    const scheduleNext = typeof requestIdleCallback !== 'undefined'
+                        ? requestIdleCallback
+                        : (fn) => setTimeout(fn, 0);
+                    scheduleNext(renderChunk);
+                }
+            }
+            
+            renderChunk();
+        }
+        
         render();
         // re-render on list changes
         const rerender = () => render();
         if (state.$observe) {
-            state.$observe('*', rerender); // page, pageSize, sortKey, items etc.
+            const unsubscribe = state.$observe('*', rerender);
+            registerObserver(el, unsubscribe);
         }
     });
 
@@ -725,6 +883,7 @@
             if (!host.hasAttribute('data-scope-id')) assignScopeId(host, sc);
             bindTree(host, sc);
             installTapDelegation(host);
+            startDOMObserver(); // Start automatic cleanup observer
             return sc;
         },
         model,
