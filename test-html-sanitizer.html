@@ -117,43 +117,74 @@
             },
 
             loadOnload() {
-                const malicious = '<img src="invalid" onerror="alert(\'XSS via onerror!\')" /><p>Image with malicious handler</p>';
+                const malicious = '<img src="invalid" onerror="alert(&quot;XSS via onerror!&quot;)" /><p>Image with malicious handler</p>';
                 this.$set('unsafeHTML', malicious);
                 this.$set('safeHTML', malicious);
             },
 
             loadIframe() {
-                const malicious = '<iframe src="javascript:alert(\'XSS via iframe!\')"></iframe><p>Iframe attack</p>';
+                const malicious = '<iframe src="javascript:alert(&quot;XSS via iframe!&quot;)"></iframe><p>Iframe attack</p>';
                 this.$set('unsafeHTML', malicious);
                 this.$set('safeHTML', malicious);
             },
 
-            loadSafeHTML() {
-                const safe = '<h4>Welcome!</h4><p>This is <strong>safe</strong> <em>formatted</em> text with a <a href="https://example.com">link</a>.</p>';
-                this.$set('unsafeHTML', safe);
-                this.$set('safeHTML', safe);
-            },
+    loadSafeHTML() {
+    const safe = '<h4>Welcome!</h4>
+    <p>This is <strong>safe</strong> <em>formatted</em> text with a <a href="https://example.com">link</a>.</p>';
+    this.$set('unsafeHTML', safe);
+    this.$set('safeHTML', safe);
+    },
 
-            loadRichText() {
-                const rich = '<div><h3>Rich Text Example</h3><p>This content includes:</p><ul><li><strong>Bold text</strong></li><li><em>Italic text</em></li><li><code>Code snippets</code></li><li><a href="https://github.com">External links</a></li></ul><blockquote>A safe blockquote with <mark>highlighted</mark> text.</blockquote></div>';
-                this.$set('unsafeHTML', rich);
-                this.$set('safeHTML', rich);
-            },
+    loadRichText() {
+    const rich = '<div>
+        <h3>Rich Text Example</h3>
+        <p>This content includes:</p>
+        <ul>
+            <li><strong>Bold text</strong></li>
+            <li><em>Italic text</em></li>
+            <li><code>Code snippets</code></li>
+            <li><a href="https://github.com">External links</a></li>
+        </ul>
+        <blockquote>A safe blockquote with <mark>highlighted</mark> text.</blockquote>
+    </div>';
+    this.$set('unsafeHTML', rich);
+    this.$set('safeHTML', rich);
+    },
 
-            loadTable() {
-                const table = '<table class="table table-striped"><thead><tr><th>Name</th><th>Role</th><th>Status</th></tr></thead><tbody><tr><td>John Doe</td><td>Developer</td><td><span class="badge bg-success">Active</span></td></tr><tr><td>Jane Smith</td><td>Designer</td><td><span class="badge bg-warning">Pending</span></td></tr></tbody></table>';
-                this.$set('unsafeHTML', table);
-                this.$set('safeHTML', table);
-            }
-        });
+    loadTable() {
+    const table = '<table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>John Doe</td>
+                <td>Developer</td>
+                <td><span class="badge bg-success">Active</span></td>
+            </tr>
+            <tr>
+                <td>Jane Smith</td>
+                <td>Designer</td>
+                <td><span class="badge bg-warning">Pending</span></td>
+            </tr>
+        </tbody>
+    </table>';
+    this.$set('unsafeHTML', table);
+    this.$set('safeHTML', table);
+    }
+    });
 
-        testState.$observe('manualHTML', (value) => {
-            const sanitized = px64.sanitizeHTML(value);
-            testState.$set('sanitizedResult', sanitized);
-        });
+    testState.$observe('manualHTML', (value) => {
+    const sanitized = px64.sanitizeHTML(value);
+    testState.$set('sanitizedResult', sanitized);
+    });
 
-        const app = px64.bind('#app', testState);
-        app.sanitizedResult = px64.sanitizeHTML(app.manualHTML);
+    const app = px64.bind('#app', testState);
+    app.sanitizedResult = px64.sanitizeHTML(app.manualHTML);
     </script>
 </body>
 
