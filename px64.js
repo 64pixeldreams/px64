@@ -56,7 +56,7 @@
  * License: MIT — use, modify, and distribute freely.
  */
 
-(function(global) {
+(function (global) {
     'use strict';
 
     // ─────────────────────────────────────────────────────────────────────────────
@@ -78,20 +78,20 @@
 
     // ─────────────────────────────────────────────────────────────────────────────
     // Performance & Memory Management Core
-    
+
     // Batch DOM updates for performance
     const updateQueue = new Set();
     let isUpdateScheduled = false;
-    
+
     function batchUpdate(updateFn) {
         updateQueue.add(updateFn);
         if (!isUpdateScheduled) {
             isUpdateScheduled = true;
             // Use requestAnimationFrame for smooth updates, fallback to setTimeout
-            const scheduleUpdate = typeof requestAnimationFrame !== 'undefined' 
-                ? requestAnimationFrame 
+            const scheduleUpdate = typeof requestAnimationFrame !== 'undefined'
+                ? requestAnimationFrame
                 : (fn) => setTimeout(fn, 16);
-                
+
             scheduleUpdate(() => {
                 // Apply all queued updates
                 updateQueue.forEach(fn => {
@@ -102,19 +102,19 @@
             });
         }
     }
-    
+
     // Observer cleanup system for memory management
     const elementObservers = new WeakMap(); // element -> Set of cleanup functions
     const scopeRegistry = new Map(); // scope-id -> { scope, cleanupFns }
     let scopeCounter = 0;
-    
+
     function registerObserver(element, cleanupFn) {
         if (!elementObservers.has(element)) {
             elementObservers.set(element, new Set());
         }
         elementObservers.get(element).add(cleanupFn);
     }
-    
+
     // One-liner reactive helper - handles path resolution, initial call, and observer setup
     function reactive(el, scope, path, applyFn) {
         applyFn(resolvePath(scope, path));
@@ -125,7 +125,7 @@
             registerObserver(el, parent.$observe(lastKey, applyFn));
         }
     }
-    
+
     function cleanupElement(element) {
         const observers = elementObservers.get(element);
         if (observers) {
@@ -134,13 +134,13 @@
             });
             elementObservers.delete(element);
         }
-        
+
         // Cleanup child elements recursively
         if (element.children) {
             Array.from(element.children).forEach(child => cleanupElement(child));
         }
     }
-    
+
     // Automatic cleanup when elements are removed from DOM
     let startDOMObserver;
     if (typeof MutationObserver !== 'undefined') {
@@ -153,17 +153,17 @@
                 });
             });
         });
-        
+
         // Start observing when first bind() is called
         let observerStarted = false;
-        startDOMObserver = function() {
+        startDOMObserver = function () {
             if (!observerStarted && typeof document !== 'undefined') {
                 observer.observe(document.body, { childList: true, subtree: true });
                 observerStarted = true;
             }
         };
     } else {
-        startDOMObserver = function() {}; // No-op for environments without MutationObserver
+        startDOMObserver = function () { }; // No-op for environments without MutationObserver
     }
 
     // ─────────────────────────────────────────────────────────────────────────────
@@ -183,14 +183,14 @@
             if (any) any.forEach(fn => fn(prop, value, old));
         };
 
-        obj.$observe = function(prop, fn) {
+        obj.$observe = function (prop, fn) {
             const key = prop || '*';
             if (!obj[OBS].has(key)) obj[OBS].set(key, new Set());
             obj[OBS].get(key).add(fn);
             return () => obj[OBS].get(key).delete(fn);
         };
 
-        obj.$set = function(prop, value) {
+        obj.$set = function (prop, value) {
             const old = obj[prop];
             if (old === value) return;
             obj[prop] = value;
@@ -336,14 +336,14 @@
             return;
         }
         const [conditionPath, trueValue, falseValue] = parts;
-        
+
         const apply = () => batchUpdate(() => {
             const conditionResult = !!resolvePath(scope, conditionPath.trim());
             el.textContent = conditionResult ? trueValue : falseValue;
         });
-        
+
         apply();
-        
+
         // Set up observer for the condition
         const keys = conditionPath.trim().split('.');
         const lastKey = keys.pop();
@@ -356,15 +356,9 @@
 
     // html:prop
     addBinder('html', ({ el, scope, arg }) => {
-        const val = resolvePath(scope, arg);
-        const apply = v => batchUpdate(() => { el.innerHTML = v ?? ''; });
-        apply(val);
-        const lastKey = arg.split('.').pop();
-        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
-        if (parent && parent.$observe) {
-            const unsubscribe = parent.$observe(lastKey, v => apply(v));
-            registerObserver(el, unsubscribe);
-        }
+        reactive(el, scope, arg, (v) => batchUpdate(() => {
+            el.innerHTML = v ?? '';
+        }));
     });
 
     // value:prop (two-way for inputs)
@@ -475,15 +469,15 @@
         // Smart list rendering with diffing and batching
         let lastRenderedItems = [];
         let renderedNodes = [];
-        
+
         function render() {
             if (state.sortBy && meta.sort) state.sortBy(meta.sort, meta.dir || 'asc');
             const rows = state.paged ? state.paged() : (state.items || []);
-            
+
             // Smart diffing - only update if items actually changed
             const itemsChanged = !arraysEqual(rows, lastRenderedItems);
             if (!itemsChanged) return;
-            
+
             // Batch the rendering operation
             batchUpdate(() => {
                 // For large lists (>100 items), use incremental rendering
@@ -495,7 +489,7 @@
                 lastRenderedItems = rows.slice(); // shallow copy
             });
         }
-        
+
         function arraysEqual(a, b) {
             if (a.length !== b.length) return false;
             for (let i = 0; i < a.length; i++) {
@@ -503,12 +497,12 @@
             }
             return true;
         }
-        
+
         function renderFull(rows) {
             // Cleanup existing nodes
             renderedNodes.forEach(node => cleanupElement(node));
             el.innerHTML = '';
-            
+
             const frag = document.createDocumentFragment();
             renderedNodes = [];
             rows.forEach(row => {
@@ -521,16 +515,16 @@
             });
             el.appendChild(frag);
         }
-        
+
         function renderIncremental(rows) {
             // For large lists, render in chunks using requestIdleCallback
             let index = 0;
             const chunkSize = 20;
-            
+
             function renderChunk() {
                 const endIndex = Math.min(index + chunkSize, rows.length);
                 const frag = document.createDocumentFragment();
-                
+
                 for (let i = index; i < endIndex; i++) {
                     const row = rows[i];
                     const node = template.cloneNode(true);
@@ -540,17 +534,17 @@
                     frag.appendChild(node);
                     renderedNodes.push(node);
                 }
-                
+
                 if (index === 0) {
                     // First chunk - clear and append
                     renderedNodes.forEach(node => cleanupElement(node));
                     el.innerHTML = '';
                     renderedNodes = [];
                 }
-                
+
                 el.appendChild(frag);
                 index = endIndex;
-                
+
                 if (index < rows.length) {
                     // Schedule next chunk
                     const scheduleNext = typeof requestIdleCallback !== 'undefined'
@@ -559,10 +553,10 @@
                     scheduleNext(renderChunk);
                 }
             }
-            
+
             renderChunk();
         }
-        
+
         render();
         // re-render on list changes
         const rerender = () => render();
@@ -667,7 +661,7 @@
         const [styleProperty, valuePath] = parts;
         const parent = resolvePath(scope, valuePath.split('.').slice(0, -1).join('.')) || scope;
         const key = valuePath.split('.').pop();
-        
+
         const apply = v => batchUpdate(() => {
             el.style[styleProperty] = v || '';
         });
@@ -806,10 +800,10 @@
 
     // Date formatting binders
     const _dateFormats = {
-        date: new Intl.DateTimeFormat(undefined, { 
-            year: 'numeric', month: 'short', day: 'numeric' 
+        date: new Intl.DateTimeFormat(undefined, {
+            year: 'numeric', month: 'short', day: 'numeric'
         }),
-        datetime: new Intl.DateTimeFormat(undefined, { 
+        datetime: new Intl.DateTimeFormat(undefined, {
             year: 'numeric', month: 'short', day: 'numeric',
             hour: 'numeric', minute: '2-digit'
         })
@@ -840,7 +834,7 @@
             const now = new Date();
             const diffMs = now - date;
             const diffHours = diffMs / (1000 * 60 * 60);
-            
+
             if (diffHours < 24) {
                 // Less than 24 hours: "2 hours ago"
                 if (diffHours < 1) {
@@ -851,8 +845,8 @@
                 }
             } else if (diffHours < 48) {
                 // Yesterday: "Yesterday 3:45 PM"
-                const timeStr = date.toLocaleTimeString(undefined, { 
-                    hour: 'numeric', minute: '2-digit' 
+                const timeStr = date.toLocaleTimeString(undefined, {
+                    hour: 'numeric', minute: '2-digit'
                 });
                 el.textContent = `Yesterday ${timeStr}`;
             } else {
@@ -880,7 +874,7 @@
             const diffMins = Math.floor(diffSecs / 60);
             const diffHours = Math.floor(diffMins / 60);
             const diffDays = Math.floor(diffHours / 24);
-            
+
             if (diffSecs < 60) el.textContent = 'Just now';
             else if (diffMins < 60) el.textContent = `${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;
             else if (diffHours < 24) el.textContent = `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
@@ -894,59 +888,40 @@
     // Bootstrap component binders
     // alert:error (Bootstrap alert integration)
     addBinder('alert', ({ el, scope, arg }) => {
-        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
-        const key = arg.split('.').pop();
-        const apply = () => batchUpdate(() => {
-            const message = resolvePath(scope, arg);
+        reactive(el, scope, arg, (message) => batchUpdate(() => {
             if (message) {
                 el.textContent = message;
                 el.style.display = 'block';
             } else {
                 el.style.display = 'none';
             }
-        });
-        apply();
-        if (parent && parent.$observe) {
-            const unsubscribe = parent.$observe(key, apply);
-            registerObserver(el, unsubscribe);
-        }
+        }));
     });
 
     // badge:status (auto-colored badges)
     addBinder('badge', ({ el, scope, arg }) => {
-        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
-        const key = arg.split('.').pop();
         const colorMap = {
-            success: 'bg-success', active: 'bg-success', completed: 'bg-success', 
-            warning: 'bg-warning', pending: 'bg-warning', 
+            success: 'bg-success', active: 'bg-success', completed: 'bg-success',
+            warning: 'bg-warning', pending: 'bg-warning',
             danger: 'bg-danger', error: 'bg-danger', failed: 'bg-danger',
             info: 'bg-info', processing: 'bg-info',
             secondary: 'bg-secondary', inactive: 'bg-secondary'
         };
-        const apply = () => batchUpdate(() => {
-            const value = resolvePath(scope, arg);
+        reactive(el, scope, arg, (value) => batchUpdate(() => {
             el.textContent = value || '';
             // Remove existing bg-* classes
             el.className = el.className.replace(/bg-\w+/g, '');
             // Add appropriate color class
             const colorClass = colorMap[String(value).toLowerCase()] || 'bg-secondary';
             el.classList.add(colorClass);
-        });
-        apply();
-        if (parent && parent.$observe) {
-            const unsubscribe = parent.$observe(key, apply);
-            registerObserver(el, unsubscribe);
-        }
+        }));
     });
 
     // progress:uploadPercent (Bootstrap progress bars)
     addBinder('progress', ({ el, scope, arg }) => {
-        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
-        const key = arg.split('.').pop();
-        const apply = () => batchUpdate(() => {
-            const percent = Number(resolvePath(scope, arg)) || 0;
-            const clampedPercent = Math.max(0, Math.min(100, percent));
-            
+        reactive(el, scope, arg, (percent) => batchUpdate(() => {
+            const clampedPercent = Math.max(0, Math.min(100, Number(percent) || 0));
+
             // Create progress bar if it doesn't exist
             let progressBar = el.querySelector('.progress-bar');
             if (!progressBar) {
@@ -955,18 +930,13 @@
                 progressBar.setAttribute('role', 'progressbar');
                 el.appendChild(progressBar);
             }
-            
+
             progressBar.style.width = `${clampedPercent}%`;
             progressBar.setAttribute('aria-valuenow', clampedPercent);
             progressBar.setAttribute('aria-valuemin', '0');
             progressBar.setAttribute('aria-valuemax', '100');
             progressBar.textContent = `${Math.round(clampedPercent)}%`;
-        });
-        apply();
-        if (parent && parent.$observe) {
-            const unsubscribe = parent.$observe(key, apply);
-            registerObserver(el, unsubscribe);
-        }
+        }));
     });
 
     // checkbox:isChecked (two-way binding for checkboxes)
@@ -1009,13 +979,13 @@
             const activeTab = resolvePath(scope, arg);
             const tabId = el.getAttribute('data-tab-id');
             const contentId = el.getAttribute('data-tab-content');
-            
+
             if (tabId) {
                 // This is a tab button
                 el.classList.toggle('active', tabId === activeTab);
                 el.setAttribute('aria-selected', tabId === activeTab);
             }
-            
+
             if (contentId) {
                 // This is tab content
                 const isActive = contentId === activeTab;
@@ -1028,7 +998,7 @@
             const unsubscribe = parent.$observe(key, apply);
             registerObserver(el, unsubscribe);
         }
-        
+
         // Handle tab clicks
         if (el.getAttribute('data-tab-id')) {
             el.addEventListener('click', (e) => {
@@ -1054,7 +1024,7 @@
             const scopeId = target.closest('[data-scope-id]')?.getAttribute('data-scope-id');
             const scope = scopeId && scopeRegistry.get(scopeId);
             if (!scope) return;
-            
+
             // Check if this is a function call with parameters like "setStatus('danger')"
             const functionCallMatch = action.match(/^(\w+)\('([^']+)'\)$/);
             if (functionCallMatch) {
