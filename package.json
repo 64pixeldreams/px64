@@ -1,0 +1,52 @@
+{
+  "name": "px64",
+  "version": "1.0.0",
+  "description": "Lightweight, zero-dependency reactive binding library for modern web applications",
+  "main": "px64.js",
+  "keywords": [
+    "reactive",
+    "binding",
+    "dom",
+    "javascript",
+    "library",
+    "lightweight",
+    "zero-dependencies",
+    "production",
+    "commercial"
+  ],
+  "author": "64pixeldreams",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/64pixeldreams/px64.git"
+  },
+  "bugs": {
+    "url": "https://github.com/64pixeldreams/px64/issues"
+  },
+  "homepage": "https://github.com/64pixeldreams/px64#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo \"No build process needed - single file library\"",
+    "lint": "echo \"No linter configured\"",
+    "demo": "python -m http.server 8000 || python3 -m http.server 8000"
+  },
+  "files": [
+    "px64.js",
+    "README.md",
+    "*.html",
+    "*.md"
+  ],
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "devDependencies": {},
+  "dependencies": {},
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  }
+}

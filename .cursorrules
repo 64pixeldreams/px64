@@ -1,0 +1,114 @@
+# Cursor AI Rules for px64 - Production Commercial Product
+
+## Project Context
+- **Type**: Production-ready JavaScript library
+- **Target**: Commercial use, enterprise customers
+- **Philosophy**: Lightweight, zero-dependencies, high-performance
+- **Code Quality**: Production-grade, maintainable, well-documented
+
+## Code Quality Standards
+- **Performance First**: Every line must be optimized for speed
+- **Memory Management**: Zero memory leaks, proper cleanup
+- **Backward Compatibility**: Never break existing APIs
+- **Error Handling**: Robust error handling, graceful degradation
+- **Documentation**: Every function must be documented
+- **Testing**: All changes must be tested before commit
+
+## Development Practices
+- **Branch Strategy**: Always use feature branches, never commit directly to main
+- **Incremental Changes**: Small, testable changes only
+- **No Rollbacks**: Never suggest rollbacks without explicit user approval
+- **Git Workflow**: Use proper git flow with descriptive commits
+- **Code Review**: All changes should be reviewable and understandable
+
+## Code Style
+- **ES6+**: Use modern JavaScript features
+- **Functional**: Prefer functional programming patterns
+- **Immutable**: Avoid mutating objects when possible
+- **Clean Code**: Self-documenting variable names
+- **DRY Principle**: Eliminate code duplication
+- **Single Responsibility**: Each function does one thing well
+
+## Performance Requirements
+- **Bundle Size**: Keep library under 10KB minified
+- **Runtime Performance**: Optimize for 60fps DOM updates
+- **Memory Usage**: Minimal memory footprint
+- **Startup Time**: Fast initialization
+- **Browser Support**: Modern browsers (ES6+)
+
+## Security Standards
+- **XSS Prevention**: Sanitize all user input
+- **No Eval**: Never use eval() or similar
+- **Safe DOM**: Use safe DOM manipulation methods
+- **Input Validation**: Validate all inputs
+
+## Testing Requirements
+- **Unit Tests**: Test all new functions
+- **Integration Tests**: Test with real DOM
+- **Memory Tests**: Verify no memory leaks
+- **Performance Tests**: Ensure no performance regressions
+- **Browser Tests**: Test in multiple browsers
+
+## Documentation Standards
+- **README**: Keep updated with all features
+- **Code Comments**: Explain complex logic
+- **Examples**: Provide working examples
+- **API Docs**: Document all public APIs
+- **Migration Guides**: Document breaking changes
+
+## Git Workflow
+- **Branch Naming**: feature/description, fix/description, docs/description
+- **Commit Messages**: Use conventional commits (feat:, fix:, docs:, etc.)
+- **Pull Requests**: Required for all changes
+- **Code Review**: All changes must be reviewed
+- **CI/CD**: Automated testing on every push
+
+## File Organization
+- **Single File**: Keep core library in px64.js
+- **Examples**: Separate demo files
+- **Documentation**: Markdown files for docs
+- **Tests**: Separate test files
+- **Build**: Automated build process
+
+## Error Handling
+- **Graceful Degradation**: Never crash the page
+- **User Feedback**: Provide helpful error messages
+- **Debug Mode**: Include debug logging
+- **Fallbacks**: Provide fallbacks for missing features
+
+## Memory Management
+- **Observer Cleanup**: Always clean up observers
+- **Event Listeners**: Remove event listeners on cleanup
+- **Weak References**: Use WeakMap for cleanup tracking
+- **Garbage Collection**: Ensure objects can be garbage collected
+
+## Performance Optimization
+- **Batch Updates**: Use requestAnimationFrame for DOM updates
+- **Debouncing**: Debounce expensive operations
+- **Lazy Loading**: Load resources only when needed
+- **Caching**: Cache expensive computations
+- **Minification**: Optimize for production builds
+
+## Commercial Considerations
+- **License**: MIT license for commercial use
+- **Support**: Provide clear support channels
+- **Documentation**: Professional documentation
+- **Examples**: Production-ready examples
+- **Migration**: Easy migration from other libraries
+
+## Quality Gates
+- **No Console Errors**: Zero console errors in production
+- **No Memory Leaks**: Pass memory leak tests
+- **Performance Budget**: Stay within performance budget
+- **Browser Compatibility**: Work in all target browsers
+- **Accessibility**: Follow accessibility guidelines
+
+## Code Review Checklist
+- [ ] Performance impact assessed
+- [ ] Memory leaks checked
+- [ ] Backward compatibility maintained
+- [ ] Documentation updated
+- [ ] Tests written and passing
+- [ ] Error handling implemented
+- [ ] Security reviewed
+- [ ] Browser compatibility verified
