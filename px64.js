@@ -308,21 +308,48 @@
     // ─────────────────────────────────────────────────────────────────────────────
     // Built-in binders
 
-    // text:name OR shorthand "name"
+    // text:name OR shorthand "name" OR ternary "condition ? 'true' : 'false'"
     addBinder('text', ({ el, scope, arg }) => {
         const path = arg || el.getAttribute('data-bind'); // when single token w/o colon
         const targetPath = path.includes(':') ? path.split(':')[1] : path;
-        const apply = (v) => batchUpdate(() => { el.textContent = v ?? ''; });
+        
+        // Check if this is a ternary expression
+        const ternaryMatch = targetPath.match(/(.+?)\s*\?\s*'([^']+)'\s*:\s*'([^']+)'/);
+        
+        if (ternaryMatch) {
+            // Handle ternary expression: condition ? 'true' : 'false'
+            const [, condition, trueValue, falseValue] = ternaryMatch;
+            const conditionPath = condition.trim();
+            
+            const apply = () => batchUpdate(() => {
+                const conditionResult = !!resolvePath(scope, conditionPath);
+                el.textContent = conditionResult ? trueValue : falseValue;
+            });
+            
+            apply();
+            
+            // Set up observer for the condition
+            const keys = conditionPath.split('.');
+            const lastKey = keys.pop();
+            const parent = keys.length ? resolvePath(scope, keys.join('.')) : scope;
+            if (parent && parent.$observe) {
+                const unsubscribe = parent.$observe(lastKey, apply);
+                registerObserver(el, unsubscribe);
+            }
+        } else {
+            // Handle simple property path
+            const apply = (v) => batchUpdate(() => { el.textContent = v ?? ''; });
 
-        apply(resolvePath(scope, targetPath));
+            apply(resolvePath(scope, targetPath));
 
-        // reactive hook (only if top-level key)
-        const keys = targetPath.split('.');
-        const lastKey = keys.pop();
-        const parent = keys.length ? resolvePath(scope, keys.join('.')) : scope;
-        if (parent && parent.$observe) {
-            const unsubscribe = parent.$observe(lastKey, v => apply(v));
-            registerObserver(el, unsubscribe);
+            // reactive hook (only if top-level key)
+            const keys = targetPath.split('.');
+            const lastKey = keys.pop();
+            const parent = keys.length ? resolvePath(scope, keys.join('.')) : scope;
+            if (parent && parent.$observe) {
+                const unsubscribe = parent.$observe(lastKey, v => apply(v));
+                registerObserver(el, unsubscribe);
+            }
         }
     });
 
