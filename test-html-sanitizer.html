@@ -91,7 +91,6 @@
             manualHTML: '<strong>Bold text</strong>',
             sanitizedResult: '',
 
-            // Malicious test cases
             loadScript() {
                 const malicious = '<script>alert("XSS Attack!");</script><p>This should be safe</p>';
                 this.$set('unsafeHTML', malicious);
@@ -110,7 +109,6 @@
                 this.$set('safeHTML', malicious);
             },
 
-            // Safe test cases
             loadSafeHTML() {
                 const safe = '<h4>Welcome!</h4><p>This is <strong>safe</strong> <em>formatted</em> text with a <a href="https://example.com">link</a>.</p>';
                 this.$set('unsafeHTML', safe);
@@ -130,16 +128,12 @@
             }
         });
 
-        // Watch manual HTML input and sanitize it
         testState.$observe('manualHTML', (value) => {
             const sanitized = px64.sanitizeHTML(value);
             testState.$set('sanitizedResult', sanitized);
         });
 
-        // Bind the app
         const app = px64.bind('#app', testState);
-
-        // Initial sanitization
         app.sanitizedResult = px64.sanitizeHTML(app.manualHTML);
     </script>
 </body>
