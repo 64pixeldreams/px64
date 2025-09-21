@@ -43,17 +43,25 @@
         <div class="test-section">
             <h3>Form Controls</h3>
             <input type="text" data-bind="value:inputValue" class="form-control mb-2" placeholder="Type here...">
-            <input type="checkbox" data-bind="checkbox:isChecked" class="form-check-input mb-2"> Checkbox
+            <div class="mb-2"><strong>Text Value:</strong> <span data-bind="text:inputValue" style="color: blue;"></span></div>
+            
+            <div class="form-check mb-2">
+                <input type="checkbox" data-bind="checkbox:isChecked" class="form-check-input" id="testCheckbox">
+                <label class="form-check-label" for="testCheckbox">Checkbox</label>
+            </div>
+            <div class="mb-2"><strong>Checkbox Value:</strong> <span data-bind="text:isChecked" style="color: green;"></span></div>
+            
             <div class="form-check mb-2">
                 <input type="radio" name="radioGroup" value="option1" data-bind="radio:selectedRadio"
-                    class="form-check-input">
-                <label class="form-check-label">Option 1</label>
+                    class="form-check-input" id="radio1">
+                <label class="form-check-label" for="radio1">Option 1</label>
             </div>
             <div class="form-check mb-2">
                 <input type="radio" name="radioGroup" value="option2" data-bind="radio:selectedRadio"
-                    class="form-check-input">
-                <label class="form-check-label">Option 2</label>
+                    class="form-check-input" id="radio2">
+                <label class="form-check-label" for="radio2">Option 2</label>
             </div>
+            <div class="mb-2"><strong>Selected Radio:</strong> <span data-bind="text:selectedRadio" style="color: purple;"></span></div>
         </div>
 
         <div class="test-section">
@@ -96,7 +104,8 @@
         <div class="test-section">
             <h3>Controls</h3>
             <button class="btn btn-outline-primary" data-bind="tap:toggleMessage">Toggle Message</button>
-            <div class="mt-2">Current message: <span data-bind="text:message" style="font-weight: bold; color: blue;"></span></div>
+            <div class="mt-2">Current message: <span data-bind="text:message"
+                    style="font-weight: bold; color: blue;"></span></div>
             <button class="btn btn-outline-secondary" data-bind="tap:toggleVisibility">Toggle Visibility</button>
             <button class="btn btn-outline-success" data-bind="tap:toggleProcessing">Toggle Processing</button>
             <button class="btn btn-outline-warning" data-bind="tap:toggleValidation">Toggle Validation</button>
