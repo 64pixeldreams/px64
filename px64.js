@@ -131,6 +131,7 @@
     }
     
     // Automatic cleanup when elements are removed from DOM
+    let startDOMObserver;
     if (typeof MutationObserver !== 'undefined') {
         const observer = new MutationObserver(mutations => {
             mutations.forEach(mutation => {
@@ -144,14 +145,14 @@
         
         // Start observing when first bind() is called
         let observerStarted = false;
-        function startDOMObserver() {
+        startDOMObserver = function() {
             if (!observerStarted && typeof document !== 'undefined') {
                 observer.observe(document.body, { childList: true, subtree: true });
                 observerStarted = true;
             }
-        }
+        };
     } else {
-        function startDOMObserver() {} // No-op for environments without MutationObserver
+        startDOMObserver = function() {}; // No-op for environments without MutationObserver
     }
 
     // ─────────────────────────────────────────────────────────────────────────────
