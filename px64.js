@@ -809,16 +809,22 @@
     // alert:error (Bootstrap alert integration)
     addBinder('alert', ({ el, scope, arg }) => {
         reactive(el, scope, arg, (v) => batchUpdate(() => {
+            // Remove existing alert-* classes
+            el.className = el.className.replace(/alert-\w+/g, '').trim();
+            // Add new alert class
             const alertClass = v ? `alert-${v}` : 'alert-primary';
-            el.className = el.className.replace(/alert-\w+/g, '') + ` ${alertClass}`.trim();
+            el.classList.add(alertClass);
         }));
     });
 
     // badge:status (auto-colored badges)
     addBinder('badge', ({ el, scope, arg }) => {
         reactive(el, scope, arg, (v) => batchUpdate(() => {
+            // Remove existing bg-* classes
+            el.className = el.className.replace(/bg-\w+/g, '').trim();
+            // Add new bg class
             const badgeClass = v ? `bg-${v}` : 'bg-primary';
-            el.className = el.className.replace(/bg-\w+/g, '') + ` ${badgeClass}`.trim();
+            el.classList.add(badgeClass);
         }));
     });
 
