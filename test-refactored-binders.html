@@ -84,8 +84,12 @@
             <h3>Form Validation</h3>
             <input type="email" data-bind="valid:isValid, invalid:!isValid" class="form-control mb-2"
                 placeholder="email@example.com">
+            <div class="mb-2"><strong>Email Validation:</strong> <span data-bind="text:isValid ? 'Valid ✅' : 'Invalid ❌'" style="color: green;"></span></div>
+            
             <button data-bind="enable:!isProcessing, disable:isProcessing" class="btn btn-primary">Toggle
                 Processing</button>
+            <div class="mb-2"><strong>Processing State:</strong> <span data-bind="text:isProcessing ? 'Processing... 🔄' : 'Ready ✅'" style="color: orange;"></span></div>
+            <div class="mb-2"><strong>Button State:</strong> <span data-bind="text:isProcessing ? 'Disabled 🚫' : 'Enabled ✅'" style="color: blue;"></span></div>
         </div>
 
         <div class="test-section">
