@@ -613,34 +613,40 @@
     addBinder('fade', ({ el, scope, arg }) => {
         const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
         const key = arg.split('.').pop();
-        const apply = () => {
+        const apply = () => batchUpdate(() => {
             const shouldFade = !!resolvePath(scope, arg);
             el.style.transition = 'opacity 0.3s ease';
             el.style.opacity = shouldFade ? '0.3' : '1';
-        };
+        });
         apply();
-        parent.$observe && parent.$observe(key, apply);
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(key, apply);
+            registerObserver(el, unsubscribe);
+        }
     });
 
     // fadein:!loading (show with fade when condition is true)
     addBinder('fadein', ({ el, scope, arg }) => {
         const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
         const key = arg.split('.').pop();
-        const apply = () => {
+        const apply = () => batchUpdate(() => {
             const shouldShow = !!resolvePath(scope, arg);
             el.style.transition = 'opacity 0.3s ease';
             el.style.opacity = shouldShow ? '1' : '0';
             el.style.pointerEvents = shouldShow ? 'auto' : 'none';
-        };
+        });
         apply();
-        parent.$observe && parent.$observe(key, apply);
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(key, apply);
+            registerObserver(el, unsubscribe);
+        }
     });
 
     // loading:isSubmitting (Bootstrap spinner integration)
     addBinder('loading', ({ el, scope, arg }) => {
         const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
         const key = arg.split('.').pop();
-        const apply = () => {
+        const apply = () => batchUpdate(() => {
             const isLoading = !!resolvePath(scope, arg);
             const spinner = el.querySelector('.spinner-border');
             if (isLoading) {
@@ -650,52 +656,71 @@
                 el.disabled = false;
                 if (spinner) spinner.style.display = 'none';
             }
-        };
+        });
         apply();
-        parent.$observe && parent.$observe(key, apply);
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(key, apply);
+            registerObserver(el, unsubscribe);
+        }
     });
 
     // disable:loading / enable:!loading (form control states)
     addBinder('disable', ({ el, scope, arg }) => {
         const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
         const key = arg.split('.').pop();
-        const apply = () => el.disabled = !!resolvePath(scope, arg);
+        const apply = () => batchUpdate(() => {
+            el.disabled = !!resolvePath(scope, arg);
+        });
         apply();
-        parent.$observe && parent.$observe(key, apply);
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(key, apply);
+            registerObserver(el, unsubscribe);
+        }
     });
 
     addBinder('enable', ({ el, scope, arg }) => {
         const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
         const key = arg.split('.').pop();
-        const apply = () => el.disabled = !resolvePath(scope, arg);
+        const apply = () => batchUpdate(() => {
+            el.disabled = !resolvePath(scope, arg);
+        });
         apply();
-        parent.$observe && parent.$observe(key, apply);
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(key, apply);
+            registerObserver(el, unsubscribe);
+        }
     });
 
     // valid:isEmailValid / invalid:!isEmailValid (Bootstrap validation)
     addBinder('valid', ({ el, scope, arg }) => {
         const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
         const key = arg.split('.').pop();
-        const apply = () => {
+        const apply = () => batchUpdate(() => {
             const isValid = !!resolvePath(scope, arg);
             el.classList.toggle('is-valid', isValid);
             el.classList.toggle('is-invalid', !isValid);
-        };
+        });
         apply();
-        parent.$observe && parent.$observe(key, apply);
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(key, apply);
+            registerObserver(el, unsubscribe);
+        }
     });
 
     addBinder('invalid', ({ el, scope, arg }) => {
         const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
         const key = arg.split('.').pop();
-        const apply = () => {
+        const apply = () => batchUpdate(() => {
             const isInvalid = !!resolvePath(scope, arg);
             el.classList.toggle('is-invalid', isInvalid);
             el.classList.toggle('is-valid', !isInvalid);
             el.style.display = isInvalid ? 'block' : 'none';
-        };
+        });
         apply();
-        parent.$observe && parent.$observe(key, apply);
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(key, apply);
+            registerObserver(el, unsubscribe);
+        }
     });
 
     // Date formatting binders
@@ -790,7 +815,7 @@
     addBinder('alert', ({ el, scope, arg }) => {
         const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
         const key = arg.split('.').pop();
-        const apply = () => {
+        const apply = () => batchUpdate(() => {
             const message = resolvePath(scope, arg);
             if (message) {
                 el.textContent = message;
@@ -798,9 +823,12 @@
             } else {
                 el.style.display = 'none';
             }
-        };
+        });
         apply();
-        parent.$observe && parent.$observe(key, apply);
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(key, apply);
+            registerObserver(el, unsubscribe);
+        }
     });
 
     // badge:status (auto-colored badges)
@@ -814,7 +842,7 @@
             info: 'bg-info', processing: 'bg-info',
             secondary: 'bg-secondary', inactive: 'bg-secondary'
         };
-        const apply = () => {
+        const apply = () => batchUpdate(() => {
             const value = resolvePath(scope, arg);
             el.textContent = value || '';
             // Remove existing bg-* classes
@@ -822,16 +850,19 @@
             // Add appropriate color class
             const colorClass = colorMap[String(value).toLowerCase()] || 'bg-secondary';
             el.classList.add(colorClass);
-        };
+        });
         apply();
-        parent.$observe && parent.$observe(key, apply);
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(key, apply);
+            registerObserver(el, unsubscribe);
+        }
     });
 
     // progress:uploadPercent (Bootstrap progress bars)
     addBinder('progress', ({ el, scope, arg }) => {
         const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
         const key = arg.split('.').pop();
-        const apply = () => {
+        const apply = () => batchUpdate(() => {
             const percent = Number(resolvePath(scope, arg)) || 0;
             const clampedPercent = Math.max(0, Math.min(100, percent));
             
@@ -849,9 +880,12 @@
             progressBar.setAttribute('aria-valuemin', '0');
             progressBar.setAttribute('aria-valuemax', '100');
             progressBar.textContent = `${Math.round(clampedPercent)}%`;
-        };
+        });
         apply();
-        parent.$observe && parent.$observe(key, apply);
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(key, apply);
+            registerObserver(el, unsubscribe);
+        }
     });
 
     // ─────────────────────────────────────────────────────────────────────────────
