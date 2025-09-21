@@ -10,11 +10,12 @@
     <!-- Prism for code highlighting -->
     <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet" />
     <style>
-        body { 
-            background: #ffffff; 
+        body {
+            background: #ffffff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             line-height: 1.6;
         }
+
         .docs-sidebar {
             position: sticky;
             top: 2rem;
@@ -24,28 +25,34 @@
             border-radius: 0.5rem;
             padding: 1rem;
         }
+
         .docs-content {
             max-width: none;
         }
+
         .demo-section {
             margin-bottom: 4rem;
             scroll-margin-top: 2rem;
         }
+
         .demo-card {
             border: 1px solid #e9ecef;
             border-radius: 0.5rem;
             margin-bottom: 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
+
         .demo-card .card-header {
             background: #f8f9fa;
             border-bottom: 1px solid #e9ecef;
             font-weight: 600;
             padding: 1rem 1.5rem;
         }
+
         .demo-card .card-body {
             padding: 1.5rem;
         }
+
         .code-example {
             background: #f8f9fa;
             border: 1px solid #e9ecef;
@@ -53,6 +60,7 @@
             padding: 1rem;
             margin: 1rem 0;
         }
+
         .code-example pre {
             margin: 0;
             background: none;
@@ -60,14 +68,17 @@
             padding: 0;
             font-size: 0.75rem;
         }
+
         .code-example .nav-tabs {
             background: white;
             border-bottom: 1px solid #dee2e6;
         }
+
         .code-example .nav-tabs .nav-link {
             font-size: 0.75rem;
             padding: 0.5rem 0.75rem;
         }
+
         .live-demo {
             background: #fff;
             border: 1px solid #e9ecef;
@@ -76,43 +87,50 @@
             margin: 1rem 0;
             min-height: 120px;
         }
+
         .binder-table th {
             background: #f8f9fa;
             font-weight: 600;
             border-top: none;
             font-size: 0.875rem;
         }
+
         .binder-table td {
             font-size: 0.875rem;
             vertical-align: middle;
         }
+
         .nav-link {
             color: #495057;
             padding: 0.5rem 1rem;
             border-radius: 0.375rem;
             margin-bottom: 0.25rem;
         }
+
         .nav-link:hover {
             background: #e9ecef;
             color: #212529;
         }
+
         .nav-link.active {
             background: #007bff;
             color: white;
             font-weight: 600;
         }
+
         /* Fix tab styling - remove bottom radius */
         .nav-tabs .nav-link {
             border-bottom-left-radius: 0 !important;
             border-bottom-right-radius: 0 !important;
         }
+
         .demo-image {
             max-width: 200px;
             height: 150px;
             object-fit: cover;
             border-radius: 0.375rem;
         }
-        
+
         /* Gallery Styles */
         .gallery-main-image {
             max-width: 100%;
@@ -122,11 +140,11 @@
             border: 1px solid #e9ecef;
             background: #f8f9fa;
         }
-        
+
         .gallery-thumbnails {
             margin-top: 1rem;
         }
-        
+
         .gallery-thumb {
             position: relative;
             cursor: pointer;
@@ -135,24 +153,24 @@
             border: 2px solid transparent;
             transition: all 0.2s ease;
         }
-        
+
         .gallery-thumb:hover {
             border-color: #6c757d;
             transform: translateY(-2px);
         }
-        
+
         .gallery-thumb.active {
             border-color: #007bff;
             box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
         }
-        
+
         .gallery-thumb-img {
             width: 100%;
             height: 80px;
             object-fit: cover;
             display: block;
         }
-        
+
         /* Preload images */
         .gallery-preload {
             position: absolute;
@@ -160,31 +178,38 @@
             top: -9999px;
             visibility: hidden;
         }
+
         .data-table {
             font-size: 0.875rem;
         }
+
         .pagination-info {
             font-size: 0.875rem;
             color: #6c757d;
         }
+
         .form-demo {
             min-height: 200px;
         }
+
         .tab-demo {
             min-height: 300px;
         }
+
         .section-title {
             color: #212529;
             border-bottom: 2px solid #007bff;
             padding-bottom: 0.5rem;
             margin-bottom: 1.5rem;
         }
+
         .demo-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
             margin: 1rem 0;
         }
+
         .demo-item {
             background: #fff;
             border: 1px solid #e9ecef;
@@ -229,14 +254,17 @@
             <!-- Main Content -->
             <div class="col-lg-9">
                 <div class="docs-content py-4">
-                    
+
                     <!-- Overview -->
                     <section id="overview" class="demo-section">
                         <h1 class="display-6 mb-3">px64 Quick Wins</h1>
-                        <p class="lead">Production-ready binders for dashboard applications. These binders extend px64 with essential functionality for modern web applications.</p>
-                        
+                        <p class="lead">Production-ready binders for dashboard applications. These binders extend px64
+                            with essential functionality for modern web applications.</p>
+
                         <div class="alert alert-info">
-                            <strong>Phase 1 & 2 Complete:</strong> All essential binders implemented with performance optimizations including batch DOM updates, automatic observer cleanup, and optimized list rendering.
+                            <strong>Phase 1 & 2 Complete:</strong> All essential binders implemented with performance
+                            optimizations including batch DOM updates, automatic observer cleanup, and optimized list
+                            rendering.
                         </div>
                     </section>
 
@@ -254,15 +282,18 @@
                                     <button data-bind="tap:toggleProcessing" class="btn btn-primary me-3">
                                         <span data-bind="ternary:isProcessing:Processing...:Toggle Processing"></span>
                                     </button>
-                                    <span class="text-muted">Status: <span data-bind="ternary:isProcessing:Active:Idle"></span></span>
+                                    <span class="text-muted">Status: <span
+                                            data-bind="ternary:isProcessing:Active:Idle"></span></span>
                                 </div>
                                 <div class="code-example">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#ternary-html" type="button">HTML</button>
+                                            <button class="nav-link active" data-bs-toggle="tab"
+                                                data-bs-target="#ternary-html" type="button">HTML</button>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#ternary-js" type="button">JavaScript</button>
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#ternary-js"
+                                                type="button">JavaScript</button>
                                         </li>
                                     </ul>
                                     <div class="tab-content">
@@ -274,7 +305,7 @@
                                             <pre><code class="language-javascript">const state = {
     isProcessing: false,
     user: { isOnline: true },
-    
+
     toggleProcessing() {
         this.$set('isProcessing', !this.isProcessing);
     }
@@ -301,19 +332,23 @@ px64.bind('#app', state);</code></pre>
                             <div class="card-body">
                                 <div class="live-demo">
                                     <div class="mb-3">
-                                        <input data-bind="value:email, disable:isProcessing" class="form-control" placeholder="Enter email">
+                                        <input data-bind="value:email, disable:isProcessing" class="form-control"
+                                            placeholder="Enter email">
                                     </div>
-                                    <button data-bind="enable:!isProcessing, tap:toggleProcessing" class="btn btn-outline-primary">
+                                    <button data-bind="enable:!isProcessing, tap:toggleProcessing"
+                                        class="btn btn-outline-primary">
                                         <span data-bind="ternary:isProcessing:Processing...:Process Email"></span>
                                     </button>
                                 </div>
                                 <div class="code-example">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#enable-html" type="button">HTML</button>
+                                            <button class="nav-link active" data-bs-toggle="tab"
+                                                data-bs-target="#enable-html" type="button">HTML</button>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#enable-js" type="button">JavaScript</button>
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#enable-js"
+                                                type="button">JavaScript</button>
                                         </li>
                                     </ul>
                                     <div class="tab-content">
@@ -325,7 +360,7 @@ px64.bind('#app', state);</code></pre>
                                             <pre><code class="language-javascript">const state = {
     isProcessing: false,
     email: '',
-    
+
     toggleProcessing() {
         this.$set('isProcessing', !this.isProcessing);
         if (this.isProcessing) {
@@ -349,7 +384,8 @@ px64.bind('#app', state);</code></pre>
                             <div class="card-body">
                                 <div class="live-demo">
                                     <div class="mb-3">
-                                        <input data-bind="value:testEmail, valid:isEmailValid" class="form-control" placeholder="test@example.com">
+                                        <input data-bind="value:testEmail, valid:isEmailValid" class="form-control"
+                                            placeholder="test@example.com">
                                         <div data-bind="invalid:!isEmailValid" class="invalid-feedback">
                                             Please enter a valid email address
                                         </div>
@@ -359,10 +395,12 @@ px64.bind('#app', state);</code></pre>
                                 <div class="code-example">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#validation-html" type="button">HTML</button>
+                                            <button class="nav-link active" data-bs-toggle="tab"
+                                                data-bs-target="#validation-html" type="button">HTML</button>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#validation-js" type="button">JavaScript</button>
+                                            <button class="nav-link" data-bs-toggle="tab"
+                                                data-bs-target="#validation-js" type="button">JavaScript</button>
                                         </li>
                                     </ul>
                                     <div class="tab-content">
@@ -375,7 +413,7 @@ px64.bind('#app', state);</code></pre>
                                         <div class="tab-pane fade" id="validation-js">
                                             <pre><code class="language-javascript">const state = {
     testEmail: '',
-    
+
     get isEmailValid() {
         const email = this.testEmail || '';
         return email.includes('@') && email.includes('.') && email.length > 5;
@@ -404,31 +442,36 @@ px64.bind('#app', state);</code></pre>
                                 <div class="live-demo">
                                     <div class="mb-3">
                                         <div class="form-check">
-                                            <input data-bind="checkbox:agreeToTerms" class="form-check-input" type="checkbox" id="terms">
+                                            <input data-bind="checkbox:agreeToTerms" class="form-check-input"
+                                                type="checkbox" id="terms">
                                             <label class="form-check-label" for="terms">
                                                 I agree to the terms and conditions
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input data-bind="checkbox:subscribeNewsletter" class="form-check-input" type="checkbox" id="newsletter">
+                                            <input data-bind="checkbox:subscribeNewsletter" class="form-check-input"
+                                                type="checkbox" id="newsletter">
                                             <label class="form-check-label" for="newsletter">
                                                 Subscribe to newsletter
                                             </label>
                                         </div>
                                     </div>
                                     <div class="alert alert-info">
-                                        <strong>Status:</strong> 
-                                        Terms: <span data-bind="ternary:agreeToTerms:Agreed:Not Agreed"></span> | 
-                                        Newsletter: <span data-bind="ternary:subscribeNewsletter:Subscribed:Not Subscribed"></span>
+                                        <strong>Status:</strong>
+                                        Terms: <span data-bind="ternary:agreeToTerms:Agreed:Not Agreed"></span> |
+                                        Newsletter: <span
+                                            data-bind="ternary:subscribeNewsletter:Subscribed:Not Subscribed"></span>
                                     </div>
                                 </div>
                                 <div class="code-example">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#checkbox-html" type="button">HTML</button>
+                                            <button class="nav-link active" data-bs-toggle="tab"
+                                                data-bs-target="#checkbox-html" type="button">HTML</button>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#checkbox-js" type="button">JavaScript</button>
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#checkbox-js"
+                                                type="button">JavaScript</button>
                                         </li>
                                     </ul>
                                     <div class="tab-content">
@@ -463,15 +506,18 @@ px64.bind('#app', state);</code></pre>
                                     <div class="mb-3">
                                         <label class="form-label">Select your preference:</label>
                                         <div class="form-check">
-                                            <input data-bind="radio:preference" class="form-check-input" type="radio" name="preference" value="email" id="email">
+                                            <input data-bind="radio:preference" class="form-check-input" type="radio"
+                                                name="preference" value="email" id="email">
                                             <label class="form-check-label" for="email">Email</label>
                                         </div>
                                         <div class="form-check">
-                                            <input data-bind="radio:preference" class="form-check-input" type="radio" name="preference" value="sms" id="sms">
+                                            <input data-bind="radio:preference" class="form-check-input" type="radio"
+                                                name="preference" value="sms" id="sms">
                                             <label class="form-check-label" for="sms">SMS</label>
                                         </div>
                                         <div class="form-check">
-                                            <input data-bind="radio:preference" class="form-check-input" type="radio" name="preference" value="phone" id="phone">
+                                            <input data-bind="radio:preference" class="form-check-input" type="radio"
+                                                name="preference" value="phone" id="phone">
                                             <label class="form-check-label" for="phone">Phone</label>
                                         </div>
                                     </div>
@@ -482,10 +528,12 @@ px64.bind('#app', state);</code></pre>
                                 <div class="code-example">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#radio-html" type="button">HTML</button>
+                                            <button class="nav-link active" data-bs-toggle="tab"
+                                                data-bs-target="#radio-html" type="button">HTML</button>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#radio-js" type="button">JavaScript</button>
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#radio-js"
+                                                type="button">JavaScript</button>
                                         </li>
                                     </ul>
                                     <div class="tab-content">
@@ -526,20 +574,24 @@ px64.bind('#app', state);</code></pre>
                                     <!-- Tab Navigation -->
                                     <ul class="nav nav-tabs mb-3">
                                         <li class="nav-item">
-                                            <a data-bind="tab:activeTab" data-tab-id="overview" class="nav-link" href="#">Overview</a>
+                                            <a data-bind="tab:activeTab" data-tab-id="overview" class="nav-link"
+                                                href="#">Overview</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a data-bind="tab:activeTab" data-tab-id="details" class="nav-link" href="#">Details</a>
+                                            <a data-bind="tab:activeTab" data-tab-id="details" class="nav-link"
+                                                href="#">Details</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a data-bind="tab:activeTab" data-tab-id="settings" class="nav-link" href="#">Settings</a>
+                                            <a data-bind="tab:activeTab" data-tab-id="settings" class="nav-link"
+                                                href="#">Settings</a>
                                         </li>
                                     </ul>
 
                                     <!-- Tab Content -->
                                     <div data-bind="tab:activeTab" data-tab-content="overview" class="tab-content">
                                         <h6>Overview Tab</h6>
-                                        <p>This is the overview content. You can see how the tab system works with px64 binding.</p>
+                                        <p>This is the overview content. You can see how the tab system works with px64
+                                            binding.</p>
                                         <div class="alert alert-info">
                                             Current active tab: <strong data-bind="text:activeTab"></strong>
                                         </div>
@@ -568,13 +620,15 @@ px64.bind('#app', state);</code></pre>
                                         <h6>Settings Tab</h6>
                                         <p>Configure your preferences and settings here.</p>
                                         <div class="form-check">
-                                            <input data-bind="checkbox:tabData.notifications" class="form-check-input" type="checkbox" id="notifications">
+                                            <input data-bind="checkbox:tabData.notifications" class="form-check-input"
+                                                type="checkbox" id="notifications">
                                             <label class="form-check-label" for="notifications">
                                                 Enable notifications
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input data-bind="checkbox:tabData.autoSave" class="form-check-input" type="checkbox" id="autoSave">
+                                            <input data-bind="checkbox:tabData.autoSave" class="form-check-input"
+                                                type="checkbox" id="autoSave">
                                             <label class="form-check-label" for="autoSave">
                                                 Auto-save changes
                                             </label>
@@ -584,10 +638,12 @@ px64.bind('#app', state);</code></pre>
                                 <div class="code-example">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabs-html" type="button">HTML</button>
+                                            <button class="nav-link active" data-bs-toggle="tab"
+                                                data-bs-target="#tabs-html" type="button">HTML</button>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabs-js" type="button">JavaScript</button>
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabs-js"
+                                                type="button">JavaScript</button>
                                         </li>
                                     </ul>
                                     <div class="tab-content">
@@ -642,7 +698,8 @@ px64.bind('#app', state);</code></pre>
                             <div class="card-body">
                                 <div class="live-demo">
                                     <div class="mb-3">
-                                        <button data-bind="tap:toggleVisibility" class="btn btn-outline-secondary me-2">Toggle Visibility</button>
+                                        <button data-bind="tap:toggleVisibility"
+                                            class="btn btn-outline-secondary me-2">Toggle Visibility</button>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
@@ -662,10 +719,12 @@ px64.bind('#app', state);</code></pre>
                                 <div class="code-example">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#showhide-html" type="button">HTML</button>
+                                            <button class="nav-link active" data-bs-toggle="tab"
+                                                data-bs-target="#showhide-html" type="button">HTML</button>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#showhide-js" type="button">JavaScript</button>
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#showhide-js"
+                                                type="button">JavaScript</button>
                                         </li>
                                     </ul>
                                     <div class="tab-content">
@@ -676,7 +735,7 @@ px64.bind('#app', state);</code></pre>
                                         <div class="tab-pane fade" id="showhide-js">
                                             <pre><code class="language-javascript">const state = {
     isVisible: true,
-    
+
     toggleVisibility() {
         this.$set('isVisible', !this.isVisible);
     }
@@ -697,7 +756,8 @@ px64.bind('#app', state);</code></pre>
                             <div class="card-body">
                                 <div class="live-demo">
                                     <div class="mb-3">
-                                        <button data-bind="tap:toggleLoading" class="btn btn-outline-secondary">Toggle Loading</button>
+                                        <button data-bind="tap:toggleLoading" class="btn btn-outline-secondary">Toggle
+                                            Loading</button>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
@@ -717,10 +777,12 @@ px64.bind('#app', state);</code></pre>
                                 <div class="code-example">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#fade-html" type="button">HTML</button>
+                                            <button class="nav-link active" data-bs-toggle="tab"
+                                                data-bs-target="#fade-html" type="button">HTML</button>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#fade-js" type="button">JavaScript</button>
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#fade-js"
+                                                type="button">JavaScript</button>
                                         </li>
                                     </ul>
                                     <div class="tab-content">
@@ -731,7 +793,7 @@ px64.bind('#app', state);</code></pre>
                                         <div class="tab-pane fade" id="fade-js">
                                             <pre><code class="language-javascript">const state = {
     isLoading: false,
-    
+
     toggleLoading() {
         this.$set('isLoading', !this.isLoading);
     }
@@ -758,54 +820,55 @@ px64.bind('#app', state);</code></pre>
                                 <div class="live-demo">
                                     <!-- Main Image Display -->
                                     <div class="text-center mb-4">
-                                        <img data-bind="image:currentImage" class="gallery-main-image img-fluid" alt="Gallery Image">
+                                        <img data-bind="image:currentImage" class="gallery-main-image img-fluid"
+                                            alt="Gallery Image">
                                     </div>
-                                    
+
                                     <!-- Thumbnail Gallery -->
                                     <div class="gallery-thumbnails">
                                         <div class="row g-2">
                                             <div class="col-4">
-                                                <div data-bind="tap:setImage('https://images.pexels.com/photos/33467273/pexels-photo-33467273.jpeg')" 
-                                                     class="gallery-thumb" 
-                                                     data-bind="class:active:currentImage === 'https://images.pexels.com/photos/33467273/pexels-photo-33467273.jpeg'">
-                                                    <img src="https://images.pexels.com/photos/33467273/pexels-photo-33467273.jpeg" 
-                                                         class="gallery-thumb-img" 
-                                                         alt="Gallery Thumb 1">
+                                                <div data-bind="tap:setImage('https://images.pexels.com/photos/33467273/pexels-photo-33467273.jpeg')"
+                                                    class="gallery-thumb"
+                                                    data-bind="class:active:currentImage === 'https://images.pexels.com/photos/33467273/pexels-photo-33467273.jpeg'">
+                                                    <img src="https://images.pexels.com/photos/33467273/pexels-photo-33467273.jpeg"
+                                                        class="gallery-thumb-img" alt="Gallery Thumb 1">
                                                 </div>
                                             </div>
                                             <div class="col-4">
-                                                <div data-bind="tap:setImage('https://images.pexels.com/photos/33538828/pexels-photo-33538828.jpeg')" 
-                                                     class="gallery-thumb" 
-                                                     data-bind="class:active:currentImage === 'https://images.pexels.com/photos/33538828/pexels-photo-33538828.jpeg'">
-                                                    <img src="https://images.pexels.com/photos/33538828/pexels-photo-33538828.jpeg" 
-                                                         class="gallery-thumb-img" 
-                                                         alt="Gallery Thumb 2">
+                                                <div data-bind="tap:setImage('https://images.pexels.com/photos/33538828/pexels-photo-33538828.jpeg')"
+                                                    class="gallery-thumb"
+                                                    data-bind="class:active:currentImage === 'https://images.pexels.com/photos/33538828/pexels-photo-33538828.jpeg'">
+                                                    <img src="https://images.pexels.com/photos/33538828/pexels-photo-33538828.jpeg"
+                                                        class="gallery-thumb-img" alt="Gallery Thumb 2">
                                                 </div>
                                             </div>
                                             <div class="col-4">
-                                                <div data-bind="tap:setImage('https://images.pexels.com/photos/9407824/pexels-photo-9407824.jpeg')" 
-                                                     class="gallery-thumb" 
-                                                     data-bind="class:active:currentImage === 'https://images.pexels.com/photos/9407824/pexels-photo-9407824.jpeg'">
-                                                    <img src="https://images.pexels.com/photos/9407824/pexels-photo-9407824.jpeg" 
-                                                         class="gallery-thumb-img" 
-                                                         alt="Gallery Thumb 3">
+                                                <div data-bind="tap:setImage('https://images.pexels.com/photos/9407824/pexels-photo-9407824.jpeg')"
+                                                    class="gallery-thumb"
+                                                    data-bind="class:active:currentImage === 'https://images.pexels.com/photos/9407824/pexels-photo-9407824.jpeg'">
+                                                    <img src="https://images.pexels.com/photos/9407824/pexels-photo-9407824.jpeg"
+                                                        class="gallery-thumb-img" alt="Gallery Thumb 3">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Clear Button -->
                                     <div class="text-center mt-3">
-                                        <button data-bind="tap:setImage('')" class="btn btn-outline-secondary btn-sm">Clear Image</button>
+                                        <button data-bind="tap:setImage('')"
+                                            class="btn btn-outline-secondary btn-sm">Clear Image</button>
                                     </div>
                                 </div>
                                 <div class="code-example">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#gallery-html" type="button">HTML</button>
+                                            <button class="nav-link active" data-bs-toggle="tab"
+                                                data-bs-target="#gallery-html" type="button">HTML</button>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#gallery-js" type="button">JavaScript</button>
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#gallery-js"
+                                                type="button">JavaScript</button>
                                         </li>
                                     </ul>
                                     <div class="tab-content">
@@ -829,7 +892,7 @@ px64.bind('#app', state);</code></pre>
         'https://example.com/image2.jpg',
         'https://example.com/image3.jpg'
     ],
-    
+
     setImage(url) {
         return () => {
             if (url === '') {
@@ -860,22 +923,28 @@ px64.bind('#app', state);</code></pre>
                             </div>
                             <div class="card-body">
                                 <div class="live-demo">
-                                    <div data-bind="style:backgroundColor:dynamicColor, style:color:textColor" class="p-3 rounded mb-3">
+                                    <div data-bind="style:backgroundColor:dynamicColor, style:color:textColor"
+                                        class="p-3 rounded mb-3">
                                         <span data-bind="text:styleMessage"></span>
                                     </div>
                                     <div class="btn-group">
-                                        <button data-bind="tap:setTheme('muted')" class="btn btn-outline-secondary btn-sm">Muted Theme</button>
-                                        <button data-bind="tap:setTheme('dark')" class="btn btn-outline-secondary btn-sm">Dark Theme</button>
-                                        <button data-bind="tap:setTheme('light')" class="btn btn-outline-secondary btn-sm">Light Theme</button>
+                                        <button data-bind="tap:setTheme('muted')"
+                                            class="btn btn-outline-secondary btn-sm">Muted Theme</button>
+                                        <button data-bind="tap:setTheme('dark')"
+                                            class="btn btn-outline-secondary btn-sm">Dark Theme</button>
+                                        <button data-bind="tap:setTheme('light')"
+                                            class="btn btn-outline-secondary btn-sm">Light Theme</button>
                                     </div>
                                 </div>
                                 <div class="code-example">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#style-html" type="button">HTML</button>
+                                            <button class="nav-link active" data-bs-toggle="tab"
+                                                data-bs-target="#style-html" type="button">HTML</button>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#style-js" type="button">JavaScript</button>
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#style-js"
+                                                type="button">JavaScript</button>
                                         </li>
                                     </ul>
                                     <div class="tab-content">
@@ -889,7 +958,7 @@ px64.bind('#app', state);</code></pre>
     dynamicColor: '#6c757d',
     textColor: '#ffffff',
     styleMessage: 'Dynamic styling with px64',
-    
+
     setTheme(theme) {
         return () => {
             const themes = {
@@ -929,25 +998,30 @@ px64.bind('#app', state);</code></pre>
                                     <div class="row">
                                         <div class="col-md-4">
                                             <h6>Date Format</h6>
-                                            <p><strong>Created:</strong> <span data-bind="date:createdDate" class="text-primary"></span></p>
+                                            <p><strong>Created:</strong> <span data-bind="date:createdDate"
+                                                    class="text-primary"></span></p>
                                         </div>
                                         <div class="col-md-4">
                                             <h6>Smart DateTime</h6>
-                                            <p><strong>Last Login:</strong> <span data-bind="datetime:lastLogin" class="text-success"></span></p>
+                                            <p><strong>Last Login:</strong> <span data-bind="datetime:lastLogin"
+                                                    class="text-success"></span></p>
                                         </div>
                                         <div class="col-md-4">
                                             <h6>Time Ago</h6>
-                                            <p><strong>Updated:</strong> <span data-bind="timeago:updatedAt" class="text-info"></span></p>
+                                            <p><strong>Updated:</strong> <span data-bind="timeago:updatedAt"
+                                                    class="text-info"></span></p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="code-example">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#date-html" type="button">HTML</button>
+                                            <button class="nav-link active" data-bs-toggle="tab"
+                                                data-bs-target="#date-html" type="button">HTML</button>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#date-js" type="button">JavaScript</button>
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#date-js"
+                                                type="button">JavaScript</button>
                                         </li>
                                     </ul>
                                     <div class="tab-content">
@@ -983,18 +1057,24 @@ px64.bind('#app', state);</code></pre>
                             </div>
                             <div class="card-body">
                                 <div class="live-demo">
-                                    <div data-bind="alert:errorMessage" class="alert alert-danger" style="display: none;"></div>
-                                    <div data-bind="alert:successMessage" class="alert alert-success" style="display: none;"></div>
-                                    <button data-bind="tap:showError" class="btn btn-outline-danger btn-sm me-2">Show Error</button>
-                                    <button data-bind="tap:showSuccess" class="btn btn-outline-success btn-sm">Show Success</button>
+                                    <div data-bind="alert:errorMessage" class="alert alert-danger"
+                                        style="display: none;"></div>
+                                    <div data-bind="alert:successMessage" class="alert alert-success"
+                                        style="display: none;"></div>
+                                    <button data-bind="tap:showError" class="btn btn-outline-danger btn-sm me-2">Show
+                                        Error</button>
+                                    <button data-bind="tap:showSuccess" class="btn btn-outline-success btn-sm">Show
+                                        Success</button>
                                 </div>
                                 <div class="code-example">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#alert-html" type="button">HTML</button>
+                                            <button class="nav-link active" data-bs-toggle="tab"
+                                                data-bs-target="#alert-html" type="button">HTML</button>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#alert-js" type="button">JavaScript</button>
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#alert-js"
+                                                type="button">JavaScript</button>
                                         </li>
                                     </ul>
                                     <div class="tab-content">
@@ -1006,13 +1086,13 @@ px64.bind('#app', state);</code></pre>
                                             <pre><code class="language-javascript">const state = {
     errorMessage: '',
     successMessage: '',
-    
+
     showError() {
         this.$set('errorMessage', 'Something went wrong!');
         this.$set('successMessage', '');
         setTimeout(() => this.$set('errorMessage', ''), 5000);
     },
-    
+
     showSuccess() {
         this.$set('successMessage', 'Operation completed!');
         this.$set('errorMessage', '');
@@ -1036,18 +1116,23 @@ px64.bind('#app', state);</code></pre>
                                 <div class="live-demo">
                                     <p>Status: <span data-bind="badge:status" class="badge"></span></p>
                                     <div class="btn-group btn-group-sm">
-                                        <button data-bind="tap:setStatus('success')" class="btn btn-outline-secondary">Success</button>
-                                        <button data-bind="tap:setStatus('warning')" class="btn btn-outline-secondary">Warning</button>
-                                        <button data-bind="tap:setStatus('danger')" class="btn btn-outline-secondary">Danger</button>
+                                        <button data-bind="tap:setStatus('success')"
+                                            class="btn btn-outline-secondary">Success</button>
+                                        <button data-bind="tap:setStatus('warning')"
+                                            class="btn btn-outline-secondary">Warning</button>
+                                        <button data-bind="tap:setStatus('danger')"
+                                            class="btn btn-outline-secondary">Danger</button>
                                     </div>
                                 </div>
                                 <div class="code-example">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#badge-html" type="button">HTML</button>
+                                            <button class="nav-link active" data-bs-toggle="tab"
+                                                data-bs-target="#badge-html" type="button">HTML</button>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#badge-js" type="button">JavaScript</button>
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#badge-js"
+                                                type="button">JavaScript</button>
                                         </li>
                                     </ul>
                                     <div class="tab-content">
@@ -1057,7 +1142,7 @@ px64.bind('#app', state);</code></pre>
                                         <div class="tab-pane fade" id="badge-js">
                                             <pre><code class="language-javascript">const state = {
     status: 'pending',
-    
+
     setStatus(newStatus) {
         return () => this.$set('status', newStatus);
     }
@@ -1078,15 +1163,18 @@ px64.bind('#app', state);</code></pre>
                             <div class="card-body">
                                 <div class="live-demo">
                                     <div data-bind="progress:uploadProgress" class="progress mb-2"></div>
-                                    <button data-bind="tap:startUpload" class="btn btn-outline-primary btn-sm">Start Upload</button>
+                                    <button data-bind="tap:startUpload" class="btn btn-outline-primary btn-sm">Start
+                                        Upload</button>
                                 </div>
                                 <div class="code-example">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#progress-html" type="button">HTML</button>
+                                            <button class="nav-link active" data-bs-toggle="tab"
+                                                data-bs-target="#progress-html" type="button">HTML</button>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#progress-js" type="button">JavaScript</button>
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#progress-js"
+                                                type="button">JavaScript</button>
                                         </li>
                                     </ul>
                                     <div class="tab-content">
@@ -1096,7 +1184,7 @@ px64.bind('#app', state);</code></pre>
                                         <div class="tab-pane fade" id="progress-js">
                                             <pre><code class="language-javascript">const state = {
     uploadProgress: 0,
-    
+
     startUpload() {
         this.$set('uploadProgress', 0);
         const interval = setInterval(() => {
@@ -1129,43 +1217,52 @@ px64.bind('#app', state);</code></pre>
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0">Employee Directory</h5>
                                 <div>
-                                    <button data-bind="tap:generateEmployees" class="btn btn-primary btn-sm">Generate Data</button>
+                                    <button data-bind="tap:generateEmployees" class="btn btn-primary btn-sm">Generate
+                                        Data</button>
                                 </div>
                             </div>
                             <div class="card-body">
                                 <div class="live-demo">
                                     <div class="row mb-3">
                                         <div class="col-md-6">
-                                            <input data-bind="value:searchTerm" class="form-control" placeholder="Search employees...">
+                                            <input data-bind="value:searchTerm" class="form-control"
+                                                placeholder="Search employees...">
                                         </div>
                                         <div class="col-md-6">
                                             <div class="pagination-info d-flex align-items-center justify-content-end">
-                                                <span>Page <span data-bind="text:employees.page"></span> of <span data-bind="text:Math.ceil(employees.total / employees.pageSize)"></span></span>
+                                                <span>Page <span data-bind="text:employees.page"></span> of <span
+                                                        data-bind="text:Math.ceil(employees.total / employees.pageSize)"></span></span>
                                                 <div class="btn-group ms-3">
-                                                    <button data-bind="tap:employees.prevPage, disable:employees.page <= 1" class="btn btn-outline-secondary btn-sm">Previous</button>
-                                                    <button data-bind="tap:employees.nextPage, disable:employees.page >= Math.ceil(employees.total / employees.pageSize)" class="btn btn-outline-secondary btn-sm">Next</button>
+                                                    <button
+                                                        data-bind="tap:employees.prevPage, disable:employees.page <= 1"
+                                                        class="btn btn-outline-secondary btn-sm">Previous</button>
+                                                    <button
+                                                        data-bind="tap:employees.nextPage, disable:employees.page >= Math.ceil(employees.total / employees.pageSize)"
+                                                        class="btn btn-outline-secondary btn-sm">Next</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <table data-bind="table:employees" 
-                                           data-meta="cols:name,email,department,status,lastActive;sort:name" 
-                                           class="table table-hover data-table">
+                                    <table data-bind="table:employees"
+                                        data-meta="cols:name,email,department,status,lastActive;sort:name"
+                                        class="table table-hover data-table">
                                     </table>
                                 </div>
                                 <div class="code-example">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#table-html" type="button">HTML</button>
+                                            <button class="nav-link active" data-bs-toggle="tab"
+                                                data-bs-target="#table-html" type="button">HTML</button>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#table-js" type="button">JavaScript</button>
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#table-js"
+                                                type="button">JavaScript</button>
                                         </li>
                                     </ul>
                                     <div class="tab-content">
                                         <div class="tab-pane fade show active" id="table-html">
-                                            <pre><code class="language-html">&lt;table data-bind="table:employees" 
-       data-meta="cols:name,email,department,status,lastActive;sort:name" 
+                                            <pre><code class="language-html">&lt;table data-bind="table:employees"
+       data-meta="cols:name,email,department,status,lastActive;sort:name"
        class="table table-hover"&gt;
 &lt;/table&gt;</code></pre>
                                         </div>
@@ -1173,12 +1270,12 @@ px64.bind('#app', state);</code></pre>
                                             <pre><code class="language-javascript">const state = {
     employees: px64.listState([]),
     searchTerm: '',
-    
+
     generateEmployees() {
         const departments = ['Engineering', 'Marketing', 'Sales', 'HR'];
         const statuses = ['active', 'inactive', 'pending', 'success'];
         const employees = [];
-        
+
         for (let i = 1; i <= 50; i++) {
             employees.push({
                 id: i,
@@ -1189,7 +1286,7 @@ px64.bind('#app', state);</code></pre>
                 lastActive: new Date(Date.now() - Math.random() * 86400000 * 30)
             });
         }
-        
+
         this.employees.setItems(employees);
     }
 };
@@ -1221,32 +1318,136 @@ px64.bind('#app', state);</code></pre>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr><td><code>text:prop</code></td><td>Set text content</td><td><code>text:user.name</code></td></tr>
-                                        <tr><td><code>ternary:cond:true:false</code></td><td>Conditional text</td><td><code>ternary:isOnline:Online:Offline</code></td></tr>
-                                        <tr><td><code>html:prop</code></td><td>Set HTML content</td><td><code>html:description</code></td></tr>
-                                        <tr><td><code>value:prop</code></td><td>Two-way input binding</td><td><code>value:user.email</code></td></tr>
-                                        <tr><td><code>image:prop</code></td><td>Set image src</td><td><code>image:user.avatar</code></td></tr>
-                                        <tr><td><code>style:prop:value</code></td><td>Dynamic CSS styling</td><td><code>style:color:theme.primary</code></td></tr>
-                                        <tr><td><code>show:expr</code></td><td>Show when true</td><td><code>show:user.isLoggedIn</code></td></tr>
-                                        <tr><td><code>hide:expr</code></td><td>Hide when true</td><td><code>hide:user.isGuest</code></td></tr>
-                                        <tr><td><code>fade:loading</code></td><td>Fade opacity when true</td><td><code>fade:isLoading</code></td></tr>
-                                        <tr><td><code>fadein:!loading</code></td><td>Fade in when true</td><td><code>fadein:!isLoading</code></td></tr>
-                                        <tr><td><code>disable:loading</code></td><td>Disable form elements</td><td><code>disable:isProcessing</code></td></tr>
-                                        <tr><td><code>enable:!loading</code></td><td>Enable form elements</td><td><code>enable:!isProcessing</code></td></tr>
-                                        <tr><td><code>valid:isValid</code></td><td>Bootstrap validation</td><td><code>valid:isEmailValid</code></td></tr>
-                                        <tr><td><code>invalid:!isValid</code></td><td>Show validation errors</td><td><code>invalid:!isEmailValid</code></td></tr>
-                                        <tr><td><code>loading:submitting</code></td><td>Button spinner states</td><td><code>loading:isSubmitting</code></td></tr>
-                                        <tr><td><code>alert:message</code></td><td>Dynamic alerts</td><td><code>alert:errorMessage</code></td></tr>
-                                        <tr><td><code>badge:status</code></td><td>Auto-colored badges</td><td><code>badge:user.status</code></td></tr>
-                                        <tr><td><code>progress:percent</code></td><td>Progress bars</td><td><code>progress:uploadProgress</code></td></tr>
-                                        <tr><td><code>date:dateValue</code></td><td>Format dates</td><td><code>date:createdAt</code></td></tr>
-                                        <tr><td><code>datetime:dateValue</code></td><td>Smart date/time</td><td><code>datetime:lastLogin</code></td></tr>
-                                        <tr><td><code>timeago:dateValue</code></td><td>Relative time</td><td><code>timeago:updatedAt</code></td></tr>
-                                        <tr><td><code>checkbox:isChecked</code></td><td>Two-way checkbox binding</td><td><code>checkbox:agreeToTerms</code></td></tr>
-                                        <tr><td><code>radio:selectedValue</code></td><td>Radio group binding</td><td><code>radio:preference</code></td></tr>
-                                        <tr><td><code>tab:activeTab</code></td><td>Tab navigation</td><td><code>tab:activeTab</code></td></tr>
-                                        <tr><td><code>list:items</code></td><td>Render lists</td><td><code>list:todos</code></td></tr>
-                                        <tr><td><code>table:items</code></td><td>Render tables</td><td><code>table:employees</code></td></tr>
+                                        <tr>
+                                            <td><code>text:prop</code></td>
+                                            <td>Set text content</td>
+                                            <td><code>text:user.name</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>ternary:cond:true:false</code></td>
+                                            <td>Conditional text</td>
+                                            <td><code>ternary:isOnline:Online:Offline</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>html:prop</code></td>
+                                            <td>Set HTML content</td>
+                                            <td><code>html:description</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>value:prop</code></td>
+                                            <td>Two-way input binding</td>
+                                            <td><code>value:user.email</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>image:prop</code></td>
+                                            <td>Set image src</td>
+                                            <td><code>image:user.avatar</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>style:prop:value</code></td>
+                                            <td>Dynamic CSS styling</td>
+                                            <td><code>style:color:theme.primary</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>show:expr</code></td>
+                                            <td>Show when true</td>
+                                            <td><code>show:user.isLoggedIn</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>hide:expr</code></td>
+                                            <td>Hide when true</td>
+                                            <td><code>hide:user.isGuest</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>fade:loading</code></td>
+                                            <td>Fade opacity when true</td>
+                                            <td><code>fade:isLoading</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>fadein:!loading</code></td>
+                                            <td>Fade in when true</td>
+                                            <td><code>fadein:!isLoading</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>disable:loading</code></td>
+                                            <td>Disable form elements</td>
+                                            <td><code>disable:isProcessing</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>enable:!loading</code></td>
+                                            <td>Enable form elements</td>
+                                            <td><code>enable:!isProcessing</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>valid:isValid</code></td>
+                                            <td>Bootstrap validation</td>
+                                            <td><code>valid:isEmailValid</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>invalid:!isValid</code></td>
+                                            <td>Show validation errors</td>
+                                            <td><code>invalid:!isEmailValid</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>loading:submitting</code></td>
+                                            <td>Button spinner states</td>
+                                            <td><code>loading:isSubmitting</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>alert:message</code></td>
+                                            <td>Dynamic alerts</td>
+                                            <td><code>alert:errorMessage</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>badge:status</code></td>
+                                            <td>Auto-colored badges</td>
+                                            <td><code>badge:user.status</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>progress:percent</code></td>
+                                            <td>Progress bars</td>
+                                            <td><code>progress:uploadProgress</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>date:dateValue</code></td>
+                                            <td>Format dates</td>
+                                            <td><code>date:createdAt</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>datetime:dateValue</code></td>
+                                            <td>Smart date/time</td>
+                                            <td><code>datetime:lastLogin</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>timeago:dateValue</code></td>
+                                            <td>Relative time</td>
+                                            <td><code>timeago:updatedAt</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>checkbox:isChecked</code></td>
+                                            <td>Two-way checkbox binding</td>
+                                            <td><code>checkbox:agreeToTerms</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>radio:selectedValue</code></td>
+                                            <td>Radio group binding</td>
+                                            <td><code>radio:preference</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>tab:activeTab</code></td>
+                                            <td>Tab navigation</td>
+                                            <td><code>tab:activeTab</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>list:items</code></td>
+                                            <td>Render lists</td>
+                                            <td><code>list:todos</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>table:items</code></td>
+                                            <td>Render tables</td>
+                                            <td><code>table:employees</code></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -1277,12 +1478,12 @@ px64.bind('#app', state);</code></pre>
             isProcessing: false,
             email: '',
             testEmail: '',
-            
+
             // Advanced form controls
             agreeToTerms: false,
             subscribeNewsletter: true,
             preference: 'email',
-            
+
             // Tab system
             activeTab: 'overview',
             tabData: {
@@ -1291,24 +1492,24 @@ px64.bind('#app', state);</code></pre>
                 notifications: true,
                 autoSave: false
             },
-            
+
             // Visibility states
             isVisible: true,
             isLoading: false,
-            
+
             // Image and styling
             currentImage: 'https://images.pexels.com/photos/33467273/pexels-photo-33467273.jpeg',
             dynamicColor: '#6c757d',
             textColor: '#ffffff',
             styleMessage: 'Dynamic styling with px64',
-            
+
             // Gallery images
             galleryImages: [
                 'https://images.pexels.com/photos/33467273/pexels-photo-33467273.jpeg',
                 'https://images.pexels.com/photos/33538828/pexels-photo-33538828.jpeg',
                 'https://images.pexels.com/photos/9407824/pexels-photo-9407824.jpeg'
             ],
-            
+
             // Dates
             createdDate: new Date('2024-12-15'),
             lastLogin: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
@@ -1319,7 +1520,7 @@ px64.bind('#app', state);</code></pre>
             successMessage: '',
             status: 'pending',
             uploadProgress: 0,
-            
+
             // Data table
             employees: px64.listState([]),
             searchTerm: '',
@@ -1355,7 +1556,7 @@ px64.bind('#app', state);</code></pre>
                     }
                 };
             },
-            
+
             isImageActive(url) {
                 return this.currentImage === url;
             },
@@ -1410,7 +1611,7 @@ px64.bind('#app', state);</code></pre>
                 const departments = ['Engineering', 'Marketing', 'Sales', 'HR', 'Finance'];
                 const statuses = ['active', 'inactive', 'pending', 'success'];
                 const employees = [];
-                
+
                 for (let i = 1; i <= 50; i++) {
                     employees.push({
                         id: i,
@@ -1421,7 +1622,7 @@ px64.bind('#app', state);</code></pre>
                         lastActive: new Date(Date.now() - Math.random() * 86400000 * 30) // Random within last 30 days
                     });
                 }
-                
+
                 this.employees.setItems(employees);
                 this.allEmployees = employees; // Store all employees for filtering
             },
@@ -1429,14 +1630,14 @@ px64.bind('#app', state);</code></pre>
             // Filter employees based on search term
             filterEmployees() {
                 if (!this.allEmployees) return;
-                
+
                 const searchTerm = this.searchTerm.toLowerCase().trim();
                 if (!searchTerm) {
                     // No search term, show all employees
                     this.employees.setItems(this.allEmployees);
                 } else {
                     // Filter employees by name, email, or department
-                    const filtered = this.allEmployees.filter(emp => 
+                    const filtered = this.allEmployees.filter(emp =>
                         emp.name.toLowerCase().includes(searchTerm) ||
                         emp.email.toLowerCase().includes(searchTerm) ||
                         emp.department.toLowerCase().includes(searchTerm)
@@ -1466,7 +1667,7 @@ px64.bind('#app', state);</code></pre>
                 const target = document.getElementById(targetId);
                 if (target) {
                     target.scrollIntoView({ behavior: 'smooth' });
-                    
+
                     // Update active nav link
                     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
                     link.classList.add('active');

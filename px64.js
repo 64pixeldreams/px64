@@ -18,7 +18,8 @@
  *
  * Built-in Binders:
  * - text:name      → <span data-bind="text:name"></span> sets textContent.
- * - html:content   → <div data-bind="html:content"></div> sets innerHTML.
+ * - html:content   → <div data-bind="html:content"></div> sets innerHTML (UNSAFE).
+ * - html-safe:content → <div data-bind="html-safe:userContent"></div> sanitized HTML.
  * - value:prop     → <input data-bind="value:username"> two-way binding.
  * - show:flag      → toggles element visibility based on truthy scope value.
  * - hide:flag      → opposite of show.
@@ -75,6 +76,66 @@
             return (av > bv ? 1 : -1) * mult;
         };
     };
+
+    // ─────────────────────────────────────────────────────────────────────────────
+    // HTML Sanitizer for XSS Protection
+    
+    // Allowed HTML tags and attributes for safe content
+    const ALLOWED_TAGS = new Set([
+        'p', 'div', 'span', 'br', 'hr', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        'strong', 'b', 'em', 'i', 'u', 'small', 'mark', 'del', 'ins', 'sub', 'sup',
+        'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'blockquote', 'pre', 'code',
+        'a', 'img', 'table', 'thead', 'tbody', 'tr', 'th', 'td'
+    ]);
+    
+    const ALLOWED_ATTRS = new Set([
+        'href', 'src', 'alt', 'title', 'class', 'id', 'target', 'rel'
+    ]);
+    
+    const URL_PROTOCOLS = /^(https?|mailto):/i;
+
+    function sanitizeHTML(html) {
+        if (!html || typeof html !== 'string') return '';
+        
+        // Create a temporary DOM element to parse HTML
+        const temp = document.createElement('div');
+        temp.innerHTML = html;
+        
+        // Recursively clean the DOM tree
+        function cleanElement(element) {
+            const tagName = element.tagName?.toLowerCase();
+            
+            // Remove disallowed tags
+            if (!ALLOWED_TAGS.has(tagName)) {
+                element.remove();
+                return;
+            }
+            
+            // Clean attributes
+            const attrs = Array.from(element.attributes || []);
+            attrs.forEach(attr => {
+                const name = attr.name.toLowerCase();
+                
+                if (!ALLOWED_ATTRS.has(name)) {
+                    element.removeAttribute(attr.name);
+                } else if (name === 'href' || name === 'src') {
+                    // Validate URLs
+                    const value = attr.value.trim();
+                    if (value && !URL_PROTOCOLS.test(value) && !value.startsWith('#') && !value.startsWith('/')) {
+                        element.removeAttribute(attr.name);
+                    }
+                }
+            });
+            
+            // Clean child elements
+            Array.from(element.children || []).forEach(cleanElement);
+        }
+        
+        // Clean all child elements
+        Array.from(temp.children).forEach(cleanElement);
+        
+        return temp.innerHTML;
+    }
 
     // ─────────────────────────────────────────────────────────────────────────────
     // Performance & Memory Management Core
@@ -355,9 +416,17 @@
     });
 
     // html:prop
+    // html:content (UNSAFE - raw HTML, use html-safe: for user content)
     addBinder('html', ({ el, scope, arg }) => {
         reactive(el, scope, arg, (v) => batchUpdate(() => {
             el.innerHTML = v ?? '';
+        }));
+    });
+
+    // html-safe:content (SAFE - sanitized HTML, recommended for user content)
+    addBinder('html-safe', ({ el, scope, arg }) => {
+        reactive(el, scope, arg, (v) => batchUpdate(() => {
+            el.innerHTML = sanitizeHTML(v);
         }));
     });
 
@@ -994,6 +1063,7 @@
             return this; // For chaining
         },
         reactive, // Expose reactive helper for external use
+        sanitizeHTML, // Expose HTML sanitizer for manual use
 
         // ─────────────────────────────────────────────────────────────────────────────
         // Batch Registration Examples
