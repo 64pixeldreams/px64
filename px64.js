@@ -806,25 +806,34 @@
     });
 
     // Bootstrap component binders
-    // alert:error (Bootstrap alert integration)
+    // alert:message (show/hide alert messages)
     addBinder('alert', ({ el, scope, arg }) => {
-        reactive(el, scope, arg, (v) => batchUpdate(() => {
-            // Remove existing alert-* classes
-            el.className = el.className.replace(/alert-\w+/g, '').trim();
-            // Add new alert class
-            const alertClass = v ? `alert-${v}` : 'alert-primary';
-            el.classList.add(alertClass);
+        reactive(el, scope, arg, (message) => batchUpdate(() => {
+            if (message) {
+                el.textContent = message;
+                el.style.display = 'block';
+            } else {
+                el.style.display = 'none';
+            }
         }));
     });
 
     // badge:status (auto-colored badges)
     addBinder('badge', ({ el, scope, arg }) => {
-        reactive(el, scope, arg, (v) => batchUpdate(() => {
+        const colorMap = {
+            success: 'bg-success', active: 'bg-success', completed: 'bg-success',
+            warning: 'bg-warning', pending: 'bg-warning',
+            danger: 'bg-danger', error: 'bg-danger', failed: 'bg-danger',
+            info: 'bg-info', processing: 'bg-info',
+            secondary: 'bg-secondary', inactive: 'bg-secondary'
+        };
+        reactive(el, scope, arg, (value) => batchUpdate(() => {
+            el.textContent = value || '';
             // Remove existing bg-* classes
-            el.className = el.className.replace(/bg-\w+/g, '').trim();
-            // Add new bg class
-            const badgeClass = v ? `bg-${v}` : 'bg-primary';
-            el.classList.add(badgeClass);
+            el.className = el.className.replace(/bg-\w+/g, '');
+            // Add appropriate color class
+            const colorClass = colorMap[String(value).toLowerCase()] || 'bg-secondary';
+            el.classList.add(colorClass);
         }));
     });
 
@@ -990,19 +999,25 @@
         // Batch Registration Examples
         // ─────────────────────────────────────────────────────────────────────────────
 
-        // Bootstrap Components
+        // Bootstrap Components (Class-only versions)
         registerBootstrapBinders() {
             return this.addBinders({
-                'alert': ({ el, scope, arg }) => {
+                'alert-class': ({ el, scope, arg }) => {
                     reactive(el, scope, arg, (v) => batchUpdate(() => {
+                        // Remove existing alert-* classes
+                        el.className = el.className.replace(/alert-\w+/g, '').trim();
+                        // Add new alert class
                         const alertClass = v ? `alert-${v}` : 'alert-primary';
-                        el.className = el.className.replace(/alert-\w+/g, '') + ` ${alertClass}`.trim();
+                        el.classList.add(alertClass);
                     }));
                 },
-                'badge': ({ el, scope, arg }) => {
+                'badge-class': ({ el, scope, arg }) => {
                     reactive(el, scope, arg, (v) => batchUpdate(() => {
+                        // Remove existing bg-* classes
+                        el.className = el.className.replace(/bg-\w+/g, '').trim();
+                        // Add new bg class
                         const badgeClass = v ? `bg-${v}` : 'bg-primary';
-                        el.className = el.className.replace(/bg-\w+/g, '') + ` ${badgeClass}`.trim();
+                        el.classList.add(badgeClass);
                     }));
                 },
                 'progress': ({ el, scope, arg }) => {

@@ -75,7 +75,7 @@ px64 exposes a global `px64`. It also supports CommonJS/AMD if you use bundlers.
 px64/
 ├── px64.js              # Main library file
 ├── helloworld.html      # Hello World demo
-├── todo.html           # Todo List demo  
+├── todo.html           # Todo List demo
 ├── index.html          # Project homepage/documentation
 ├── README.md           # This file
 └── PX64_PRODUCTION_IMPROVEMENTS.md  # Development notes
@@ -311,7 +311,7 @@ Binder signature receives `{ el, scope, arg, stack }`.
 ### List Template Resolution
 
 1. If element contains a `<template>`, its first child is used per item
-2. Else the element's first child is cloned  
+2. Else the element's first child is cloned
 3. Else it falls back to `<div data-bind="text:name"></div>`
 
 ## 💡 Patterns & Tips
@@ -386,7 +386,7 @@ Issues and PRs welcome!
 
 **Guidelines:**
 - Keep core minimal; prefer adding features as optional binders
-- Add tests for new binders and edge cases  
+- Add tests for new binders and edge cases
 - Use clear, small commits and descriptive PR titles
 
 ### Dev Hints

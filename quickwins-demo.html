@@ -1423,6 +1423,26 @@ px64.bind('#app', state);</code></pre>
                 }
                 
                 this.employees.setItems(employees);
+                this.allEmployees = employees; // Store all employees for filtering
+            },
+
+            // Filter employees based on search term
+            filterEmployees() {
+                if (!this.allEmployees) return;
+                
+                const searchTerm = this.searchTerm.toLowerCase().trim();
+                if (!searchTerm) {
+                    // No search term, show all employees
+                    this.employees.setItems(this.allEmployees);
+                } else {
+                    // Filter employees by name, email, or department
+                    const filtered = this.allEmployees.filter(emp => 
+                        emp.name.toLowerCase().includes(searchTerm) ||
+                        emp.email.toLowerCase().includes(searchTerm) ||
+                        emp.department.toLowerCase().includes(searchTerm)
+                    );
+                    this.employees.setItems(filtered);
+                }
             }
         };
 
@@ -1432,6 +1452,11 @@ px64.bind('#app', state);</code></pre>
 
         // Generate initial employee data
         app.generateEmployees();
+
+        // Set up search functionality
+        app.$observe('searchTerm', () => {
+            app.filterEmployees();
+        });
 
         // Smooth scrolling for navigation links
         document.querySelectorAll('.nav-link').forEach(link => {
