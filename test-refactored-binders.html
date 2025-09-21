@@ -96,6 +96,7 @@
         <div class="test-section">
             <h3>Controls</h3>
             <button class="btn btn-outline-primary" data-bind="tap:toggleMessage">Toggle Message</button>
+            <div class="mt-2">Current message: <span data-bind="text:message" style="font-weight: bold; color: blue;"></span></div>
             <button class="btn btn-outline-secondary" data-bind="tap:toggleVisibility">Toggle Visibility</button>
             <button class="btn btn-outline-success" data-bind="tap:toggleProcessing">Toggle Processing</button>
             <button class="btn btn-outline-warning" data-bind="tap:toggleValidation">Toggle Validation</button>
@@ -130,7 +131,10 @@
 
             // Methods
             toggleMessage() {
-                this.$set('message', this.message === 'Hello from refactored binders!' ? 'Message toggled!' : 'Hello from refactored binders!');
+                console.log('toggleMessage called, current message:', this.message);
+                const newMessage = this.message === 'Hello from refactored binders!' ? 'Message toggled!' : 'Hello from refactored binders!';
+                console.log('Setting new message to:', newMessage);
+                this.$set('message', newMessage);
             },
             toggleVisibility() {
                 this.$set('isVisible', !this.isVisible);
