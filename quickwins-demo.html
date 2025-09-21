@@ -74,7 +74,7 @@
                             </div>
                             <div class="mb-3">
                                 <button data-bind="enable:!isProcessing, tap:toggleProcessing" class="btn btn-outline-primary">
-                                    <span data-bind="text:isProcessing ? 'Processing...' : 'Process Email'"></span>
+                                    <span data-bind="ternary:isProcessing:Processing...:Process Email"></span>
                                 </button>
                             </div>
                             <div class="code-preview">

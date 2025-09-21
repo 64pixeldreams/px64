@@ -308,48 +308,47 @@
     // ─────────────────────────────────────────────────────────────────────────────
     // Built-in binders
 
-    // text:name OR shorthand "name" OR ternary "condition ? 'true' : 'false'"
+    // text:name OR shorthand "name"
     addBinder('text', ({ el, scope, arg }) => {
         const path = arg || el.getAttribute('data-bind'); // when single token w/o colon
         const targetPath = path.includes(':') ? path.split(':')[1] : path;
-        
-        // Check if this is a ternary expression
-        const ternaryMatch = targetPath.match(/(.+?)\s*\?\s*'([^']+)'\s*:\s*'([^']+)'/);
-        
-        if (ternaryMatch) {
-            // Handle ternary expression: condition ? 'true' : 'false'
-            const [, condition, trueValue, falseValue] = ternaryMatch;
-            const conditionPath = condition.trim();
-            
-            const apply = () => batchUpdate(() => {
-                const conditionResult = !!resolvePath(scope, conditionPath);
-                el.textContent = conditionResult ? trueValue : falseValue;
-            });
-            
-            apply();
-            
-            // Set up observer for the condition
-            const keys = conditionPath.split('.');
-            const lastKey = keys.pop();
-            const parent = keys.length ? resolvePath(scope, keys.join('.')) : scope;
-            if (parent && parent.$observe) {
-                const unsubscribe = parent.$observe(lastKey, apply);
-                registerObserver(el, unsubscribe);
-            }
-        } else {
-            // Handle simple property path
-            const apply = (v) => batchUpdate(() => { el.textContent = v ?? ''; });
+        const apply = (v) => batchUpdate(() => { el.textContent = v ?? ''; });
 
-            apply(resolvePath(scope, targetPath));
+        apply(resolvePath(scope, targetPath));
 
-            // reactive hook (only if top-level key)
-            const keys = targetPath.split('.');
-            const lastKey = keys.pop();
-            const parent = keys.length ? resolvePath(scope, keys.join('.')) : scope;
-            if (parent && parent.$observe) {
-                const unsubscribe = parent.$observe(lastKey, v => apply(v));
-                registerObserver(el, unsubscribe);
-            }
+        // reactive hook (only if top-level key)
+        const keys = targetPath.split('.');
+        const lastKey = keys.pop();
+        const parent = keys.length ? resolvePath(scope, keys.join('.')) : scope;
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(lastKey, v => apply(v));
+            registerObserver(el, unsubscribe);
+        }
+    });
+
+    // ternary:condition:'true':'false' (dedicated ternary binder)
+    addBinder('ternary', ({ el, scope, arg }) => {
+        const parts = arg.split(':');
+        if (parts.length !== 3) {
+            console.warn('ternary binder requires format: condition:trueValue:falseValue');
+            return;
+        }
+        const [conditionPath, trueValue, falseValue] = parts;
+        
+        const apply = () => batchUpdate(() => {
+            const conditionResult = !!resolvePath(scope, conditionPath.trim());
+            el.textContent = conditionResult ? trueValue : falseValue;
+        });
+        
+        apply();
+        
+        // Set up observer for the condition
+        const keys = conditionPath.trim().split('.');
+        const lastKey = keys.pop();
+        const parent = keys.length ? resolvePath(scope, keys.join('.')) : scope;
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(lastKey, apply);
+            registerObserver(el, unsubscribe);
         }
     });
 
@@ -634,6 +633,47 @@
         const format = v => el.textContent = _moneyFmt.format(Number(v || 0));
         format(resolvePath(scope, arg));
         parent.$observe && parent.$observe(key, format);
+    });
+
+    // image:imageUrl (sets src attribute for images)
+    addBinder('image', ({ el, scope, arg }) => {
+        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
+        const key = arg.split('.').pop();
+        const apply = v => batchUpdate(() => {
+            el.src = v || '';
+            // Handle broken images gracefully
+            if (v && !el.onerror) {
+                el.onerror = () => {
+                    el.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSIjZjBmMGYwIi8+CjxwYXRoIGQ9Ik0xMiA2VjE4TTYgMTJIMTgiIHN0cm9rZT0iIzk5OTk5OSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+'; // Simple placeholder
+                };
+            }
+        });
+        apply(resolvePath(scope, arg));
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(key, apply);
+            registerObserver(el, unsubscribe);
+        }
+    });
+
+    // style:property:value OR style:backgroundColor:user.color
+    addBinder('style', ({ el, scope, arg }) => {
+        const parts = arg.split(':');
+        if (parts.length !== 2) {
+            console.warn('style binder requires format: property:valuePath');
+            return;
+        }
+        const [styleProperty, valuePath] = parts;
+        const parent = resolvePath(scope, valuePath.split('.').slice(0, -1).join('.')) || scope;
+        const key = valuePath.split('.').pop();
+        
+        const apply = v => batchUpdate(() => {
+            el.style[styleProperty] = v || '';
+        });
+        apply(resolvePath(scope, valuePath));
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(key, apply);
+            registerObserver(el, unsubscribe);
+        }
     });
 
     // fade:loading (opacity transition for loading states)
@@ -941,9 +981,24 @@
             const scopeId = target.closest('[data-scope-id]')?.getAttribute('data-scope-id');
             const scope = scopeId && scopeRegistry.get(scopeId);
             if (!scope) return;
-            // find handler on scope (fn or path)
-            const fn = resolvePath(scope, action);
-            if (isFn(fn)) fn.call(scope, { el: target, scope, event: ev });
+            
+            // Check if this is a function call with parameters like "setStatus('danger')"
+            const functionCallMatch = action.match(/^(\w+)\('([^']+)'\)$/);
+            if (functionCallMatch) {
+                const [, functionName, parameter] = functionCallMatch;
+                const fn = resolvePath(scope, functionName);
+                if (isFn(fn)) {
+                    const result = fn.call(scope, parameter);
+                    // If the function returns another function (like setStatus does), call it
+                    if (isFn(result)) {
+                        result.call(scope, { el: target, scope, event: ev });
+                    }
+                }
+            } else {
+                // Handle simple function path
+                const fn = resolvePath(scope, action);
+                if (isFn(fn)) fn.call(scope, { el: target, scope, event: ev });
+            }
         });
     }
 
