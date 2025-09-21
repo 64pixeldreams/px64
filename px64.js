@@ -627,10 +627,14 @@
 
     // fadein:!loading (show with fade when condition is true)
     addBinder('fadein', ({ el, scope, arg }) => {
-        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
-        const key = arg.split('.').pop();
+        // Handle negated expressions like "!loading"
+        const isNegated = arg.startsWith('!');
+        const cleanArg = isNegated ? arg.slice(1) : arg;
+        const parent = resolvePath(scope, cleanArg.split('.').slice(0, -1).join('.')) || scope;
+        const key = cleanArg.split('.').pop();
         const apply = () => batchUpdate(() => {
-            const shouldShow = !!resolvePath(scope, arg);
+            const value = resolvePath(scope, cleanArg);
+            const shouldShow = isNegated ? !value : !!value;
             el.style.transition = 'opacity 0.3s ease';
             el.style.opacity = shouldShow ? '1' : '0';
             el.style.pointerEvents = shouldShow ? 'auto' : 'none';
@@ -679,10 +683,14 @@
     });
 
     addBinder('enable', ({ el, scope, arg }) => {
-        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
-        const key = arg.split('.').pop();
+        // Handle negated expressions like "!isProcessing"
+        const isNegated = arg.startsWith('!');
+        const cleanArg = isNegated ? arg.slice(1) : arg;
+        const parent = resolvePath(scope, cleanArg.split('.').slice(0, -1).join('.')) || scope;
+        const key = cleanArg.split('.').pop();
         const apply = () => batchUpdate(() => {
-            el.disabled = !resolvePath(scope, arg);
+            const value = resolvePath(scope, cleanArg);
+            el.disabled = isNegated ? !!value : !value;
         });
         apply();
         if (parent && parent.$observe) {
@@ -708,10 +716,14 @@
     });
 
     addBinder('invalid', ({ el, scope, arg }) => {
-        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
-        const key = arg.split('.').pop();
+        // Handle negated expressions like "!isEmailValid"
+        const isNegated = arg.startsWith('!');
+        const cleanArg = isNegated ? arg.slice(1) : arg;
+        const parent = resolvePath(scope, cleanArg.split('.').slice(0, -1).join('.')) || scope;
+        const key = cleanArg.split('.').pop();
         const apply = () => batchUpdate(() => {
-            const isInvalid = !!resolvePath(scope, arg);
+            const value = resolvePath(scope, cleanArg);
+            const isInvalid = isNegated ? !value : !!value;
             el.classList.toggle('is-invalid', isInvalid);
             el.classList.toggle('is-valid', !isInvalid);
             el.style.display = isInvalid ? 'block' : 'none';
