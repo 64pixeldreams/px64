@@ -994,6 +994,148 @@
             return this; // For chaining
         },
         reactive, // Expose reactive helper for external use
+        
+        // ─────────────────────────────────────────────────────────────────────────────
+        // Batch Registration Examples
+        // ─────────────────────────────────────────────────────────────────────────────
+        
+        // Bootstrap Components
+        registerBootstrapBinders() {
+            return this.addBinders({
+                'alert': ({ el, scope, arg }) => {
+                    reactive(el, scope, arg, (v) => batchUpdate(() => {
+                        const alertClass = v ? `alert-${v}` : 'alert-primary';
+                        el.className = el.className.replace(/alert-\w+/g, '') + ` ${alertClass}`.trim();
+                    }));
+                },
+                'badge': ({ el, scope, arg }) => {
+                    reactive(el, scope, arg, (v) => batchUpdate(() => {
+                        const badgeClass = v ? `bg-${v}` : 'bg-primary';
+                        el.className = el.className.replace(/bg-\w+/g, '') + ` ${badgeClass}`.trim();
+                    }));
+                },
+                'progress': ({ el, scope, arg }) => {
+                    reactive(el, scope, arg, (v) => batchUpdate(() => {
+                        const percent = Math.max(0, Math.min(100, v || 0));
+                        const progressBar = el.querySelector('.progress-bar') || (() => {
+                            const bar = document.createElement('div');
+                            bar.className = 'progress-bar';
+                            el.appendChild(bar);
+                            return bar;
+                        })();
+                        progressBar.style.width = `${percent}%`;
+                        progressBar.setAttribute('aria-valuenow', percent);
+                    }));
+                }
+            });
+        },
+        
+        // Form Controls
+        registerFormBinders() {
+            return this.addBinders({
+                'checkbox': ({ el, scope, arg }) => {
+                    reactive(el, scope, arg, (v) => batchUpdate(() => {
+                        el.checked = !!v;
+                    }));
+                    el.addEventListener('change', () => {
+                        const keys = arg.split('.');
+                        const lastKey = keys.pop();
+                        const parent = keys.length ? resolvePath(scope, keys.join('.')) : scope;
+                        if (parent && parent.$set) {
+                            parent.$set(lastKey, el.checked);
+                        }
+                    });
+                },
+                'radio': ({ el, scope, arg }) => {
+                    reactive(el, scope, arg, (v) => batchUpdate(() => {
+                        el.checked = el.value === v;
+                    }));
+                    el.addEventListener('change', () => {
+                        if (el.checked) {
+                            const keys = arg.split('.');
+                            const lastKey = keys.pop();
+                            const parent = keys.length ? resolvePath(scope, keys.join('.')) : scope;
+                            if (parent && parent.$set) {
+                                parent.$set(lastKey, el.value);
+                            }
+                        }
+                    });
+                },
+                'enable': ({ el, scope, arg }) => {
+                    const isNegated = arg.startsWith('!');
+                    const path = isNegated ? arg.slice(1) : arg;
+                    reactive(el, scope, path, (v) => batchUpdate(() => {
+                        const shouldEnable = isNegated ? !v : v;
+                        el.disabled = !shouldEnable;
+                    }));
+                },
+                'disable': ({ el, scope, arg }) => {
+                    const isNegated = arg.startsWith('!');
+                    const path = isNegated ? arg.slice(1) : arg;
+                    reactive(el, scope, path, (v) => batchUpdate(() => {
+                        const shouldDisable = isNegated ? !v : v;
+                        el.disabled = shouldDisable;
+                    }));
+                },
+                'valid': ({ el, scope, arg }) => {
+                    const isNegated = arg.startsWith('!');
+                    const path = isNegated ? arg.slice(1) : arg;
+                    reactive(el, scope, path, (v) => batchUpdate(() => {
+                        const isValid = isNegated ? !v : v;
+                        el.classList.toggle('is-valid', isValid);
+                        el.classList.toggle('is-invalid', !isValid);
+                    }));
+                },
+                'invalid': ({ el, scope, arg }) => {
+                    const isNegated = arg.startsWith('!');
+                    const path = isNegated ? arg.slice(1) : arg;
+                    reactive(el, scope, path, (v) => batchUpdate(() => {
+                        const isInvalid = isNegated ? !v : v;
+                        el.classList.toggle('is-invalid', isInvalid);
+                        el.classList.toggle('is-valid', !isInvalid);
+                    }));
+                }
+            });
+        },
+        
+        // Visual Effects
+        registerEffectBinders() {
+            return this.addBinders({
+                'fade': ({ el, scope, arg }) => {
+                    reactive(el, scope, arg, (v) => batchUpdate(() => {
+                        el.style.opacity = v ? '1' : '0';
+                        el.style.transition = 'opacity 0.3s ease';
+                    }));
+                },
+                'fadein': ({ el, scope, arg }) => {
+                    reactive(el, scope, arg, (v) => batchUpdate(() => {
+                        if (v) {
+                            el.style.opacity = '0';
+                            el.style.display = '';
+                            requestAnimationFrame(() => {
+                                el.style.opacity = '1';
+                                el.style.transition = 'opacity 0.3s ease';
+                            });
+                        } else {
+                            el.style.opacity = '0';
+                            el.style.transition = 'opacity 0.3s ease';
+                            setTimeout(() => { el.style.display = 'none'; }, 300);
+                        }
+                    }));
+                },
+                'show': ({ el, scope, arg }) => {
+                    reactive(el, scope, arg, (v) => batchUpdate(() => {
+                        el.style.display = v ? '' : 'none';
+                    }));
+                },
+                'hide': ({ el, scope, arg }) => {
+                    reactive(el, scope, arg, (v) => batchUpdate(() => {
+                        el.style.display = v ? 'none' : '';
+                    }));
+                }
+            });
+        },
+        
         bind(root, scope) {
             const host = typeof root === 'string' ? document.querySelector(root) : root;
             if (!host) throw new Error('px64.bind: root not found');

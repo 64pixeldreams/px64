@@ -34,6 +34,8 @@ Bind plain JavaScript objects ("scopes") to your HTML with `data-bind` attribute
   - [px64.observable(obj)](#px64observableobj)
   - [px64.listState(items)](#px64liststateitems)
   - [px64.addBinder(name, fn)](#px64addbindername-fn)
+  - [px64.addBinders(binderObj)](#px64addbindersbinderobj)
+  - [Batch Registration Helpers](#batch-registration-helpers)
 - [Built-in Binders](#built-in-binders)
 - [Patterns & Tips](#patterns--tips)
 - [Performance Notes](#performance-notes)
@@ -215,6 +217,55 @@ px64.addBinder("upper", ({ el, scope, arg }) => {
 **HTML:**
 ```html
 <span data-bind="upper:user.name"></span>
+```
+
+### `px64.addBinders(binderObj)`
+
+Register multiple binders at once using an object. Returns `px64` for chaining.
+
+**Example:**
+```javascript
+px64.addBinders({
+  'upper': ({ el, scope, arg }) => {
+    // Implementation here
+  },
+  'lower': ({ el, scope, arg }) => {
+    // Implementation here
+  },
+  'capitalize': ({ el, scope, arg }) => {
+    // Implementation here
+  }
+});
+```
+
+### Batch Registration Helpers
+
+px64 includes pre-built batch registration methods for common binder groups:
+
+**Bootstrap Components:**
+```javascript
+px64.registerBootstrapBinders();
+// Registers: alert:, badge:, progress:
+```
+
+**Form Controls:**
+```javascript
+px64.registerFormBinders();
+// Registers: checkbox:, radio:, enable:, disable:, valid:, invalid:
+```
+
+**Visual Effects:**
+```javascript
+px64.registerEffectBinders();
+// Registers: fade:, fadein:, show:, hide:
+```
+
+**Usage:**
+```javascript
+// Register all at once
+px64.registerBootstrapBinders()
+     .registerFormBinders()
+     .registerEffectBinders();
 ```
 
 Binder signature receives `{ el, scope, arg, stack }`.

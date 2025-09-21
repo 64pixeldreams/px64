@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>px64 Refactored Binders Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .test-section { margin: 2rem 0; padding: 1rem; border: 1px solid #dee2e6; border-radius: 0.5rem; }
+        .test-result { margin-top: 0.5rem; font-weight: bold; }
+        .pass { color: #198754; }
+        .fail { color: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <h1>px64 Refactored Binders Test</h1>
+        <p>Testing all binders after reactive() refactoring...</p>
+
+        <div class="test-section">
+            <h3>Text & HTML Binders</h3>
+            <div data-bind="text:message" class="test-result">Loading...</div>
+            <div data-bind="html:htmlMessage" class="test-result">Loading...</div>
+        </div>
+
+        <div class="test-section">
+            <h3>Form Controls</h3>
+            <input type="text" data-bind="value:inputValue" class="form-control mb-2" placeholder="Type here...">
+            <input type="checkbox" data-bind="checkbox:isChecked" class="form-check-input mb-2"> Checkbox
+            <div class="form-check mb-2">
+                <input type="radio" name="radioGroup" value="option1" data-bind="radio:selectedRadio" class="form-check-input">
+                <label class="form-check-label">Option 1</label>
+            </div>
+            <div class="form-check mb-2">
+                <input type="radio" name="radioGroup" value="option2" data-bind="radio:selectedRadio" class="form-check-input">
+                <label class="form-check-label">Option 2</label>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>Bootstrap Components</h3>
+            <div class="alert" data-bind="alert:alertType" role="alert">Alert message</div>
+            <span class="badge" data-bind="badge:badgeType">Badge</span>
+            <div class="progress mb-2" data-bind="progress:progressValue">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>Visual Effects</h3>
+            <div data-bind="show:isVisible" class="test-result">Show/Hide Test</div>
+            <div data-bind="fade:isFaded" class="test-result">Fade Test</div>
+            <div data-bind="fadein:isFadeIn" class="test-result">Fade In Test</div>
+        </div>
+
+        <div class="test-section">
+            <h3>Form Validation</h3>
+            <input type="email" data-bind="valid:isValid, invalid:!isValid" class="form-control mb-2" placeholder="email@example.com">
+            <button data-bind="enable:!isProcessing, disable:isProcessing" class="btn btn-primary">Toggle Processing</button>
+        </div>
+
+        <div class="test-section">
+            <h3>Styling & Images</h3>
+            <div data-bind="style:color:dynamicColor" class="test-result">Dynamic Color</div>
+            <img data-bind="image:imageSrc" class="img-thumbnail" style="width: 100px; height: 100px;" alt="Test image">
+        </div>
+
+        <div class="test-section">
+            <h3>Date & Time</h3>
+            <div data-bind="date:currentDate" class="test-result">Date</div>
+            <div data-bind="datetime:currentDate" class="test-result">DateTime</div>
+            <div data-bind="timeago:currentDate" class="test-result">Time Ago</div>
+        </div>
+
+        <div class="test-section">
+            <h3>Controls</h3>
+            <button class="btn btn-outline-primary" onclick="testState.toggleMessage()">Toggle Message</button>
+            <button class="btn btn-outline-secondary" onclick="testState.toggleVisibility()">Toggle Visibility</button>
+            <button class="btn btn-outline-success" onclick="testState.toggleProcessing()">Toggle Processing</button>
+            <button class="btn btn-outline-warning" onclick="testState.toggleValidation()">Toggle Validation</button>
+        </div>
+
+        <div class="test-section">
+            <h3>Test Results</h3>
+            <div id="test-results" class="test-result">Running tests...</div>
+        </div>
+    </div>
+
+    <script src="px64.js"></script>
+    <script>
+        // Test state
+        const testState = px64.observable({
+            message: 'Hello from refactored binders!',
+            htmlMessage: '<strong>HTML</strong> message',
+            inputValue: 'Initial value',
+            isChecked: true,
+            selectedRadio: 'option1',
+            alertType: 'primary',
+            badgeType: 'primary',
+            progressValue: 75,
+            isVisible: true,
+            isFaded: true,
+            isFadeIn: true,
+            isValid: true,
+            isProcessing: false,
+            dynamicColor: 'blue',
+            imageSrc: 'https://via.placeholder.com/100x100/007bff/ffffff?text=Test',
+            currentDate: new Date(),
+            
+            // Methods
+            toggleMessage() {
+                this.$set('message', this.message === 'Hello from refactored binders!' ? 'Message toggled!' : 'Hello from refactored binders!');
+            },
+            toggleVisibility() {
+                this.$set('isVisible', !this.isVisible);
+            },
+            toggleProcessing() {
+                this.$set('isProcessing', !this.isProcessing);
+            },
+            toggleValidation() {
+                this.$set('isValid', !this.isValid);
+            }
+        });
+
+        // Bind the app
+        const app = px64.bind('#app', testState);
+
+        // Run tests
+        function runTests() {
+            const results = [];
+            let passed = 0;
+            let total = 0;
+
+            // Test text binder
+            total++;
+            if (document.querySelector('[data-bind="text:message"]').textContent === 'Hello from refactored binders!') {
+                results.push('✅ Text binder: PASS');
+                passed++;
+            } else {
+                results.push('❌ Text binder: FAIL');
+            }
+
+            // Test HTML binder
+            total++;
+            if (document.querySelector('[data-bind="html:htmlMessage"]').innerHTML === '<strong>HTML</strong> message') {
+                results.push('✅ HTML binder: PASS');
+                passed++;
+            } else {
+                results.push('❌ HTML binder: FAIL');
+            }
+
+            // Test value binder
+            total++;
+            if (document.querySelector('[data-bind="value:inputValue"]').value === 'Initial value') {
+                results.push('✅ Value binder: PASS');
+                passed++;
+            } else {
+                results.push('❌ Value binder: FAIL');
+            }
+
+            // Test checkbox binder
+            total++;
+            if (document.querySelector('[data-bind="checkbox:isChecked"]').checked === true) {
+                results.push('✅ Checkbox binder: PASS');
+                passed++;
+            } else {
+                results.push('❌ Checkbox binder: FAIL');
+            }
+
+            // Test radio binder
+            total++;
+            if (document.querySelector('[data-bind="radio:selectedRadio"][value="option1"]').checked === true) {
+                results.push('✅ Radio binder: PASS');
+                passed++;
+            } else {
+                results.push('❌ Radio binder: FAIL');
+            }
+
+            // Test alert binder
+            total++;
+            if (document.querySelector('[data-bind="alert:alertType"]').classList.contains('alert-primary')) {
+                results.push('✅ Alert binder: PASS');
+                passed++;
+            } else {
+                results.push('❌ Alert binder: FAIL');
+            }
+
+            // Test badge binder
+            total++;
+            if (document.querySelector('[data-bind="badge:badgeType"]').classList.contains('bg-primary')) {
+                results.push('✅ Badge binder: PASS');
+                passed++;
+            } else {
+                results.push('❌ Badge binder: FAIL');
+            }
+
+            // Test progress binder
+            total++;
+            const progressBar = document.querySelector('[data-bind="progress:progressValue"] .progress-bar');
+            if (progressBar && progressBar.style.width === '75%') {
+                results.push('✅ Progress binder: PASS');
+                passed++;
+            } else {
+                results.push('❌ Progress binder: FAIL');
+            }
+
+            // Test show binder
+            total++;
+            if (document.querySelector('[data-bind="show:isVisible"]').style.display !== 'none') {
+                results.push('✅ Show binder: PASS');
+                passed++;
+            } else {
+                results.push('❌ Show binder: FAIL');
+            }
+
+            // Test fade binder
+            total++;
+            if (document.querySelector('[data-bind="fade:isFaded"]').style.opacity === '1') {
+                results.push('✅ Fade binder: PASS');
+                passed++;
+            } else {
+                results.push('❌ Fade binder: FAIL');
+            }
+
+            // Test valid/invalid binders
+            total++;
+            const emailInput = document.querySelector('[data-bind="valid:isValid, invalid:!isValid"]');
+            if (emailInput.classList.contains('is-valid') && !emailInput.classList.contains('is-invalid')) {
+                results.push('✅ Valid/Invalid binders: PASS');
+                passed++;
+            } else {
+                results.push('❌ Valid/Invalid binders: FAIL');
+            }
+
+            // Test enable/disable binders
+            total++;
+            const button = document.querySelector('[data-bind="enable:!isProcessing, disable:isProcessing"]');
+            if (!button.disabled) {
+                results.push('✅ Enable/Disable binders: PASS');
+                passed++;
+            } else {
+                results.push('❌ Enable/Disable binders: FAIL');
+            }
+
+            // Test style binder
+            total++;
+            if (document.querySelector('[data-bind="style:color:dynamicColor"]').style.color === 'blue') {
+                results.push('✅ Style binder: PASS');
+                passed++;
+            } else {
+                results.push('❌ Style binder: FAIL');
+            }
+
+            // Test image binder
+            total++;
+            if (document.querySelector('[data-bind="image:imageSrc"]').src.includes('placeholder.com')) {
+                results.push('✅ Image binder: PASS');
+                passed++;
+            } else {
+                results.push('❌ Image binder: FAIL');
+            }
+
+            // Display results
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = `
+                <h4>Test Results: ${passed}/${total} passed</h4>
+                <div class="${passed === total ? 'pass' : 'fail'}">
+                    ${results.join('<br>')}
+                </div>
+            `;
+        }
+
+        // Run tests after a short delay to ensure everything is bound
+        setTimeout(runTests, 100);
+    </script>
+</body>
+</html>
