@@ -650,9 +650,9 @@
 
     // fade:loading (opacity transition for loading states)
     addBinder('fade', ({ el, scope, arg }) => {
-        reactive(el, scope, arg, (shouldFade) => batchUpdate(() => {
+        reactive(el, scope, arg, (v) => batchUpdate(() => {
+            el.style.opacity = v ? '1' : '0';
             el.style.transition = 'opacity 0.3s ease';
-            el.style.opacity = shouldFade ? '0.3' : '1';
         }));
     });
 
@@ -808,32 +808,17 @@
     // Bootstrap component binders
     // alert:error (Bootstrap alert integration)
     addBinder('alert', ({ el, scope, arg }) => {
-        reactive(el, scope, arg, (message) => batchUpdate(() => {
-            if (message) {
-                el.textContent = message;
-                el.style.display = 'block';
-            } else {
-                el.style.display = 'none';
-            }
+        reactive(el, scope, arg, (v) => batchUpdate(() => {
+            const alertClass = v ? `alert-${v}` : 'alert-primary';
+            el.className = el.className.replace(/alert-\w+/g, '') + ` ${alertClass}`.trim();
         }));
     });
 
     // badge:status (auto-colored badges)
     addBinder('badge', ({ el, scope, arg }) => {
-        const colorMap = {
-            success: 'bg-success', active: 'bg-success', completed: 'bg-success',
-            warning: 'bg-warning', pending: 'bg-warning',
-            danger: 'bg-danger', error: 'bg-danger', failed: 'bg-danger',
-            info: 'bg-info', processing: 'bg-info',
-            secondary: 'bg-secondary', inactive: 'bg-secondary'
-        };
-        reactive(el, scope, arg, (value) => batchUpdate(() => {
-            el.textContent = value || '';
-            // Remove existing bg-* classes
-            el.className = el.className.replace(/bg-\w+/g, '');
-            // Add appropriate color class
-            const colorClass = colorMap[String(value).toLowerCase()] || 'bg-secondary';
-            el.classList.add(colorClass);
+        reactive(el, scope, arg, (v) => batchUpdate(() => {
+            const badgeClass = v ? `bg-${v}` : 'bg-primary';
+            el.className = el.className.replace(/bg-\w+/g, '') + ` ${badgeClass}`.trim();
         }));
     });
 
@@ -994,11 +979,11 @@
             return this; // For chaining
         },
         reactive, // Expose reactive helper for external use
-        
+
         // ─────────────────────────────────────────────────────────────────────────────
         // Batch Registration Examples
         // ─────────────────────────────────────────────────────────────────────────────
-        
+
         // Bootstrap Components
         registerBootstrapBinders() {
             return this.addBinders({
@@ -1029,7 +1014,7 @@
                 }
             });
         },
-        
+
         // Form Controls
         registerFormBinders() {
             return this.addBinders({
@@ -1097,7 +1082,7 @@
                 }
             });
         },
-        
+
         // Visual Effects
         registerEffectBinders() {
             return this.addBinders({
@@ -1135,7 +1120,7 @@
                 }
             });
         },
-        
+
         bind(root, scope) {
             const host = typeof root === 'string' ? document.querySelector(root) : root;
             if (!host) throw new Error('px64.bind: root not found');

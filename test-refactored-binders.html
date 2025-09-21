@@ -1,19 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>px64 Refactored Binders Test</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .test-section { margin: 2rem 0; padding: 1rem; border: 1px solid #dee2e6; border-radius: 0.5rem; }
-        .test-result { margin-top: 0.5rem; font-weight: bold; }
-        .pass { color: #198754; }
-        .fail { color: #dc3545; }
+        .test-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+        }
+
+        .test-result {
+            margin-top: 0.5rem;
+            font-weight: bold;
+        }
+
+        .pass {
+            color: #198754;
+        }
+
+        .fail {
+            color: #dc3545;
+        }
     </style>
 </head>
+
 <body>
-    <div class="container py-4">
+    <div class="container py-4" id="app">
         <h1>px64 Refactored Binders Test</h1>
         <p>Testing all binders after reactive() refactoring...</p>
 
@@ -28,11 +45,13 @@
             <input type="text" data-bind="value:inputValue" class="form-control mb-2" placeholder="Type here...">
             <input type="checkbox" data-bind="checkbox:isChecked" class="form-check-input mb-2"> Checkbox
             <div class="form-check mb-2">
-                <input type="radio" name="radioGroup" value="option1" data-bind="radio:selectedRadio" class="form-check-input">
+                <input type="radio" name="radioGroup" value="option1" data-bind="radio:selectedRadio"
+                    class="form-check-input">
                 <label class="form-check-label">Option 1</label>
             </div>
             <div class="form-check mb-2">
-                <input type="radio" name="radioGroup" value="option2" data-bind="radio:selectedRadio" class="form-check-input">
+                <input type="radio" name="radioGroup" value="option2" data-bind="radio:selectedRadio"
+                    class="form-check-input">
                 <label class="form-check-label">Option 2</label>
             </div>
         </div>
@@ -55,8 +74,10 @@
 
         <div class="test-section">
             <h3>Form Validation</h3>
-            <input type="email" data-bind="valid:isValid, invalid:!isValid" class="form-control mb-2" placeholder="email@example.com">
-            <button data-bind="enable:!isProcessing, disable:isProcessing" class="btn btn-primary">Toggle Processing</button>
+            <input type="email" data-bind="valid:isValid, invalid:!isValid" class="form-control mb-2"
+                placeholder="email@example.com">
+            <button data-bind="enable:!isProcessing, disable:isProcessing" class="btn btn-primary">Toggle
+                Processing</button>
         </div>
 
         <div class="test-section">
@@ -106,7 +127,7 @@
             dynamicColor: 'blue',
             imageSrc: 'https://via.placeholder.com/100x100/007bff/ffffff?text=Test',
             currentDate: new Date(),
-            
+
             // Methods
             toggleMessage() {
                 this.$set('message', this.message === 'Hello from refactored binders!' ? 'Message toggled!' : 'Hello from refactored binders!');
@@ -274,4 +295,5 @@
         setTimeout(runTests, 100);
     </script>
 </body>
+
 </html>
