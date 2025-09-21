@@ -1,38 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Reactive Helpers</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .test { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
-        .success { background: #d4edda; border-color: #c3e6cb; }
-        .error { background: #f8d7da; border-color: #f5c6cb; }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .test {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+        }
     </style>
 </head>
+
 <body>
     <h1>Testing px64 Reactive Helpers</h1>
-    
+
     <div class="test">
         <h3>Test 1: Basic Text Binding</h3>
         <p>Value: <span data-bind="text:message"></span></p>
         <button data-bind="tap:updateMessage">Update Message</button>
     </div>
-    
+
     <div class="test">
         <h3>Test 2: addBinders() Method</h3>
         <p>Custom binder: <span data-bind="custom:customValue"></span></p>
         <button data-bind="tap:updateCustom">Update Custom</button>
     </div>
-    
+
     <div class="test">
         <h3>Test 3: Observer Cleanup</h3>
         <p>Dynamic element: <span id="dynamic" data-bind="text:dynamicValue"></span></p>
         <button data-bind="tap:updateDynamic">Update Dynamic</button>
         <button data-bind="tap:removeDynamic">Remove Dynamic Element</button>
     </div>
-    
+
     <div class="test">
         <h3>Test Results</h3>
         <div id="results"></div>
@@ -42,7 +60,7 @@
     <script>
         // Test the reactive() helper and addBinders() method
         console.log('Testing px64 reactive helpers...');
-        
+
         // Test addBinders() method
         px64.addBinders({
             custom: ({ el, scope, arg }) => {
@@ -51,25 +69,25 @@
                 });
             }
         });
-        
+
         // Create test scope
         const testScope = px64.observable({
             message: 'Hello World',
             customValue: 'Test Value',
             dynamicValue: 'Dynamic Content',
-            
+
             updateMessage() {
                 this.$set('message', 'Updated at ' + new Date().toLocaleTimeString());
             },
-            
+
             updateCustom() {
                 this.$set('customValue', 'Updated at ' + new Date().toLocaleTimeString());
             },
-            
+
             updateDynamic() {
                 this.$set('dynamicValue', 'Updated at ' + new Date().toLocaleTimeString());
             },
-            
+
             removeDynamic() {
                 const element = document.getElementById('dynamic');
                 if (element) {
@@ -78,10 +96,10 @@
                 }
             }
         });
-        
+
         // Bind to the page
         px64.bind(document.body, testScope);
-        
+
         // Test results
         const results = document.getElementById('results');
         results.innerHTML = `
@@ -90,8 +108,9 @@
             <div class="success">✅ Basic binding works</div>
             <div class="success">✅ Observer cleanup system active</div>
         `;
-        
+
         console.log('All tests completed successfully!');
     </script>
 </body>
+
 </html>

@@ -381,24 +381,14 @@
     // show:expr / hide:expr (truthy)
     const truthy = v => !!v;
     addBinder('show', ({ el, scope, arg }) => {
-        const apply = () => batchUpdate(() => {
-            el.style.display = truthy(resolvePath(scope, arg)) ? '' : 'none';
-        });
-        apply();
-        if (scope.$observe) {
-            const unsubscribe = scope.$observe('*', apply);
-            registerObserver(el, unsubscribe);
-        }
+        reactive(el, scope, arg, (value) => batchUpdate(() => {
+            el.style.display = truthy(value) ? '' : 'none';
+        }));
     });
     addBinder('hide', ({ el, scope, arg }) => {
-        const apply = () => batchUpdate(() => {
-            el.style.display = truthy(resolvePath(scope, arg)) ? 'none' : '';
-        });
-        apply();
-        if (scope.$observe) {
-            const unsubscribe = scope.$observe('*', apply);
-            registerObserver(el, unsubscribe);
-        }
+        reactive(el, scope, arg, (value) => batchUpdate(() => {
+            el.style.display = truthy(value) ? 'none' : '';
+        }));
     });
 
     // attr:title:prop OR attr:data-id:order.id
@@ -633,9 +623,7 @@
 
     // image:imageUrl (sets src attribute for images)
     addBinder('image', ({ el, scope, arg }) => {
-        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
-        const key = arg.split('.').pop();
-        const apply = v => batchUpdate(() => {
+        reactive(el, scope, arg, (v) => batchUpdate(() => {
             el.src = v || '';
             // Handle broken images gracefully
             if (v && !el.onerror) {
@@ -643,12 +631,7 @@
                     el.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSIjZjBmMGYwIi8+CjxwYXRoIGQ9Ik0xMiA2VjE4TTYgMTJIMTgiIHN0cm9rZT0iIzk5OTk5OSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+'; // Simple placeholder
                 };
             }
-        });
-        apply(resolvePath(scope, arg));
-        if (parent && parent.$observe) {
-            const unsubscribe = parent.$observe(key, apply);
-            registerObserver(el, unsubscribe);
-        }
+        }));
     });
 
     // style:property:value OR style:backgroundColor:user.color
@@ -659,33 +642,18 @@
             return;
         }
         const [styleProperty, valuePath] = parts;
-        const parent = resolvePath(scope, valuePath.split('.').slice(0, -1).join('.')) || scope;
-        const key = valuePath.split('.').pop();
 
-        const apply = v => batchUpdate(() => {
+        reactive(el, scope, valuePath, (v) => batchUpdate(() => {
             el.style[styleProperty] = v || '';
-        });
-        apply(resolvePath(scope, valuePath));
-        if (parent && parent.$observe) {
-            const unsubscribe = parent.$observe(key, apply);
-            registerObserver(el, unsubscribe);
-        }
+        }));
     });
 
     // fade:loading (opacity transition for loading states)
     addBinder('fade', ({ el, scope, arg }) => {
-        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
-        const key = arg.split('.').pop();
-        const apply = () => batchUpdate(() => {
-            const shouldFade = !!resolvePath(scope, arg);
+        reactive(el, scope, arg, (shouldFade) => batchUpdate(() => {
             el.style.transition = 'opacity 0.3s ease';
             el.style.opacity = shouldFade ? '0.3' : '1';
-        });
-        apply();
-        if (parent && parent.$observe) {
-            const unsubscribe = parent.$observe(key, apply);
-            registerObserver(el, unsubscribe);
-        }
+        }));
     });
 
     // fadein:!loading (show with fade when condition is true)
@@ -693,20 +661,13 @@
         // Handle negated expressions like "!loading"
         const isNegated = arg.startsWith('!');
         const cleanArg = isNegated ? arg.slice(1) : arg;
-        const parent = resolvePath(scope, cleanArg.split('.').slice(0, -1).join('.')) || scope;
-        const key = cleanArg.split('.').pop();
-        const apply = () => batchUpdate(() => {
-            const value = resolvePath(scope, cleanArg);
+
+        reactive(el, scope, cleanArg, (value) => batchUpdate(() => {
             const shouldShow = isNegated ? !value : !!value;
             el.style.transition = 'opacity 0.3s ease';
             el.style.opacity = shouldShow ? '1' : '0';
             el.style.pointerEvents = shouldShow ? 'auto' : 'none';
-        });
-        apply();
-        if (parent && parent.$observe) {
-            const unsubscribe = parent.$observe(key, apply);
-            registerObserver(el, unsubscribe);
-        }
+        }));
     });
 
     // loading:isSubmitting (Bootstrap spinner integration)
@@ -733,69 +694,40 @@
 
     // disable:loading / enable:!loading (form control states)
     addBinder('disable', ({ el, scope, arg }) => {
-        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
-        const key = arg.split('.').pop();
-        const apply = () => batchUpdate(() => {
-            el.disabled = !!resolvePath(scope, arg);
-        });
-        apply();
-        if (parent && parent.$observe) {
-            const unsubscribe = parent.$observe(key, apply);
-            registerObserver(el, unsubscribe);
-        }
+        reactive(el, scope, arg, (value) => batchUpdate(() => {
+            el.disabled = !!value;
+        }));
     });
 
     addBinder('enable', ({ el, scope, arg }) => {
         // Handle negated expressions like "!isProcessing"
         const isNegated = arg.startsWith('!');
         const cleanArg = isNegated ? arg.slice(1) : arg;
-        const parent = resolvePath(scope, cleanArg.split('.').slice(0, -1).join('.')) || scope;
-        const key = cleanArg.split('.').pop();
-        const apply = () => batchUpdate(() => {
-            const value = resolvePath(scope, cleanArg);
+
+        reactive(el, scope, cleanArg, (value) => batchUpdate(() => {
             el.disabled = isNegated ? !!value : !value;
-        });
-        apply();
-        if (parent && parent.$observe) {
-            const unsubscribe = parent.$observe(key, apply);
-            registerObserver(el, unsubscribe);
-        }
+        }));
     });
 
     // valid:isEmailValid / invalid:!isEmailValid (Bootstrap validation)
     addBinder('valid', ({ el, scope, arg }) => {
-        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
-        const key = arg.split('.').pop();
-        const apply = () => batchUpdate(() => {
-            const isValid = !!resolvePath(scope, arg);
-            el.classList.toggle('is-valid', isValid);
+        reactive(el, scope, arg, (isValid) => batchUpdate(() => {
+            el.classList.toggle('is-valid', !!isValid);
             el.classList.toggle('is-invalid', !isValid);
-        });
-        apply();
-        if (parent && parent.$observe) {
-            const unsubscribe = parent.$observe(key, apply);
-            registerObserver(el, unsubscribe);
-        }
+        }));
     });
 
     addBinder('invalid', ({ el, scope, arg }) => {
         // Handle negated expressions like "!isEmailValid"
         const isNegated = arg.startsWith('!');
         const cleanArg = isNegated ? arg.slice(1) : arg;
-        const parent = resolvePath(scope, cleanArg.split('.').slice(0, -1).join('.')) || scope;
-        const key = cleanArg.split('.').pop();
-        const apply = () => batchUpdate(() => {
-            const value = resolvePath(scope, cleanArg);
+
+        reactive(el, scope, cleanArg, (value) => batchUpdate(() => {
             const isInvalid = isNegated ? !value : !!value;
             el.classList.toggle('is-invalid', isInvalid);
             el.classList.toggle('is-valid', !isInvalid);
             el.style.display = isInvalid ? 'block' : 'none';
-        });
-        apply();
-        if (parent && parent.$observe) {
-            const unsubscribe = parent.$observe(key, apply);
-            registerObserver(el, unsubscribe);
-        }
+        }));
     });
 
     // Date formatting binders
@@ -811,21 +743,15 @@
 
     // date:createdAt (format as "Dec 15, 2024")
     addBinder('date', ({ el, scope, arg }) => {
-        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
-        const key = arg.split('.').pop();
-        const format = v => {
+        reactive(el, scope, arg, (v) => {
             const date = v instanceof Date ? v : new Date(v);
             el.textContent = isNaN(date) ? '' : _dateFormats.date.format(date);
-        };
-        format(resolvePath(scope, arg));
-        parent.$observe && parent.$observe(key, format);
+        });
     });
 
     // datetime:lastLogin (smart relative/absolute formatting)
     addBinder('datetime', ({ el, scope, arg }) => {
-        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
-        const key = arg.split('.').pop();
-        const format = v => {
+        reactive(el, scope, arg, (v) => {
             const date = v instanceof Date ? v : new Date(v);
             if (isNaN(date)) {
                 el.textContent = '';
@@ -853,16 +779,12 @@
                 // Older: "Dec 12, 2024"
                 el.textContent = _dateFormats.date.format(date);
             }
-        };
-        format(resolvePath(scope, arg));
-        parent.$observe && parent.$observe(key, format);
+        });
     });
 
     // timeago:updatedAt ("2 minutes ago")
     addBinder('timeago', ({ el, scope, arg }) => {
-        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
-        const key = arg.split('.').pop();
-        const format = v => {
+        reactive(el, scope, arg, (v) => {
             const date = v instanceof Date ? v : new Date(v);
             if (isNaN(date)) {
                 el.textContent = '';
@@ -880,9 +802,7 @@
             else if (diffHours < 24) el.textContent = `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
             else if (diffDays < 7) el.textContent = `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
             else el.textContent = _dateFormats.date.format(date);
-        };
-        format(resolvePath(scope, arg));
-        parent.$observe && parent.$observe(key, format);
+        });
     });
 
     // Bootstrap component binders
@@ -943,12 +863,13 @@
     addBinder('checkbox', ({ el, scope, arg }) => {
         const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
         const key = arg.split('.').pop();
-        const apply = v => { el.checked = !!v; };
-        apply(resolvePath(scope, arg));
-        if (parent && parent.$observe) {
-            const unsubscribe = parent.$observe(key, v => apply(v));
-            registerObserver(el, unsubscribe);
-        }
+
+        // Use reactive helper for initial setup and observer
+        reactive(el, scope, arg, (v) => {
+            el.checked = !!v;
+        });
+
+        // Two-way binding on change
         el.addEventListener('change', () => {
             if (parent.$set) parent.$set(key, el.checked);
             else parent[key] = el.checked;
@@ -959,12 +880,13 @@
     addBinder('radio', ({ el, scope, arg }) => {
         const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
         const key = arg.split('.').pop();
-        const apply = v => { el.checked = (el.value === v); };
-        apply(resolvePath(scope, arg));
-        if (parent && parent.$observe) {
-            const unsubscribe = parent.$observe(key, v => apply(v));
-            registerObserver(el, unsubscribe);
-        }
+
+        // Use reactive helper for initial setup and observer
+        reactive(el, scope, arg, (v) => {
+            el.checked = (el.value === v);
+        });
+
+        // Two-way binding on change
         el.addEventListener('change', () => {
             if (el.checked && parent.$set) parent.$set(key, el.value);
             else if (el.checked) parent[key] = el.value;
