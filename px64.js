@@ -967,6 +967,77 @@
         }
     });
 
+    // checkbox:isChecked (two-way binding for checkboxes)
+    addBinder('checkbox', ({ el, scope, arg }) => {
+        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
+        const key = arg.split('.').pop();
+        const apply = v => { el.checked = !!v; };
+        apply(resolvePath(scope, arg));
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(key, v => apply(v));
+            registerObserver(el, unsubscribe);
+        }
+        el.addEventListener('change', () => {
+            if (parent.$set) parent.$set(key, el.checked);
+            else parent[key] = el.checked;
+        });
+    });
+
+    // radio:selectedValue (radio group binding)
+    addBinder('radio', ({ el, scope, arg }) => {
+        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
+        const key = arg.split('.').pop();
+        const apply = v => { el.checked = (el.value === v); };
+        apply(resolvePath(scope, arg));
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(key, v => apply(v));
+            registerObserver(el, unsubscribe);
+        }
+        el.addEventListener('change', () => {
+            if (el.checked && parent.$set) parent.$set(key, el.value);
+            else if (el.checked) parent[key] = el.value;
+        });
+    });
+
+    // tab:activeTab (tab navigation with content switching)
+    addBinder('tab', ({ el, scope, arg }) => {
+        const parent = resolvePath(scope, arg.split('.').slice(0, -1).join('.')) || scope;
+        const key = arg.split('.').pop();
+        const apply = () => batchUpdate(() => {
+            const activeTab = resolvePath(scope, arg);
+            const tabId = el.getAttribute('data-tab-id');
+            const contentId = el.getAttribute('data-tab-content');
+            
+            if (tabId) {
+                // This is a tab button
+                el.classList.toggle('active', tabId === activeTab);
+                el.setAttribute('aria-selected', tabId === activeTab);
+            }
+            
+            if (contentId) {
+                // This is tab content
+                const isActive = contentId === activeTab;
+                el.style.display = isActive ? 'block' : 'none';
+                el.classList.toggle('active', isActive);
+            }
+        });
+        apply();
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(key, apply);
+            registerObserver(el, unsubscribe);
+        }
+        
+        // Handle tab clicks
+        if (el.getAttribute('data-tab-id')) {
+            el.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tabId = el.getAttribute('data-tab-id');
+                if (parent.$set) parent.$set(key, tabId);
+                else parent[key] = tabId;
+            });
+        }
+    });
+
     // ─────────────────────────────────────────────────────────────────────────────
     // Event delegation for tap:* — install once per root
     function installTapDelegation(root) {

@@ -252,6 +252,10 @@ Binder signature receives `{ el, scope, arg, stack }`.
 | `alert:errorMessage` | Show/hide Bootstrap alerts with dynamic content. |
 | `badge:status` | Auto-colored badges based on status (success→green, warning→yellow, etc.). |
 | `progress:uploadPercent` | Bootstrap progress bars with percentage display. |
+| **Form Controls (Advanced)** | | |
+| `checkbox:isChecked` | Two-way binding for checkboxes. |
+| `radio:selectedValue` | Radio group binding. |
+| `tab:activeTab` | Tab navigation with content switching. |
 
 ### List Template Resolution
 

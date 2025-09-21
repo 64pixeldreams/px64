@@ -11,30 +11,40 @@
     <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet" />
     <style>
         body { 
-            background: #f8f9fa; 
+            background: #ffffff; 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
         }
         .docs-sidebar {
             position: sticky;
             top: 2rem;
             height: calc(100vh - 4rem);
             overflow-y: auto;
+            background: #f8f9fa;
+            border-radius: 0.5rem;
+            padding: 1rem;
         }
         .docs-content {
             max-width: none;
         }
         .demo-section {
-            margin-bottom: 3rem;
+            margin-bottom: 4rem;
             scroll-margin-top: 2rem;
         }
         .demo-card {
-            border: 1px solid #dee2e6;
-            margin-bottom: 1.5rem;
+            border: 1px solid #e9ecef;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         .demo-card .card-header {
-            background: #fff;
-            border-bottom: 1px solid #dee2e6;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
             font-weight: 600;
+            padding: 1rem 1.5rem;
+        }
+        .demo-card .card-body {
+            padding: 1.5rem;
         }
         .code-example {
             background: #f8f9fa;
@@ -48,6 +58,15 @@
             background: none;
             border: none;
             padding: 0;
+            font-size: 0.75rem;
+        }
+        .code-example .nav-tabs {
+            background: white;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .code-example .nav-tabs .nav-link {
+            font-size: 0.75rem;
+            padding: 0.5rem 0.75rem;
         }
         .live-demo {
             background: #fff;
@@ -55,14 +74,37 @@
             border-radius: 0.375rem;
             padding: 1.5rem;
             margin: 1rem 0;
+            min-height: 120px;
         }
         .binder-table th {
             background: #f8f9fa;
             font-weight: 600;
             border-top: none;
+            font-size: 0.875rem;
+        }
+        .binder-table td {
+            font-size: 0.875rem;
+            vertical-align: middle;
+        }
+        .nav-link {
+            color: #495057;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 0.25rem;
+        }
+        .nav-link:hover {
+            background: #e9ecef;
+            color: #212529;
         }
         .nav-link.active {
+            background: #007bff;
+            color: white;
             font-weight: 600;
+        }
+        /* Fix tab styling - remove bottom radius */
+        .nav-tabs .nav-link {
+            border-bottom-left-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
         }
         .demo-image {
             max-width: 200px;
@@ -70,12 +112,85 @@
             object-fit: cover;
             border-radius: 0.375rem;
         }
+        
+        /* Gallery Styles */
+        .gallery-main-image {
+            max-width: 100%;
+            height: 300px;
+            object-fit: contain;
+            border-radius: 0.5rem;
+            border: 1px solid #e9ecef;
+            background: #f8f9fa;
+        }
+        
+        .gallery-thumbnails {
+            margin-top: 1rem;
+        }
+        
+        .gallery-thumb {
+            position: relative;
+            cursor: pointer;
+            border-radius: 0.375rem;
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        .gallery-thumb:hover {
+            border-color: #6c757d;
+            transform: translateY(-2px);
+        }
+        
+        .gallery-thumb.active {
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+        
+        .gallery-thumb-img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        /* Preload images */
+        .gallery-preload {
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
+            visibility: hidden;
+        }
         .data-table {
             font-size: 0.875rem;
         }
         .pagination-info {
             font-size: 0.875rem;
             color: #6c757d;
+        }
+        .form-demo {
+            min-height: 200px;
+        }
+        .tab-demo {
+            min-height: 300px;
+        }
+        .section-title {
+            color: #212529;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+        .demo-item {
+            background: #fff;
+            border: 1px solid #e9ecef;
+            border-radius: 0.375rem;
+            padding: 1.5rem;
+            min-height: 200px;
         }
     </style>
 </head>
@@ -98,8 +213,11 @@
                         <a class="nav-link active" href="#overview">Overview</a>
                         <a class="nav-link" href="#text-ternary">Text & Ternary</a>
                         <a class="nav-link" href="#form-controls">Form Controls</a>
+                        <a class="nav-link" href="#advanced-forms">Advanced Forms</a>
+                        <a class="nav-link" href="#tabs">Tab Navigation</a>
                         <a class="nav-link" href="#visibility">Visibility & Effects</a>
-                        <a class="nav-link" href="#images-styling">Images & Styling</a>
+                        <a class="nav-link" href="#images">Images</a>
+                        <a class="nav-link" href="#styling">Dynamic Styling</a>
                         <a class="nav-link" href="#date-formatting">Date Formatting</a>
                         <a class="nav-link" href="#bootstrap-components">Bootstrap Components</a>
                         <a class="nav-link" href="#data-tables">Data Tables</a>
@@ -139,8 +257,32 @@
                                     <span class="text-muted">Status: <span data-bind="ternary:isProcessing:Active:Idle"></span></span>
                                 </div>
                                 <div class="code-example">
-                                    <pre><code class="language-html">&lt;span data-bind="ternary:isProcessing:Processing...:Process Email"&gt;&lt;/span&gt;
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#ternary-html" type="button">HTML</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#ternary-js" type="button">JavaScript</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="ternary-html">
+                                            <pre><code class="language-html">&lt;span data-bind="ternary:isProcessing:Processing...:Process Email"&gt;&lt;/span&gt;
 &lt;span data-bind="ternary:user.isOnline:Online:Offline"&gt;&lt;/span&gt;</code></pre>
+                                        </div>
+                                        <div class="tab-pane fade" id="ternary-js">
+                                            <pre><code class="language-javascript">const state = {
+    isProcessing: false,
+    user: { isOnline: true },
+    
+    toggleProcessing() {
+        this.$set('isProcessing', !this.isProcessing);
+    }
+};
+
+px64.bind('#app', state);</code></pre>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -151,39 +293,337 @@
                         <h2>Form Controls</h2>
                         <p>Dynamic form state management with Bootstrap integration.</p>
 
+                        <!-- Enable/Disable Demo -->
                         <div class="demo-card">
                             <div class="card-header">
-                                <h5 class="mb-0">Enable/Disable & Validation</h5>
+                                <h5 class="mb-0">Enable/Disable Controls</h5>
                             </div>
                             <div class="card-body">
                                 <div class="live-demo">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h6>Enable/Disable Demo</h6>
-                                            <div class="mb-3">
-                                                <input data-bind="value:email, disable:isProcessing" class="form-control" placeholder="Enter email">
-                                            </div>
-                                            <button data-bind="enable:!isProcessing, tap:toggleProcessing" class="btn btn-outline-primary">
-                                                <span data-bind="ternary:isProcessing:Processing...:Process Email"></span>
-                                            </button>
+                                    <div class="mb-3">
+                                        <input data-bind="value:email, disable:isProcessing" class="form-control" placeholder="Enter email">
+                                    </div>
+                                    <button data-bind="enable:!isProcessing, tap:toggleProcessing" class="btn btn-outline-primary">
+                                        <span data-bind="ternary:isProcessing:Processing...:Process Email"></span>
+                                    </button>
+                                </div>
+                                <div class="code-example">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#enable-html" type="button">HTML</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#enable-js" type="button">JavaScript</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="enable-html">
+                                            <pre><code class="language-html">&lt;input data-bind="value:email, disable:isProcessing" class="form-control"&gt;
+&lt;button data-bind="enable:!isProcessing, tap:toggleProcessing"&gt;Submit&lt;/button&gt;</code></pre>
                                         </div>
-                                        <div class="col-md-6">
-                                            <h6>Validation Demo</h6>
-                                            <div class="mb-3">
-                                                <input data-bind="value:testEmail, valid:isEmailValid" class="form-control" placeholder="test@example.com">
-                                                <div data-bind="invalid:!isEmailValid" class="invalid-feedback">
-                                                    Please enter a valid email address
-                                                </div>
+                                        <div class="tab-pane fade" id="enable-js">
+                                            <pre><code class="language-javascript">const state = {
+    isProcessing: false,
+    email: '',
+    
+    toggleProcessing() {
+        this.$set('isProcessing', !this.isProcessing);
+        if (this.isProcessing) {
+            setTimeout(() => this.$set('isProcessing', false), 3000);
+        }
+    }
+};
+
+px64.bind('#app', state);</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Validation Demo -->
+                        <div class="demo-card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Form Validation</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="live-demo">
+                                    <div class="mb-3">
+                                        <input data-bind="value:testEmail, valid:isEmailValid" class="form-control" placeholder="test@example.com">
+                                        <div data-bind="invalid:!isEmailValid" class="invalid-feedback">
+                                            Please enter a valid email address
+                                        </div>
+                                    </div>
+                                    <small class="text-muted">Try typing: "test@example.com"</small>
+                                </div>
+                                <div class="code-example">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#validation-html" type="button">HTML</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#validation-js" type="button">JavaScript</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="validation-html">
+                                            <pre><code class="language-html">&lt;input data-bind="value:testEmail, valid:isEmailValid" class="form-control"&gt;
+&lt;div data-bind="invalid:!isEmailValid" class="invalid-feedback"&gt;
+    Please enter a valid email address
+&lt;/div&gt;</code></pre>
+                                        </div>
+                                        <div class="tab-pane fade" id="validation-js">
+                                            <pre><code class="language-javascript">const state = {
+    testEmail: '',
+    
+    get isEmailValid() {
+        const email = this.testEmail || '';
+        return email.includes('@') && email.includes('.') && email.length > 5;
+    }
+};
+
+px64.bind('#app', state);</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Advanced Forms -->
+                    <section id="advanced-forms" class="demo-section">
+                        <h2 class="section-title">Advanced Form Controls</h2>
+                        <p>Checkboxes, radio buttons, and enhanced input binding with two-way data flow.</p>
+
+                        <!-- Checkbox Binding -->
+                        <div class="demo-card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Checkbox Binding</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="live-demo">
+                                    <div class="mb-3">
+                                        <div class="form-check">
+                                            <input data-bind="checkbox:agreeToTerms" class="form-check-input" type="checkbox" id="terms">
+                                            <label class="form-check-label" for="terms">
+                                                I agree to the terms and conditions
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input data-bind="checkbox:subscribeNewsletter" class="form-check-input" type="checkbox" id="newsletter">
+                                            <label class="form-check-label" for="newsletter">
+                                                Subscribe to newsletter
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="alert alert-info">
+                                        <strong>Status:</strong> 
+                                        Terms: <span data-bind="ternary:agreeToTerms:Agreed:Not Agreed"></span> | 
+                                        Newsletter: <span data-bind="ternary:subscribeNewsletter:Subscribed:Not Subscribed"></span>
+                                    </div>
+                                </div>
+                                <div class="code-example">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#checkbox-html" type="button">HTML</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#checkbox-js" type="button">JavaScript</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="checkbox-html">
+                                            <pre><code class="language-html">&lt;div class="form-check"&gt;
+    &lt;input data-bind="checkbox:agreeToTerms" class="form-check-input" type="checkbox" id="terms"&gt;
+    &lt;label class="form-check-label" for="terms"&gt;
+        I agree to the terms and conditions
+    &lt;/label&gt;
+&lt;/div&gt;</code></pre>
+                                        </div>
+                                        <div class="tab-pane fade" id="checkbox-js">
+                                            <pre><code class="language-javascript">const state = {
+    agreeToTerms: false,
+    subscribeNewsletter: true
+};
+
+px64.bind('#app', state);</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Radio Group Binding -->
+                        <div class="demo-card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Radio Group Binding</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="live-demo">
+                                    <div class="mb-3">
+                                        <label class="form-label">Select your preference:</label>
+                                        <div class="form-check">
+                                            <input data-bind="radio:preference" class="form-check-input" type="radio" name="preference" value="email" id="email">
+                                            <label class="form-check-label" for="email">Email</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input data-bind="radio:preference" class="form-check-input" type="radio" name="preference" value="sms" id="sms">
+                                            <label class="form-check-label" for="sms">SMS</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input data-bind="radio:preference" class="form-check-input" type="radio" name="preference" value="phone" id="phone">
+                                            <label class="form-check-label" for="phone">Phone</label>
+                                        </div>
+                                    </div>
+                                    <div class="alert alert-info">
+                                        <strong>Selected:</strong> <span data-bind="text:preference"></span>
+                                    </div>
+                                </div>
+                                <div class="code-example">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#radio-html" type="button">HTML</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#radio-js" type="button">JavaScript</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="radio-html">
+                                            <pre><code class="language-html">&lt;div class="form-check"&gt;
+    &lt;input data-bind="radio:preference" class="form-check-input" type="radio" name="preference" value="email" id="email"&gt;
+    &lt;label class="form-check-label" for="email"&gt;Email&lt;/label&gt;
+&lt;/div&gt;
+&lt;div class="form-check"&gt;
+    &lt;input data-bind="radio:preference" class="form-check-input" type="radio" name="preference" value="sms" id="sms"&gt;
+    &lt;label class="form-check-label" for="sms"&gt;SMS&lt;/label&gt;
+&lt;/div&gt;</code></pre>
+                                        </div>
+                                        <div class="tab-pane fade" id="radio-js">
+                                            <pre><code class="language-javascript">const state = {
+    preference: 'email'
+};
+
+px64.bind('#app', state);</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Tab Navigation -->
+                    <section id="tabs" class="demo-section">
+                        <h2 class="section-title">Tab Navigation</h2>
+                        <p>Dynamic tab switching with content management.</p>
+
+                        <div class="demo-card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Tab Demo</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="live-demo tab-demo">
+                                    <!-- Tab Navigation -->
+                                    <ul class="nav nav-tabs mb-3">
+                                        <li class="nav-item">
+                                            <a data-bind="tab:activeTab" data-tab-id="overview" class="nav-link" href="#">Overview</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a data-bind="tab:activeTab" data-tab-id="details" class="nav-link" href="#">Details</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a data-bind="tab:activeTab" data-tab-id="settings" class="nav-link" href="#">Settings</a>
+                                        </li>
+                                    </ul>
+
+                                    <!-- Tab Content -->
+                                    <div data-bind="tab:activeTab" data-tab-content="overview" class="tab-content">
+                                        <h6>Overview Tab</h6>
+                                        <p>This is the overview content. You can see how the tab system works with px64 binding.</p>
+                                        <div class="alert alert-info">
+                                            Current active tab: <strong data-bind="text:activeTab"></strong>
+                                        </div>
+                                    </div>
+
+                                    <div data-bind="tab:activeTab" data-tab-content="details" class="tab-content">
+                                        <h6>Details Tab</h6>
+                                        <p>Here you can see detailed information about the selected item.</p>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Name:</label>
+                                                <input data-bind="value:tabData.name" class="form-control" type="text">
                                             </div>
-                                            <small class="text-muted">Try typing: "test@example.com"</small>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Status:</label>
+                                                <select data-bind="value:tabData.status" class="form-select">
+                                                    <option value="active">Active</option>
+                                                    <option value="inactive">Inactive</option>
+                                                    <option value="pending">Pending</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div data-bind="tab:activeTab" data-tab-content="settings" class="tab-content">
+                                        <h6>Settings Tab</h6>
+                                        <p>Configure your preferences and settings here.</p>
+                                        <div class="form-check">
+                                            <input data-bind="checkbox:tabData.notifications" class="form-check-input" type="checkbox" id="notifications">
+                                            <label class="form-check-label" for="notifications">
+                                                Enable notifications
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input data-bind="checkbox:tabData.autoSave" class="form-check-input" type="checkbox" id="autoSave">
+                                            <label class="form-check-label" for="autoSave">
+                                                Auto-save changes
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="code-example">
-                                    <pre><code class="language-html">&lt;input data-bind="disable:isProcessing" class="form-control"&gt;
-&lt;button data-bind="enable:!isProcessing"&gt;Submit&lt;/button&gt;
-&lt;input data-bind="valid:isEmailValid" class="form-control"&gt;
-&lt;div data-bind="invalid:!isEmailValid" class="invalid-feedback"&gt;Error&lt;/div&gt;</code></pre>
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabs-html" type="button">HTML</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabs-js" type="button">JavaScript</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="tabs-html">
+                                            <pre><code class="language-html">&lt;!-- Tab Navigation --&gt;
+&lt;ul class="nav nav-tabs"&gt;
+    &lt;li class="nav-item"&gt;
+        &lt;a data-bind="tab:activeTab" data-tab-id="overview" class="nav-link"&gt;Overview&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="nav-item"&gt;
+        &lt;a data-bind="tab:activeTab" data-tab-id="details" class="nav-link"&gt;Details&lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- Tab Content --&gt;
+&lt;div data-bind="tab:activeTab" data-tab-content="overview"&gt;
+    Overview content here
+&lt;/div&gt;
+&lt;div data-bind="tab:activeTab" data-tab-content="details"&gt;
+    Details content here
+&lt;/div&gt;</code></pre>
+                                        </div>
+                                        <div class="tab-pane fade" id="tabs-js">
+                                            <pre><code class="language-javascript">const state = {
+    activeTab: 'overview',
+    tabData: {
+        name: 'John Doe',
+        status: 'active',
+        notifications: true,
+        autoSave: false
+    }
+};
+
+px64.bind('#app', state);</code></pre>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -194,92 +634,282 @@
                         <h2>Visibility & Effects</h2>
                         <p>Show, hide, and fade effects for dynamic content.</p>
 
+                        <!-- Show/Hide Demo -->
                         <div class="demo-card">
                             <div class="card-header">
-                                <h5 class="mb-0">Show/Hide & Fade Effects</h5>
+                                <h5 class="mb-0">Show/Hide Controls</h5>
                             </div>
                             <div class="card-body">
                                 <div class="live-demo">
                                     <div class="mb-3">
                                         <button data-bind="tap:toggleVisibility" class="btn btn-outline-secondary me-2">Toggle Visibility</button>
-                                        <button data-bind="tap:toggleLoading" class="btn btn-outline-secondary">Toggle Loading</button>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-md-6">
                                             <strong>Show:</strong>
-                                            <div data-bind="show:isVisible" class="alert alert-success mt-2">
+                                            <div data-bind="show:isVisible" class="alert alert-secondary mt-2">
                                                 Visible when true
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-6">
                                             <strong>Hide:</strong>
-                                            <div data-bind="hide:isVisible" class="alert alert-warning mt-2">
+                                            <div data-bind="hide:isVisible" class="alert alert-light mt-2">
                                                 Hidden when true
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                    </div>
+                                </div>
+                                <div class="code-example">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#showhide-html" type="button">HTML</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#showhide-js" type="button">JavaScript</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="showhide-html">
+                                            <pre><code class="language-html">&lt;div data-bind="show:isVisible"&gt;Shows when true&lt;/div&gt;
+&lt;div data-bind="hide:isVisible"&gt;Hides when true&lt;/div&gt;</code></pre>
+                                        </div>
+                                        <div class="tab-pane fade" id="showhide-js">
+                                            <pre><code class="language-javascript">const state = {
+    isVisible: true,
+    
+    toggleVisibility() {
+        this.$set('isVisible', !this.isVisible);
+    }
+};
+
+px64.bind('#app', state);</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fade Effects Demo -->
+                        <div class="demo-card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Fade Effects</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="live-demo">
+                                    <div class="mb-3">
+                                        <button data-bind="tap:toggleLoading" class="btn btn-outline-secondary">Toggle Loading</button>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
                                             <strong>Fade:</strong>
-                                            <div data-bind="fade:isLoading" class="alert alert-info mt-2">
+                                            <div data-bind="fade:isLoading" class="alert alert-secondary mt-2">
                                                 Fades when loading
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-6">
                                             <strong>Fade In:</strong>
-                                            <div data-bind="fadein:!isLoading" class="alert alert-primary mt-2">
+                                            <div data-bind="fadein:!isLoading" class="alert alert-light mt-2">
                                                 Appears when not loading
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="code-example">
-                                    <pre><code class="language-html">&lt;div data-bind="show:isVisible"&gt;Shows when true&lt;/div&gt;
-&lt;div data-bind="hide:isVisible"&gt;Hides when true&lt;/div&gt;
-&lt;div data-bind="fade:isLoading"&gt;Fades when loading&lt;/div&gt;
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#fade-html" type="button">HTML</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#fade-js" type="button">JavaScript</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="fade-html">
+                                            <pre><code class="language-html">&lt;div data-bind="fade:isLoading"&gt;Fades when loading&lt;/div&gt;
 &lt;div data-bind="fadein:!isLoading"&gt;Appears when not loading&lt;/div&gt;</code></pre>
+                                        </div>
+                                        <div class="tab-pane fade" id="fade-js">
+                                            <pre><code class="language-javascript">const state = {
+    isLoading: false,
+    
+    toggleLoading() {
+        this.$set('isLoading', !this.isLoading);
+    }
+};
+
+px64.bind('#app', state);</code></pre>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </section>
 
-                    <!-- Images & Styling -->
-                    <section id="images-styling" class="demo-section">
-                        <h2>Images & Dynamic Styling</h2>
-                        <p>Dynamic image sources and CSS styling.</p>
+                    <!-- Images -->
+                    <section id="images" class="demo-section">
+                        <h2 class="section-title">Image Gallery</h2>
+                        <p>Dynamic image gallery with thumbnails and preloading.</p>
 
                         <div class="demo-card">
                             <div class="card-header">
-                                <h5 class="mb-0">Image & Style Binders</h5>
+                                <h5 class="mb-0">Image Gallery</h5>
                             </div>
                             <div class="card-body">
                                 <div class="live-demo">
-                                    <div class="row align-items-center">
-                                        <div class="col-md-4">
-                                            <img data-bind="image:currentImage" class="demo-image img-fluid" alt="Demo Image">
-                                        </div>
-                                        <div class="col-md-8">
-                                            <h6>Dynamic Image Source</h6>
-                                            <div class="btn-group mb-3">
-                                                <button data-bind="tap:setImage('https://images.pexels.com/photos/33467273/pexels-photo-33467273.jpeg')" class="btn btn-outline-primary btn-sm">Pexels Photo</button>
-                                                <button data-bind="tap:setImage('https://via.placeholder.com/200x150/007bff/ffffff?text=px64')" class="btn btn-outline-secondary btn-sm">Placeholder</button>
-                                                <button data-bind="tap:setImage('')" class="btn btn-outline-danger btn-sm">Clear</button>
+                                    <!-- Main Image Display -->
+                                    <div class="text-center mb-4">
+                                        <img data-bind="image:currentImage" class="gallery-main-image img-fluid" alt="Gallery Image">
+                                    </div>
+                                    
+                                    <!-- Thumbnail Gallery -->
+                                    <div class="gallery-thumbnails">
+                                        <div class="row g-2">
+                                            <div class="col-4">
+                                                <div data-bind="tap:setImage('https://images.pexels.com/photos/33467273/pexels-photo-33467273.jpeg')" 
+                                                     class="gallery-thumb" 
+                                                     data-bind="class:active:currentImage === 'https://images.pexels.com/photos/33467273/pexels-photo-33467273.jpeg'">
+                                                    <img src="https://images.pexels.com/photos/33467273/pexels-photo-33467273.jpeg" 
+                                                         class="gallery-thumb-img" 
+                                                         alt="Gallery Thumb 1">
+                                                </div>
                                             </div>
-                                            <h6>Dynamic Styling</h6>
-                                            <div data-bind="style:backgroundColor:dynamicColor, style:color:textColor" class="p-3 rounded">
-                                                <span data-bind="text:styleMessage"></span>
+                                            <div class="col-4">
+                                                <div data-bind="tap:setImage('https://images.pexels.com/photos/33538828/pexels-photo-33538828.jpeg')" 
+                                                     class="gallery-thumb" 
+                                                     data-bind="class:active:currentImage === 'https://images.pexels.com/photos/33538828/pexels-photo-33538828.jpeg'">
+                                                    <img src="https://images.pexels.com/photos/33538828/pexels-photo-33538828.jpeg" 
+                                                         class="gallery-thumb-img" 
+                                                         alt="Gallery Thumb 2">
+                                                </div>
                                             </div>
-                                            <div class="btn-group mt-2">
-                                                <button data-bind="tap:setTheme('blue')" class="btn btn-outline-primary btn-sm">Blue Theme</button>
-                                                <button data-bind="tap:setTheme('success')" class="btn btn-outline-success btn-sm">Green Theme</button>
-                                                <button data-bind="tap:setTheme('warning')" class="btn btn-outline-warning btn-sm">Orange Theme</button>
+                                            <div class="col-4">
+                                                <div data-bind="tap:setImage('https://images.pexels.com/photos/9407824/pexels-photo-9407824.jpeg')" 
+                                                     class="gallery-thumb" 
+                                                     data-bind="class:active:currentImage === 'https://images.pexels.com/photos/9407824/pexels-photo-9407824.jpeg'">
+                                                    <img src="https://images.pexels.com/photos/9407824/pexels-photo-9407824.jpeg" 
+                                                         class="gallery-thumb-img" 
+                                                         alt="Gallery Thumb 3">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                    
+                                    <!-- Clear Button -->
+                                    <div class="text-center mt-3">
+                                        <button data-bind="tap:setImage('')" class="btn btn-outline-secondary btn-sm">Clear Image</button>
+                                    </div>
                                 </div>
                                 <div class="code-example">
-                                    <pre><code class="language-html">&lt;img data-bind="image:user.avatar" class="img-fluid"&gt;
-&lt;div data-bind="style:backgroundColor:theme.bgColor, style:color:theme.textColor"&gt;
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#gallery-html" type="button">HTML</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#gallery-js" type="button">JavaScript</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="gallery-html">
+                                            <pre><code class="language-html">&lt;!-- Main Image --&gt;
+&lt;img data-bind="image:currentImage" class="gallery-main-image img-fluid"&gt;
+
+&lt;!-- Thumbnail Gallery --&gt;
+&lt;div class="gallery-thumb" data-bind="tap:setImage('image-url')"&gt;
+    &lt;img src="image-url" class="gallery-thumb-img"&gt;
+&lt;/div&gt;
+
+&lt;!-- Clear Button --&gt;
+&lt;button data-bind="tap:setImage('')"&gt;Clear Image&lt;/button&gt;</code></pre>
+                                        </div>
+                                        <div class="tab-pane fade" id="gallery-js">
+                                            <pre><code class="language-javascript">const state = {
+    currentImage: 'https://example.com/image1.jpg',
+    galleryImages: [
+        'https://example.com/image1.jpg',
+        'https://example.com/image2.jpg',
+        'https://example.com/image3.jpg'
+    ],
+    
+    setImage(url) {
+        return () => {
+            if (url === '') {
+                this.$set('currentImage', '');
+            } else {
+                this.$set('currentImage', url);
+            }
+        };
+    }
+};
+
+px64.bind('#app', state);</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Dynamic Styling -->
+                    <section id="styling" class="demo-section">
+                        <h2 class="section-title">Dynamic Styling</h2>
+                        <p>Dynamic CSS styling with theme switching.</p>
+
+                        <div class="demo-card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Style Binding</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="live-demo">
+                                    <div data-bind="style:backgroundColor:dynamicColor, style:color:textColor" class="p-3 rounded mb-3">
+                                        <span data-bind="text:styleMessage"></span>
+                                    </div>
+                                    <div class="btn-group">
+                                        <button data-bind="tap:setTheme('muted')" class="btn btn-outline-secondary btn-sm">Muted Theme</button>
+                                        <button data-bind="tap:setTheme('dark')" class="btn btn-outline-secondary btn-sm">Dark Theme</button>
+                                        <button data-bind="tap:setTheme('light')" class="btn btn-outline-secondary btn-sm">Light Theme</button>
+                                    </div>
+                                </div>
+                                <div class="code-example">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#style-html" type="button">HTML</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#style-js" type="button">JavaScript</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="style-html">
+                                            <pre><code class="language-html">&lt;div data-bind="style:backgroundColor:dynamicColor, style:color:textColor"&gt;
     Dynamic styling
 &lt;/div&gt;</code></pre>
+                                        </div>
+                                        <div class="tab-pane fade" id="style-js">
+                                            <pre><code class="language-javascript">const state = {
+    dynamicColor: '#6c757d',
+    textColor: '#ffffff',
+    styleMessage: 'Dynamic styling with px64',
+    
+    setTheme(theme) {
+        return () => {
+            const themes = {
+                muted: { bg: '#6c757d', text: '#ffffff', msg: 'Muted theme' },
+                dark: { bg: '#343a40', text: '#ffffff', msg: 'Dark theme' },
+                light: { bg: '#f8f9fa', text: '#212529', msg: 'Light theme' }
+            };
+            const t = themes[theme];
+            if (t) {
+                this.$set('dynamicColor', t.bg);
+                this.$set('textColor', t.text);
+                this.$set('styleMessage', t.msg);
+            }
+        };
+    }
+};
+
+px64.bind('#app', state);</code></pre>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -312,9 +942,30 @@
                                     </div>
                                 </div>
                                 <div class="code-example">
-                                    <pre><code class="language-html">&lt;span data-bind="date:createdDate"&gt;&lt;/span&gt;        &lt;!-- "Dec 15, 2024" --&gt;
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#date-html" type="button">HTML</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#date-js" type="button">JavaScript</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="date-html">
+                                            <pre><code class="language-html">&lt;span data-bind="date:createdDate"&gt;&lt;/span&gt;        &lt;!-- "Dec 15, 2024" --&gt;
 &lt;span data-bind="datetime:lastLogin"&gt;&lt;/span&gt;    &lt;!-- "2 hours ago" --&gt;
 &lt;span data-bind="timeago:updatedAt"&gt;&lt;/span&gt;     &lt;!-- "5 minutes ago" --&gt;</code></pre>
+                                        </div>
+                                        <div class="tab-pane fade" id="date-js">
+                                            <pre><code class="language-javascript">const state = {
+    createdDate: new Date('2024-12-15'),
+    lastLogin: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+    updatedAt: new Date(Date.now() - 5 * 60 * 1000) // 5 minutes ago
+};
+
+px64.bind('#app', state);</code></pre>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -325,40 +976,145 @@
                         <h2>Bootstrap Components</h2>
                         <p>Dynamic Bootstrap alerts, badges, and progress bars.</p>
 
+                        <!-- Dynamic Alerts -->
                         <div class="demo-card">
                             <div class="card-header">
-                                <h5 class="mb-0">Alerts, Badges & Progress</h5>
+                                <h5 class="mb-0">Dynamic Alerts</h5>
                             </div>
                             <div class="card-body">
                                 <div class="live-demo">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <h6>Dynamic Alerts</h6>
-                                            <div data-bind="alert:errorMessage" class="alert alert-danger" style="display: none;"></div>
-                                            <div data-bind="alert:successMessage" class="alert alert-success" style="display: none;"></div>
-                                            <button data-bind="tap:showError" class="btn btn-outline-danger btn-sm me-2">Show Error</button>
-                                            <button data-bind="tap:showSuccess" class="btn btn-outline-success btn-sm">Show Success</button>
+                                    <div data-bind="alert:errorMessage" class="alert alert-danger" style="display: none;"></div>
+                                    <div data-bind="alert:successMessage" class="alert alert-success" style="display: none;"></div>
+                                    <button data-bind="tap:showError" class="btn btn-outline-danger btn-sm me-2">Show Error</button>
+                                    <button data-bind="tap:showSuccess" class="btn btn-outline-success btn-sm">Show Success</button>
+                                </div>
+                                <div class="code-example">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#alert-html" type="button">HTML</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#alert-js" type="button">JavaScript</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="alert-html">
+                                            <pre><code class="language-html">&lt;div data-bind="alert:errorMessage" class="alert alert-danger"&gt;&lt;/div&gt;
+&lt;div data-bind="alert:successMessage" class="alert alert-success"&gt;&lt;/div&gt;</code></pre>
                                         </div>
-                                        <div class="col-md-4">
-                                            <h6>Auto-Colored Badges</h6>
-                                            <p>Status: <span data-bind="badge:status" class="badge"></span></p>
-                                            <div class="btn-group btn-group-sm">
-                                                <button data-bind="tap:setStatus('success')" class="btn btn-outline-secondary">Success</button>
-                                                <button data-bind="tap:setStatus('warning')" class="btn btn-outline-secondary">Warning</button>
-                                                <button data-bind="tap:setStatus('danger')" class="btn btn-outline-secondary">Danger</button>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <h6>Progress Bars</h6>
-                                            <div data-bind="progress:uploadProgress" class="progress mb-2"></div>
-                                            <button data-bind="tap:startUpload" class="btn btn-outline-primary btn-sm">Start Upload</button>
+                                        <div class="tab-pane fade" id="alert-js">
+                                            <pre><code class="language-javascript">const state = {
+    errorMessage: '',
+    successMessage: '',
+    
+    showError() {
+        this.$set('errorMessage', 'Something went wrong!');
+        this.$set('successMessage', '');
+        setTimeout(() => this.$set('errorMessage', ''), 5000);
+    },
+    
+    showSuccess() {
+        this.$set('successMessage', 'Operation completed!');
+        this.$set('errorMessage', '');
+        setTimeout(() => this.$set('successMessage', ''), 5000);
+    }
+};
+
+px64.bind('#app', state);</code></pre>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Auto-Colored Badges -->
+                        <div class="demo-card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Auto-Colored Badges</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="live-demo">
+                                    <p>Status: <span data-bind="badge:status" class="badge"></span></p>
+                                    <div class="btn-group btn-group-sm">
+                                        <button data-bind="tap:setStatus('success')" class="btn btn-outline-secondary">Success</button>
+                                        <button data-bind="tap:setStatus('warning')" class="btn btn-outline-secondary">Warning</button>
+                                        <button data-bind="tap:setStatus('danger')" class="btn btn-outline-secondary">Danger</button>
+                                    </div>
+                                </div>
                                 <div class="code-example">
-                                    <pre><code class="language-html">&lt;div data-bind="alert:errorMessage" class="alert alert-danger"&gt;&lt;/div&gt;
-&lt;span data-bind="badge:status" class="badge"&gt;&lt;/span&gt;
-&lt;div data-bind="progress:uploadPercent" class="progress"&gt;&lt;/div&gt;</code></pre>
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#badge-html" type="button">HTML</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#badge-js" type="button">JavaScript</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="badge-html">
+                                            <pre><code class="language-html">&lt;span data-bind="badge:status" class="badge"&gt;&lt;/span&gt;</code></pre>
+                                        </div>
+                                        <div class="tab-pane fade" id="badge-js">
+                                            <pre><code class="language-javascript">const state = {
+    status: 'pending',
+    
+    setStatus(newStatus) {
+        return () => this.$set('status', newStatus);
+    }
+};
+
+px64.bind('#app', state);</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bars -->
+                        <div class="demo-card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Progress Bars</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="live-demo">
+                                    <div data-bind="progress:uploadProgress" class="progress mb-2"></div>
+                                    <button data-bind="tap:startUpload" class="btn btn-outline-primary btn-sm">Start Upload</button>
+                                </div>
+                                <div class="code-example">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#progress-html" type="button">HTML</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#progress-js" type="button">JavaScript</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="progress-html">
+                                            <pre><code class="language-html">&lt;div data-bind="progress:uploadProgress" class="progress"&gt;&lt;/div&gt;</code></pre>
+                                        </div>
+                                        <div class="tab-pane fade" id="progress-js">
+                                            <pre><code class="language-javascript">const state = {
+    uploadProgress: 0,
+    
+    startUpload() {
+        this.$set('uploadProgress', 0);
+        const interval = setInterval(() => {
+            const current = this.uploadProgress + Math.random() * 15;
+            if (current >= 100) {
+                this.$set('uploadProgress', 100);
+                clearInterval(interval);
+                setTimeout(() => this.$set('uploadProgress', 0), 2000);
+            } else {
+                this.$set('uploadProgress', current);
+            }
+        }, 200);
+    }
+};
+
+px64.bind('#app', state);</code></pre>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -398,10 +1154,49 @@
                                     </table>
                                 </div>
                                 <div class="code-example">
-                                    <pre><code class="language-html">&lt;table data-bind="table:employees" 
-       data-meta="cols:name,email,department,status;sort:name" 
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#table-html" type="button">HTML</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#table-js" type="button">JavaScript</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="table-html">
+                                            <pre><code class="language-html">&lt;table data-bind="table:employees" 
+       data-meta="cols:name,email,department,status,lastActive;sort:name" 
        class="table table-hover"&gt;
 &lt;/table&gt;</code></pre>
+                                        </div>
+                                        <div class="tab-pane fade" id="table-js">
+                                            <pre><code class="language-javascript">const state = {
+    employees: px64.listState([]),
+    searchTerm: '',
+    
+    generateEmployees() {
+        const departments = ['Engineering', 'Marketing', 'Sales', 'HR'];
+        const statuses = ['active', 'inactive', 'pending', 'success'];
+        const employees = [];
+        
+        for (let i = 1; i <= 50; i++) {
+            employees.push({
+                id: i,
+                name: `Employee ${i}`,
+                email: `employee${i}@company.com`,
+                department: departments[i % departments.length],
+                status: statuses[i % statuses.length],
+                lastActive: new Date(Date.now() - Math.random() * 86400000 * 30)
+            });
+        }
+        
+        this.employees.setItems(employees);
+    }
+};
+
+px64.bind('#app', state);</code></pre>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -447,6 +1242,9 @@
                                         <tr><td><code>date:dateValue</code></td><td>Format dates</td><td><code>date:createdAt</code></td></tr>
                                         <tr><td><code>datetime:dateValue</code></td><td>Smart date/time</td><td><code>datetime:lastLogin</code></td></tr>
                                         <tr><td><code>timeago:dateValue</code></td><td>Relative time</td><td><code>timeago:updatedAt</code></td></tr>
+                                        <tr><td><code>checkbox:isChecked</code></td><td>Two-way checkbox binding</td><td><code>checkbox:agreeToTerms</code></td></tr>
+                                        <tr><td><code>radio:selectedValue</code></td><td>Radio group binding</td><td><code>radio:preference</code></td></tr>
+                                        <tr><td><code>tab:activeTab</code></td><td>Tab navigation</td><td><code>tab:activeTab</code></td></tr>
                                         <tr><td><code>list:items</code></td><td>Render lists</td><td><code>list:todos</code></td></tr>
                                         <tr><td><code>table:items</code></td><td>Render tables</td><td><code>table:employees</code></td></tr>
                                     </tbody>
@@ -459,8 +1257,17 @@
         </div>
     </div>
 
+    <!-- Preload images for gallery -->
+    <div class="gallery-preload">
+        <img src="https://images.pexels.com/photos/33467273/pexels-photo-33467273.jpeg" alt="Preload 1">
+        <img src="https://images.pexels.com/photos/33538828/pexels-photo-33538828.jpeg" alt="Preload 2">
+        <img src="https://images.pexels.com/photos/9407824/pexels-photo-9407824.jpeg" alt="Preload 3">
+    </div>
+
     <!-- px64 library -->
     <script src="./px64.js"></script>
+    <!-- Bootstrap JS for tabs -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Prism for syntax highlighting -->
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
     <script>
@@ -471,15 +1278,36 @@
             email: '',
             testEmail: '',
             
+            // Advanced form controls
+            agreeToTerms: false,
+            subscribeNewsletter: true,
+            preference: 'email',
+            
+            // Tab system
+            activeTab: 'overview',
+            tabData: {
+                name: 'John Doe',
+                status: 'active',
+                notifications: true,
+                autoSave: false
+            },
+            
             // Visibility states
             isVisible: true,
             isLoading: false,
             
             // Image and styling
             currentImage: 'https://images.pexels.com/photos/33467273/pexels-photo-33467273.jpeg',
-            dynamicColor: '#007bff',
+            dynamicColor: '#6c757d',
             textColor: '#ffffff',
             styleMessage: 'Dynamic styling with px64',
+            
+            // Gallery images
+            galleryImages: [
+                'https://images.pexels.com/photos/33467273/pexels-photo-33467273.jpeg',
+                'https://images.pexels.com/photos/33538828/pexels-photo-33538828.jpeg',
+                'https://images.pexels.com/photos/9407824/pexels-photo-9407824.jpeg'
+            ],
             
             // Dates
             createdDate: new Date('2024-12-15'),
@@ -519,15 +1347,25 @@
             },
 
             setImage(url) {
-                return () => this.$set('currentImage', url);
+                return () => {
+                    if (url === '') {
+                        this.$set('currentImage', '');
+                    } else {
+                        this.$set('currentImage', url);
+                    }
+                };
+            },
+            
+            isImageActive(url) {
+                return this.currentImage === url;
             },
 
             setTheme(theme) {
                 return () => {
                     const themes = {
-                        blue: { bg: '#007bff', text: '#ffffff', msg: 'Blue theme active' },
-                        success: { bg: '#28a745', text: '#ffffff', msg: 'Success theme active' },
-                        warning: { bg: '#ffc107', text: '#212529', msg: 'Warning theme active' }
+                        muted: { bg: '#6c757d', text: '#ffffff', msg: 'Muted theme active' },
+                        dark: { bg: '#343a40', text: '#ffffff', msg: 'Dark theme active' },
+                        light: { bg: '#f8f9fa', text: '#212529', msg: 'Light theme active' }
                     };
                     const t = themes[theme];
                     if (t) {
