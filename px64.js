@@ -345,7 +345,10 @@
         const parent = parentPath ? resolvePath(scope, parentPath) : scope;
         const apply = v => { if (el.value !== (v ?? '')) el.value = v ?? ''; };
         apply(parent[key]);
-        parent.$observe && parent.$observe(key, v => apply(v));
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(key, v => apply(v));
+            registerObserver(el, unsubscribe);
+        }
         el.addEventListener('input', () => {
             if (parent.$set) parent.$set(key, el.value);
             else parent[key] = el.value; // non-observable fallback
@@ -355,14 +358,24 @@
     // show:expr / hide:expr (truthy)
     const truthy = v => !!v;
     addBinder('show', ({ el, scope, arg }) => {
-        const apply = () => el.style.display = truthy(resolvePath(scope, arg)) ? '' : 'none';
+        const apply = () => batchUpdate(() => {
+            el.style.display = truthy(resolvePath(scope, arg)) ? '' : 'none';
+        });
         apply();
-        scope.$observe && scope.$observe('*', apply);
+        if (scope.$observe) {
+            const unsubscribe = scope.$observe('*', apply);
+            registerObserver(el, unsubscribe);
+        }
     });
     addBinder('hide', ({ el, scope, arg }) => {
-        const apply = () => el.style.display = truthy(resolvePath(scope, arg)) ? 'none' : '';
+        const apply = () => batchUpdate(() => {
+            el.style.display = truthy(resolvePath(scope, arg)) ? 'none' : '';
+        });
         apply();
-        scope.$observe && scope.$observe('*', apply);
+        if (scope.$observe) {
+            const unsubscribe = scope.$observe('*', apply);
+            registerObserver(el, unsubscribe);
+        }
     });
 
     // attr:title:prop OR attr:data-id:order.id
@@ -471,7 +484,9 @@
             renderedNodes = [];
             rows.forEach(row => {
                 const node = template.cloneNode(true);
-                bindTree(node, observable(row));
+                // Don't double-wrap with observable if already observable
+                const rowScope = (row && row.$set) ? row : observable(row);
+                bindTree(node, rowScope);
                 frag.appendChild(node);
                 renderedNodes.push(node);
             });
@@ -490,7 +505,9 @@
                 for (let i = index; i < endIndex; i++) {
                     const row = rows[i];
                     const node = template.cloneNode(true);
-                    bindTree(node, observable(row));
+                    // Don't double-wrap with observable if already observable
+                    const rowScope = (row && row.$set) ? row : observable(row);
+                    bindTree(node, rowScope);
                     frag.appendChild(node);
                     renderedNodes.push(node);
                 }
