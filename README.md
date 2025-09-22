@@ -31,6 +31,7 @@ Bind plain JavaScript objects ("scopes") to your HTML with `data-bind` attribute
 - [Todo List Example](#todo-list-example)
 - [Core API](#core-api)
   - [px64.bind(root, scope)](#px64bindroot-scope)
+  - [px64.unbind(root)](#px64unbindroot)
   - [px64.observable(obj)](#px64observableobj)
   - [px64.listState(items)](#px64liststateitems)
   - [px64.addBinder(name, fn)](#px64addbindername-fn)
@@ -174,6 +175,37 @@ Bind a DOM subtree to a reactive scope.
 **Returns:** the observable scope
 
 The bound root receives a private `data-scope-id` attribute so delegated events can find the right scope.
+
+### `px64.unbind(root)`
+
+Clean up and remove all bindings from a DOM subtree. Essential for SPAs and dynamic content.
+
+**Parameters:**
+- `root`: CSS selector or DOM element to unbind
+
+**Returns:** `true` if successful
+
+**What it does:**
+- Removes all observers and event listeners (prevents memory leaks)
+- Removes `data-bind` and `data-tap` attributes  
+- Removes `data-scope-id` attribute
+- Calls `cleanupElement()` recursively on all children
+
+**Example:**
+```javascript
+// Bind dynamic content
+const scope = px64.bind('#dynamic-widget', { data: 'test' });
+
+// Later, clean up when removing content
+px64.unbind('#dynamic-widget');
+// All observers cleaned up, no memory leaks
+```
+
+**Use Cases:**
+- **SPA route changes** - Clean up old page bindings
+- **Dynamic widgets** - Remove components safely  
+- **Modal/popup cleanup** - Prevent observer accumulation
+- **Long-running apps** - Essential for memory management
 
 ### `px64.observable(obj)`
 
