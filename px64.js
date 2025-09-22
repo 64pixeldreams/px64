@@ -425,7 +425,7 @@
         if (!tabButtons) {
             tabButtons = root.querySelectorAll('[data-bs-toggle="tab"]');
         }
-        
+
         // Update tab buttons
         tabButtons.forEach(button => {
             const target = button.getAttribute('data-bs-target');
@@ -433,7 +433,7 @@
             button.classList.toggle('active', isActive);
             button.setAttribute('aria-selected', isActive);
         });
-        
+
         // Update tab content panes
         const tabContent = root.querySelectorAll('.tab-pane');
         tabContent.forEach(pane => {
@@ -460,17 +460,19 @@
             tabButtons.forEach(button => {
                 if (button.classList.contains('active')) {
                     const target = button.getAttribute('data-bs-target');
-                    activeTab = target ? target.slice(1) : null; // Remove # prefix
+                    if (target && target.startsWith('#')) {
+                        activeTab = target.slice(1); // Remove # prefix
+                    }
                 }
             });
-
+            
             // Default to first tab if none active
             if (!activeTab && tabButtons.length > 0) {
                 const firstTarget = tabButtons[0].getAttribute('data-bs-target');
-                activeTab = firstTarget ? firstTarget.slice(1) : null;
-
-                // Mark first tab as active if none were marked
-                if (activeTab) {
+                if (firstTarget && firstTarget.startsWith('#')) {
+                    activeTab = firstTarget.slice(1);
+                    
+                    // Mark first tab as active if none were marked
                     tabButtons[0].classList.add('active');
                     tabButtons[0].setAttribute('aria-selected', 'true');
                 }
@@ -480,7 +482,7 @@
             if (scope[stateKey] === undefined && activeTab) {
                 scope.$set(stateKey, activeTab);
             }
-            
+
             // Force initial display immediately (before observer setup)
             if (activeTab) {
                 updateTabDisplay(root, activeTab);
@@ -491,7 +493,7 @@
                 button.addEventListener('click', (e) => {
                     e.preventDefault();
                     const target = button.getAttribute('data-bs-target');
-                    if (target) {
+                    if (target && target.startsWith('#')) {
                         const tabId = target.slice(1); // Remove # prefix
                         scope.$set(stateKey, tabId);
                     }
