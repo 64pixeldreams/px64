@@ -420,6 +420,29 @@
         });
     }
 
+    function updateTabDisplay(root, activeTabId, tabButtons = null) {
+        // Find tab buttons if not provided
+        if (!tabButtons) {
+            tabButtons = root.querySelectorAll('[data-bs-toggle="tab"]');
+        }
+        
+        // Update tab buttons
+        tabButtons.forEach(button => {
+            const target = button.getAttribute('data-bs-target');
+            const isActive = target && target.slice(1) === activeTabId;
+            button.classList.toggle('active', isActive);
+            button.setAttribute('aria-selected', isActive);
+        });
+        
+        // Update tab content panes
+        const tabContent = root.querySelectorAll('.tab-pane');
+        tabContent.forEach(pane => {
+            const isActive = pane.id === activeTabId;
+            pane.classList.toggle('active', isActive);
+            pane.classList.toggle('show', isActive);
+        });
+    }
+
     function autoWireBootstrapTabs(root, scope) {
         // Find all Bootstrap tab containers
         const tabContainers = root.querySelectorAll('.nav-tabs');
@@ -445,7 +468,7 @@
             if (!activeTab && tabButtons.length > 0) {
                 const firstTarget = tabButtons[0].getAttribute('data-bs-target');
                 activeTab = firstTarget ? firstTarget.slice(1) : null;
-                
+
                 // Mark first tab as active if none were marked
                 if (activeTab) {
                     tabButtons[0].classList.add('active');
@@ -453,26 +476,14 @@
                 }
             }
 
-            // Initialize state and trigger initial display
+            // Initialize state
             if (scope[stateKey] === undefined && activeTab) {
                 scope.$set(stateKey, activeTab);
             }
             
-            // Force initial tab content display
+            // Force initial display immediately (before observer setup)
             if (activeTab) {
-                // Ensure the active tab content is visible on page load
-                const activePane = root.querySelector(`#${activeTab}`);
-                if (activePane) {
-                    activePane.classList.add('active', 'show');
-                }
-                
-                // Ensure other panes are hidden
-                const allPanes = root.querySelectorAll('.tab-pane');
-                allPanes.forEach(pane => {
-                    if (pane.id !== activeTab) {
-                        pane.classList.remove('active', 'show');
-                    }
-                });
+                updateTabDisplay(root, activeTab);
             }
 
             // Setup click handlers for tab buttons
@@ -489,21 +500,7 @@
 
             // Setup observer for state changes
             scope.$observe(stateKey, (activeTabId) => {
-                // Update tab buttons
-                tabButtons.forEach(button => {
-                    const target = button.getAttribute('data-bs-target');
-                    const isActive = target && target.slice(1) === activeTabId;
-                    button.classList.toggle('active', isActive);
-                    button.setAttribute('aria-selected', isActive);
-                });
-
-                // Update tab content panes
-                const tabContent = root.querySelectorAll('.tab-pane');
-                tabContent.forEach(pane => {
-                    const isActive = pane.id === activeTabId;
-                    pane.classList.toggle('active', isActive);
-                    pane.classList.toggle('show', isActive);
-                });
+                updateTabDisplay(root, activeTabId, tabButtons);
             });
         });
     }
