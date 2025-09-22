@@ -420,10 +420,10 @@
         });
     }
 
-    function updateTabDisplay(root, activeTabId, tabButtons = null) {
-        // Find tab buttons if not provided
+    function updateTabDisplay(tabContainer, activeTabId, tabButtons = null) {
+        // Find tab buttons within this specific container
         if (!tabButtons) {
-            tabButtons = root.querySelectorAll('[data-bs-toggle="tab"]');
+            tabButtons = tabContainer.querySelectorAll('[data-bs-toggle="tab"]');
         }
 
         // Update tab buttons
@@ -434,22 +434,37 @@
             button.setAttribute('aria-selected', isActive);
         });
 
-        // Update tab content panes
-        const tabContent = root.querySelectorAll('.tab-pane');
-        tabContent.forEach(pane => {
-            const isActive = pane.id === activeTabId;
-            pane.classList.toggle('active', isActive);
-            pane.classList.toggle('show', isActive);
-        });
+        // Find the tab-content container that's related to this tab container
+        // Look for .tab-content that contains the target pane
+        const targetPane = document.getElementById(activeTabId);
+        if (targetPane) {
+            const tabContentContainer = targetPane.closest('.tab-content');
+            if (tabContentContainer) {
+                // Update only tab panes within this specific tab-content container
+                const tabPanes = tabContentContainer.querySelectorAll('.tab-pane');
+                tabPanes.forEach(pane => {
+                    const isActive = pane.id === activeTabId;
+                    if (isActive) {
+                        // Make active: add both 'active' and 'show'
+                        pane.classList.add('active', 'show');
+                    } else {
+                        // Make inactive: remove both 'active' and 'show'
+                        pane.classList.remove('active', 'show');
+                    }
+                });
+            }
+        }
     }
 
     function autoWireBootstrapTabs(root, scope) {
         // Find all Bootstrap tab containers
         const tabContainers = root.querySelectorAll('.nav-tabs');
 
-        tabContainers.forEach(tabContainer => {
+        tabContainers.forEach((tabContainer, index) => {
             const tabButtons = tabContainer.querySelectorAll('[data-bs-toggle="tab"]');
-            if (tabButtons.length === 0) return;
+            if (tabButtons.length === 0) {
+                return;
+            }
 
             // Create unique state key for this tab group
             const containerId = tabContainer.id || `tabs_${Math.random().toString(36).substr(2, 9)}`;
@@ -485,7 +500,7 @@
 
             // Force initial display immediately (before observer setup)
             if (activeTab) {
-                updateTabDisplay(root, activeTab);
+                updateTabDisplay(tabContainer, activeTab, tabButtons);
             }
 
             // Setup click handlers for tab buttons
@@ -502,7 +517,7 @@
 
             // Setup observer for state changes
             scope.$observe(stateKey, (activeTabId) => {
-                updateTabDisplay(root, activeTabId, tabButtons);
+                updateTabDisplay(tabContainer, activeTabId, tabButtons);
             });
         });
     }
