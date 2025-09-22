@@ -22,7 +22,7 @@ This folder contains all test files and demos for the px64 library.
    ```bash
    # Python
    python -m http.server 8000
-   
+
    # Node.js
    npx http-server -p 8000
    ```
@@ -39,13 +39,13 @@ This folder contains all test files and demos for the px64 library.
 - All binders working with reactive() helper
 - Interactive controls for real-time testing
 
-### **html-sanitizer-demo.html** 
+### **html-sanitizer-demo.html**
 - **No syntax errors** ✅
 - Demonstrates XSS protection without Chrome blocking
 - Shows sanitizer removing dangerous tags
 
 ### **test-memory-leaks.html**
-- **Dynamic element creation/removal** ✅  
+- **Dynamic element creation/removal** ✅
 - Automatic observer cleanup verification
 - Memory usage monitoring
 
