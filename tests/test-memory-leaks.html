@@ -146,7 +146,7 @@
         // Test attr: and class: binder cleanup fixes
         function testAttrClassCleanup() {
             const container = document.getElementById('fixes-test-results');
-            
+
             // Create test element with attr: and class: binders
             const testEl = document.createElement('div');
             testEl.innerHTML = `
@@ -154,20 +154,20 @@
                     <span data-bind="text:dynamicTitle">Test Element</span>
                 </div>
             `;
-            
+
             // Create scope
             const testScope = px64.observable({
                 dynamicTitle: 'Initial Title',
                 isHighlighted: false
             });
-            
+
             // Bind element
             px64.bind(testEl, testScope);
-            
+
             // Test that bindings work
             testScope.$set('dynamicTitle', 'Updated Title');
             testScope.$set('isHighlighted', true);
-            
+
             // Remove element (should trigger cleanup)
             setTimeout(() => {
                 testEl.remove();
@@ -181,14 +181,14 @@
                     </div>
                 `;
             }, 1000);
-            
+
             container.innerHTML = '<div class="alert alert-info">🔄 Testing attr: & class: binder cleanup...</div>';
         }
 
         // Test px64.unbind() function
         function testUnbindFunction() {
             const container = document.getElementById('fixes-test-results');
-            
+
             // Create test element
             const testEl = document.createElement('div');
             testEl.id = 'unbind-test';
@@ -198,30 +198,30 @@
                 </div>
             `;
             document.body.appendChild(testEl);
-            
+
             // Create scope and bind
             const testScope = px64.observable({
                 message: 'Bound Element',
                 isActive: true,
                 counter: 0
             });
-            
+
             px64.bind('#unbind-test', testScope);
-            
+
             // Test that binding works
             testScope.$set('counter', 42);
             testScope.$set('message', 'Updated Message');
-            
+
             // Test unbind function
             setTimeout(() => {
                 const success = px64.unbind('#unbind-test');
-                
+
                 // Verify cleanup
                 const hasDataBind = testEl.querySelector('[data-bind]');
                 const hasScopeId = testEl.hasAttribute('data-scope-id');
-                
+
                 testEl.remove();
-                
+
                 container.innerHTML = `
                     <div class="alert alert-success">
                         ✅ px64.unbind() test completed!<br>
@@ -232,7 +232,7 @@
                     </div>
                 `;
             }, 1000);
-            
+
             container.innerHTML = '<div class="alert alert-info">🔄 Testing px64.unbind() function...</div>';
         }
 

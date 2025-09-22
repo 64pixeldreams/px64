@@ -187,7 +187,7 @@ Clean up and remove all bindings from a DOM subtree. Essential for SPAs and dyna
 
 **What it does:**
 - Removes all observers and event listeners (prevents memory leaks)
-- Removes `data-bind` and `data-tap` attributes  
+- Removes `data-bind` and `data-tap` attributes
 - Removes `data-scope-id` attribute
 - Calls `cleanupElement()` recursively on all children
 
@@ -203,7 +203,7 @@ px64.unbind('#dynamic-widget');
 
 **Use Cases:**
 - **SPA route changes** - Clean up old page bindings
-- **Dynamic widgets** - Remove components safely  
+- **Dynamic widgets** - Remove components safely
 - **Modal/popup cleanup** - Prevent observer accumulation
 - **Long-running apps** - Essential for memory management
 

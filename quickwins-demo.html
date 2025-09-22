@@ -246,6 +246,7 @@
                         <a class="nav-link" href="#date-formatting">Date Formatting</a>
                         <a class="nav-link" href="#bootstrap-components">Bootstrap Components</a>
                         <a class="nav-link" href="#data-tables">Data Tables</a>
+                        <a class="nav-link" href="#bootstrap-dropdowns">Bootstrap Dropdowns</a>
                         <a class="nav-link" href="#reference">Binder Reference</a>
                     </nav>
                 </div>
@@ -1299,6 +1300,162 @@ px64.bind('#app', state);</code></pre>
                         </div>
                     </section>
 
+                    <!-- Bootstrap Dropdowns -->
+                    <section id="bootstrap-dropdowns" class="demo-section">
+                        <h2>Bootstrap Dropdowns</h2>
+                        <p>Automatic Bootstrap dropdown enhancement - Zero JavaScript required! px64 auto-detects and
+                            wires up all Bootstrap dropdown markup.</p>
+
+                        <div class="demo-card">
+                            <div class="card-header">
+                                <h5 class="mb-0">🎯 Auto-Wired Dropdowns</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="live-demo">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <h6>Standard Dropdown</h6>
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary dropdown-toggle" type="button"
+                                                    data-bs-toggle="dropdown">
+                                                    Choose Action
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="#">Edit Profile</a></li>
+                                                    <li><a class="dropdown-item" href="#">View Settings</a></li>
+                                                    <li><a class="dropdown-item" href="#">Sign Out</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <h6>Button Group Dropdown</h6>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary">Save</button>
+                                                <button type="button"
+                                                    class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+                                                    data-bs-toggle="dropdown">
+                                                    <span class="visually-hidden">Toggle Dropdown</span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="#">Save as Draft</a></li>
+                                                    <li><a class="dropdown-item" href="#">Save and Publish</a></li>
+                                                    <li>
+                                                        <hr class="dropdown-divider">
+                                                    </li>
+                                                    <li><a class="dropdown-item" href="#">Save Template</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <h6>Navigation Dropdown</h6>
+                                            <nav class="navbar navbar-expand navbar-light bg-light">
+                                                <div class="container-fluid">
+                                                    <ul class="navbar-nav">
+                                                        <li class="nav-item dropdown">
+                                                            <a class="nav-link dropdown-toggle" href="#"
+                                                                data-bs-toggle="dropdown">
+                                                                Menu
+                                                            </a>
+                                                            <ul class="dropdown-menu">
+                                                                <li><a class="dropdown-item" href="#">Dashboard</a></li>
+                                                                <li><a class="dropdown-item" href="#">Reports</a></li>
+                                                                <li><a class="dropdown-item" href="#">Analytics</a></li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </nav>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <h6>Dropdown with Icons</h6>
+                                            <div class="dropdown">
+                                                <button class="btn btn-outline-primary dropdown-toggle" type="button"
+                                                    data-bs-toggle="dropdown">
+                                                    🎨 Design Tools
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="#">📝 Text Editor</a></li>
+                                                    <li><a class="dropdown-item" href="#">🖼️ Image Gallery</a></li>
+                                                    <li><a class="dropdown-item" href="#">🎨 Color Picker</a></li>
+                                                    <li>
+                                                        <hr class="dropdown-divider">
+                                                    </li>
+                                                    <li><a class="dropdown-item" href="#">💾 Export</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="code-example">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" data-bs-toggle="tab"
+                                                data-bs-target="#dropdown-html" type="button">HTML</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#dropdown-js"
+                                                type="button">JavaScript</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="dropdown-html">
+                                            <pre><code class="language-html">&lt;!-- Pure Bootstrap markup - px64 auto-wires it! --&gt;
+&lt;div class="dropdown"&gt;
+  &lt;button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"&gt;
+    Choose Action
+  &lt;/button&gt;
+  &lt;ul class="dropdown-menu"&gt;
+    &lt;li&gt;&lt;a class="dropdown-item" href="#"&gt;Edit Profile&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="dropdown-item" href="#"&gt;View Settings&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="dropdown-item" href="#"&gt;Sign Out&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;!-- Button Group Dropdown --&gt;
+&lt;div class="btn-group"&gt;
+  &lt;button class="btn btn-primary"&gt;Save&lt;/button&gt;
+  &lt;button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"&gt;
+    &lt;span class="visually-hidden"&gt;Toggle Dropdown&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;ul class="dropdown-menu"&gt;
+    &lt;li&gt;&lt;a class="dropdown-item" href="#"&gt;Save as Draft&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="dropdown-item" href="#"&gt;Save and Publish&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+                                        </div>
+                                        <div class="tab-pane fade" id="dropdown-js">
+                                            <pre><code class="language-javascript">// NO JAVASCRIPT REQUIRED! 🎉
+// px64 automatically detects and enhances Bootstrap dropdowns
+
+// Just bind your page normally:
+const app = px64.bind('#app', {});
+
+// px64 automatically:
+// ✅ Detects .dropdown elements
+// ✅ Adds click handlers
+// ✅ Manages show/hide state
+// ✅ Handles click outside to close
+// ✅ Supports escape key
+// ✅ Updates ARIA attributes
+// ✅ Works with multiple dropdowns
+
+// Features:
+// - Pure Bootstrap 5 markup compatibility
+// - Zero JavaScript configuration needed
+// - Automatic state management in scope
+// - Full keyboard accessibility
+// - Click outside to close behavior
+// - Multiple dropdown support</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
                     <!-- Binder Reference -->
                     <section id="reference" class="demo-section">
                         <h2>Quick Reference</h2>
@@ -1467,8 +1624,7 @@ px64.bind('#app', state);</code></pre>
 
     <!-- px64 library -->
     <script src="./px64.js"></script>
-    <!-- Bootstrap JS for tabs -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS removed - px64 auto-wires tabs! -->
     <!-- Prism for syntax highlighting -->
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
     <script>

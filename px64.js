@@ -331,6 +331,181 @@
     function bindTree(root, scope) {
         const stack = [{ el: root, scope }];
         walk(root, scope, stack);
+
+        // Auto-wire Bootstrap components after binding
+        autoWireBootstrapComponents(root, scope);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Bootstrap Auto-Wiring System - Zero JS Required!
+
+    function autoWireBootstrapComponents(root, scope) {
+        autoWireDropdowns(root, scope);
+        autoWireBootstrapTabs(root, scope);
+    }
+
+    function autoWireDropdowns(root, scope) {
+        const dropdowns = root.querySelectorAll('.dropdown');
+
+        dropdowns.forEach(dropdown => {
+            const toggle = dropdown.querySelector('[data-bs-toggle="dropdown"], .dropdown-toggle');
+            const menu = dropdown.querySelector('.dropdown-menu');
+
+            if (!toggle || !menu) return;
+
+            // Create unique state key
+            const dropdownId = toggle.id || `dropdown_${Math.random().toString(36).substr(2, 9)}`;
+            const stateKey = `_dropdown_${dropdownId}`;
+
+            // Initialize state
+            if (scope[stateKey] === undefined) {
+                scope.$set(stateKey, false);
+            }
+
+            // Click handler for toggle
+            toggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Close other dropdowns
+                closeAllDropdowns(root, scope, stateKey);
+
+                // Toggle this dropdown
+                const isOpen = !scope[stateKey];
+                scope.$set(stateKey, isOpen);
+            });
+
+            // Observer for state changes
+            scope.$observe(stateKey, (isOpen) => {
+                dropdown.classList.toggle('show', isOpen);
+                menu.classList.toggle('show', isOpen);
+                toggle.setAttribute('aria-expanded', isOpen);
+            });
+
+            // Global click outside handler (once per root)
+            if (!root._px64DropdownHandler) {
+                root._px64DropdownHandler = (e) => {
+                    if (!e.target.closest('.dropdown')) {
+                        closeAllDropdowns(root, scope);
+                    }
+                };
+                document.addEventListener('click', root._px64DropdownHandler);
+
+                // Escape key handler
+                root._px64EscapeHandler = (e) => {
+                    if (e.key === 'Escape') {
+                        closeAllDropdowns(root, scope);
+                    }
+                };
+                document.addEventListener('keydown', root._px64EscapeHandler);
+            }
+        });
+    }
+
+    function closeAllDropdowns(root, scope, except = null) {
+        // Close all dropdown states
+        Object.keys(scope).forEach(key => {
+            if (key.startsWith('_dropdown_') && key !== except) {
+                scope.$set(key, false);
+            }
+        });
+
+        // Remove Bootstrap classes from all dropdowns
+        root.querySelectorAll('.dropdown').forEach(dropdown => {
+            dropdown.classList.remove('show');
+            const menu = dropdown.querySelector('.dropdown-menu');
+            const toggle = dropdown.querySelector('[data-bs-toggle="dropdown"], .dropdown-toggle');
+            if (menu) menu.classList.remove('show');
+            if (toggle) toggle.setAttribute('aria-expanded', 'false');
+        });
+    }
+
+    function autoWireBootstrapTabs(root, scope) {
+        // Find all Bootstrap tab containers
+        const tabContainers = root.querySelectorAll('.nav-tabs');
+
+        tabContainers.forEach(tabContainer => {
+            const tabButtons = tabContainer.querySelectorAll('[data-bs-toggle="tab"]');
+            if (tabButtons.length === 0) return;
+
+            // Create unique state key for this tab group
+            const containerId = tabContainer.id || `tabs_${Math.random().toString(36).substr(2, 9)}`;
+            const stateKey = `_tabs_${containerId}`;
+
+            // Find the active tab or default to first
+            let activeTab = null;
+            tabButtons.forEach(button => {
+                if (button.classList.contains('active')) {
+                    const target = button.getAttribute('data-bs-target');
+                    activeTab = target ? target.slice(1) : null; // Remove # prefix
+                }
+            });
+
+            // Default to first tab if none active
+            if (!activeTab && tabButtons.length > 0) {
+                const firstTarget = tabButtons[0].getAttribute('data-bs-target');
+                activeTab = firstTarget ? firstTarget.slice(1) : null;
+                
+                // Mark first tab as active if none were marked
+                if (activeTab) {
+                    tabButtons[0].classList.add('active');
+                    tabButtons[0].setAttribute('aria-selected', 'true');
+                }
+            }
+
+            // Initialize state and trigger initial display
+            if (scope[stateKey] === undefined && activeTab) {
+                scope.$set(stateKey, activeTab);
+            }
+            
+            // Force initial tab content display
+            if (activeTab) {
+                // Ensure the active tab content is visible on page load
+                const activePane = root.querySelector(`#${activeTab}`);
+                if (activePane) {
+                    activePane.classList.add('active', 'show');
+                }
+                
+                // Ensure other panes are hidden
+                const allPanes = root.querySelectorAll('.tab-pane');
+                allPanes.forEach(pane => {
+                    if (pane.id !== activeTab) {
+                        pane.classList.remove('active', 'show');
+                    }
+                });
+            }
+
+            // Setup click handlers for tab buttons
+            tabButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = button.getAttribute('data-bs-target');
+                    if (target) {
+                        const tabId = target.slice(1); // Remove # prefix
+                        scope.$set(stateKey, tabId);
+                    }
+                });
+            });
+
+            // Setup observer for state changes
+            scope.$observe(stateKey, (activeTabId) => {
+                // Update tab buttons
+                tabButtons.forEach(button => {
+                    const target = button.getAttribute('data-bs-target');
+                    const isActive = target && target.slice(1) === activeTabId;
+                    button.classList.toggle('active', isActive);
+                    button.setAttribute('aria-selected', isActive);
+                });
+
+                // Update tab content panes
+                const tabContent = root.querySelectorAll('.tab-pane');
+                tabContent.forEach(pane => {
+                    const isActive = pane.id === activeTabId;
+                    pane.classList.toggle('active', isActive);
+                    pane.classList.toggle('show', isActive);
+                });
+            });
+        });
     }
 
     function walk(el, scope, stack) {
@@ -355,11 +530,11 @@
 
     function resolvePath(scope, path) {
         if (!path || path === '') return scope;
-        
+
         // Handle edge cases: remove empty segments and trailing dots
         const keys = path.split('.').filter(k => k !== '');
         if (keys.length === 0) return scope;
-        
+
         return keys.reduce((acc, k) => {
             // Handle null/undefined gracefully
             if (acc === null || acc === undefined) return undefined;
@@ -1237,24 +1412,24 @@
             startDOMObserver(); // Start automatic cleanup observer
             return sc;
         },
-        
+
         unbind(root) {
             const host = typeof root === 'string' ? document.querySelector(root) : root;
             if (!host) throw new Error('px64.unbind: root not found');
-            
+
             // Clean up all observers for this element and its children
             cleanupElement(host);
-            
+
             // Remove scope ID and tap delegation
             host.removeAttribute('data-scope-id');
-            
+
             // Remove all data-bind attributes to prevent re-binding
             const elements = [host, ...host.querySelectorAll('[data-bind]')];
             elements.forEach(el => {
                 el.removeAttribute('data-bind');
                 el.removeAttribute('data-tap');
             });
-            
+
             return true;
         },
         model,
