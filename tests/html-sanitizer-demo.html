@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <script src="px64.js"></script>
+    <script src="../px64.js"></script>
     <script>
         const demoState = px64.observable({
             unsafeContent: '<p>Type or paste HTML here...</p>',
@@ -62,9 +62,9 @@
                 this.$set('unsafeContent', '');
                 this.$set('safeContent', '');
             }
-    });
+        });
 
-    px64.bind('#app', demoState);
+        px64.bind('#app', demoState);
     </script>
 </body>
 

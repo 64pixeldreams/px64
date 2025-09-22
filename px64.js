@@ -79,7 +79,7 @@
 
     // ─────────────────────────────────────────────────────────────────────────────
     // HTML Sanitizer for XSS Protection
-    
+
     // Allowed HTML tags and attributes for safe content
     const ALLOWED_TAGS = new Set([
         'p', 'div', 'span', 'br', 'hr', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
@@ -87,35 +87,35 @@
         'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'blockquote', 'pre', 'code',
         'a', 'img', 'table', 'thead', 'tbody', 'tr', 'th', 'td'
     ]);
-    
+
     const ALLOWED_ATTRS = new Set([
         'href', 'src', 'alt', 'title', 'class', 'id', 'target', 'rel'
     ]);
-    
+
     const URL_PROTOCOLS = /^(https?|mailto):/i;
 
     function sanitizeHTML(html) {
         if (!html || typeof html !== 'string') return '';
-        
+
         // Create a temporary DOM element to parse HTML
         const temp = document.createElement('div');
         temp.innerHTML = html;
-        
+
         // Recursively clean the DOM tree
         function cleanElement(element) {
             const tagName = element.tagName?.toLowerCase();
-            
+
             // Remove disallowed tags
             if (!ALLOWED_TAGS.has(tagName)) {
                 element.remove();
                 return;
             }
-            
+
             // Clean attributes
             const attrs = Array.from(element.attributes || []);
             attrs.forEach(attr => {
                 const name = attr.name.toLowerCase();
-                
+
                 if (!ALLOWED_ATTRS.has(name)) {
                     element.removeAttribute(attr.name);
                 } else if (name === 'href' || name === 'src') {
@@ -126,14 +126,14 @@
                     }
                 }
             });
-            
+
             // Clean child elements
             Array.from(element.children || []).forEach(cleanElement);
         }
-        
+
         // Clean all child elements
         Array.from(temp.children).forEach(cleanElement);
-        
+
         return temp.innerHTML;
     }
 
