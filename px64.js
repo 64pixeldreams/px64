@@ -480,13 +480,13 @@
                     }
                 }
             });
-            
+
             // Default to first tab if none active
             if (!activeTab && tabButtons.length > 0) {
                 const firstTarget = tabButtons[0].getAttribute('data-bs-target');
                 if (firstTarget && firstTarget.startsWith('#')) {
                     activeTab = firstTarget.slice(1);
-                    
+
                     // Mark first tab as active if none were marked
                     tabButtons[0].classList.add('active');
                     tabButtons[0].setAttribute('aria-selected', 'true');

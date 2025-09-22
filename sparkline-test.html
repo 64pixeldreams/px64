@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PX64 Charts - Sparkline Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 40px;
+        }
+
+        .test-container {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .sparkline-container {
+            height: 40px;
+            width: 200px;
+            border: 1px solid #eee;
+            margin: 10px 0;
+        }
+
+        .large-sparkline {
+            height: 80px;
+            width: 400px;
+        }
+
+        button {
+            margin: 5px;
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>📊 PX64 Charts - Sparkline Test</h1>
+
+    <div class="test-container">
+        <h3>Basic Sparkline</h3>
+        <div class="sparkline-container">
+            <div data-bind="sparkline:salesData" data-color="#28a745"></div>
+        </div>
+        <button onclick="updateSales()">Update Sales Data</button>
+        <button onclick="addSalesPoint()">Add Point</button>
+    </div>
+
+    <div class="test-container">
+        <h3>Bootstrap Theme Sparklines</h3>
+        <div style="display: flex; gap: 20px;">
+            <div>
+                <label>Revenue (Bootstrap Blue)</label>
+                <div class="sparkline-container">
+                    <div data-bind="sparkline:revenueData" data-theme="bootstrap" data-color="#007bff"></div>
+                </div>
+            </div>
+            <div>
+                <label>Users (Bootstrap Green)</label>
+                <div class="sparkline-container">
+                    <div data-bind="sparkline:userData" data-theme="bootstrap" data-color="#28a745"></div>
+                </div>
+            </div>
+            <div>
+                <label>Orders (Bootstrap Warning)</label>
+                <div class="sparkline-container">
+                    <div data-bind="sparkline:orderData" data-theme="bootstrap" data-color="#ffc107"></div>
+                </div>
+            </div>
+        </div>
+        <button onclick="updateAllData()">Update All Data</button>
+    </div>
+
+    <div class="test-container">
+        <h3>Sparkline Types</h3>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+            <div>
+                <label>Line Sparkline</label>
+                <div class="sparkline-container">
+                    <div data-bind="sparkline:largeData" data-color="#007bff" data-type="line"></div>
+                </div>
+            </div>
+            <div>
+                <label>Area Sparkline</label>
+                <div class="sparkline-container">
+                    <div data-bind="sparkline:largeData" data-color="#28a745" data-type="area"></div>
+                </div>
+            </div>
+            <div>
+                <label>Bar Sparkline</label>
+                <div class="sparkline-container">
+                    <div data-bind="sparkline:largeData" data-color="#ffc107" data-type="bar"></div>
+                </div>
+            </div>
+            <div>
+                <label>Win/Loss Sparkline</label>
+                <div class="sparkline-container">
+                    <div data-bind="sparkline:winLossData" data-type="winloss" data-win-color="#28a745"
+                        data-loss-color="#dc3545"></div>
+                </div>
+            </div>
+        </div>
+        <button onclick="generateLargeData()">Update Sparklines</button>
+        <button onclick="generateWinLoss()">Update Win/Loss</button>
+    </div>
+
+    <div class="test-container">
+        <h3>Full Charts</h3>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+            <div>
+                <label>Line Chart</label>
+                <div style="height: 200px; border: 1px solid #eee;">
+                    <div data-bind="chart:salesData" data-type="line" data-color="#007bff"></div>
+                </div>
+            </div>
+            <div>
+                <label>Bar Chart</label>
+                <div style="height: 200px; border: 1px solid #eee;">
+                    <div data-bind="chart:revenueData" data-type="bar" data-color="#28a745"></div>
+                </div>
+            </div>
+            <div>
+                <label>Area Chart</label>
+                <div style="height: 200px; border: 1px solid #eee;">
+                    <div data-bind="chart:userData" data-type="area" data-color="#17a2b8"></div>
+                </div>
+            </div>
+            <div>
+                <label>Pie Chart</label>
+                <div style="height: 200px; border: 1px solid #eee;">
+                    <div data-bind="chart:pieData" data-type="pie" data-theme="bootstrap"></div>
+                </div>
+            </div>
+        </div>
+        <button onclick="updateCharts()">Update Charts</button>
+    </div>
+
+    <div class="test-container">
+        <h3>Micro Bars (Analytics Style)</h3>
+        <p>Clean layout - labels left, values right, bars in between:</p>
+
+        <div style="display: grid; gap: 8px; max-width: 500px;">
+            <div style="display: flex; align-items: center; gap: 12px; height: 24px;">
+                <div style="width: 80px; font-size: 14px;">HTML</div>
+                <div style="width: 60px; text-align: right; font-size: 14px; color: #666;"
+                    data-bind="text:htmlTrafficFormatted"></div>
+                <div style="width: 150px; height: 16px;">
+                    <div data-bind="microbar:htmlTraffic" data-color="#007bff" data-group="content-types"></div>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px; height: 24px;">
+                <div style="width: 80px; font-size: 14px;">CSS</div>
+                <div style="width: 60px; text-align: right; font-size: 14px; color: #666;"
+                    data-bind="text:cssTrafficFormatted"></div>
+                <div style="width: 150px; height: 16px;">
+                    <div data-bind="microbar:cssTraffic" data-color="#28a745" data-group="content-types"></div>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px; height: 24px;">
+                <div style="width: 80px; font-size: 14px;">JavaScript</div>
+                <div style="width: 60px; text-align: right; font-size: 14px; color: #666;"
+                    data-bind="text:jsTrafficFormatted"></div>
+                <div style="width: 150px; height: 16px;">
+                    <div data-bind="microbar:jsTraffic" data-color="#ffc107" data-group="content-types"></div>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px; height: 24px;">
+                <div style="width: 80px; font-size: 14px;">Images</div>
+                <div style="width: 60px; text-align: right; font-size: 14px; color: #666;"
+                    data-bind="text:imageTrafficFormatted"></div>
+                <div style="width: 150px; height: 16px;">
+                    <div data-bind="microbar:imageTraffic" data-color="#dc3545" data-group="content-types"></div>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px; height: 24px;">
+                <div style="width: 80px; font-size: 14px;">Other</div>
+                <div style="width: 60px; text-align: right; font-size: 14px; color: #666;"
+                    data-bind="text:otherTrafficFormatted"></div>
+                <div style="width: 150px; height: 16px;">
+                    <div data-bind="microbar:otherTraffic" data-color="#6c757d" data-group="content-types"></div>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="updateTrafficData()">Update Traffic Data</button>
+        <button onclick="simulateTrafficSpike()">Simulate Spike</button>
+    </div>
+
+    <!-- Core px64 -->
+    <script src="px64.js"></script>
+
+    <!-- Charts extension -->
+    <script src="px64-charts.js"></script>
+
+    <script>
+        // Test data
+        const testData = px64.observable({
+            salesData: [10, 15, 12, 18, 22, 25, 20, 28, 30, 26],
+            revenueData: [100, 120, 110, 140, 160, 180, 200, 190, 210, 220],
+            userData: [50, 55, 52, 60, 65, 70, 68, 75, 80, 85],
+            orderData: [5, 8, 6, 12, 15, 18, 16, 20, 22, 25],
+            largeData: Array.from({ length: 50 }, (_, i) => Math.sin(i * 0.2) * 50 + 100 + Math.random() * 20),
+            winLossData: [1, -1, 1, 1, -1, 1, -1, -1, 1, 1, -1, 1],
+            pieData: [30, 25, 20, 15, 10],
+
+            // Traffic data for micro bars (like Cloudflare analytics)
+            htmlTraffic: 768650,
+            cssTraffic: 126820,
+            jsTraffic: 89340,
+            imageTraffic: 45120,
+            otherTraffic: 12890,
+
+            // Formatted values for display
+            get htmlTrafficFormatted() { return this.formatValue(this.htmlTraffic); },
+            get cssTrafficFormatted() { return this.formatValue(this.cssTraffic); },
+            get jsTrafficFormatted() { return this.formatValue(this.jsTraffic); },
+            get imageTrafficFormatted() { return this.formatValue(this.imageTraffic); },
+            get otherTrafficFormatted() { return this.formatValue(this.otherTraffic); },
+
+            formatValue(value) {
+                if (value >= 1000000) return (value / 1000000).toFixed(1) + 'M';
+                if (value >= 1000) return (value / 1000).toFixed(1) + 'K';
+                return value.toString();
+            }
+        });
+
+        // Bind data to page
+        px64.bind('body', testData);
+
+        // Test functions
+        function updateSales() {
+            const newData = Array.from({ length: 10 }, () => Math.random() * 40 + 10);
+            testData.$set('salesData', newData);
+        }
+
+        function addSalesPoint() {
+            const currentData = [...testData.salesData];
+            currentData.push(Math.random() * 40 + 10);
+            if (currentData.length > 15) {
+                currentData.shift();
+            }
+            testData.$set('salesData', currentData);
+        }
+
+        function updateAllData() {
+            testData.$set('revenueData', Array.from({ length: 10 }, () => Math.random() * 200 + 100));
+            testData.$set('userData', Array.from({ length: 10 }, () => Math.random() * 50 + 50));
+            testData.$set('orderData', Array.from({ length: 10 }, () => Math.random() * 30 + 5));
+        }
+
+        function generateLargeData() {
+            const newData = Array.from({ length: 50 }, (_, i) => Math.sin(i * 0.3) * 60 + 120 + Math.random() * 30);
+            testData.$set('largeData', newData);
+        }
+
+        function generateWinLoss() {
+            const newData = Array.from({ length: 12 }, () => Math.random() > 0.5 ? 1 : -1);
+            testData.$set('winLossData', newData);
+        }
+
+        function updateCharts() {
+            updateSales();
+            updateAllData();
+            const newPieData = Array.from({ length: 5 }, () => Math.random() * 40 + 10);
+            testData.$set('pieData', newPieData);
+        }
+
+        function updateTrafficData() {
+            // Realistic traffic data updates
+            testData.$set('htmlTraffic', Math.round(600000 + Math.random() * 300000));
+            testData.$set('cssTraffic', Math.round(80000 + Math.random() * 100000));
+            testData.$set('jsTraffic', Math.round(60000 + Math.random() * 80000));
+            testData.$set('imageTraffic', Math.round(30000 + Math.random() * 40000));
+            testData.$set('otherTraffic', Math.round(8000 + Math.random() * 20000));
+        }
+
+        function simulateTrafficSpike() {
+            // Simulate a traffic spike - multiply all values by 2-3x
+            const multiplier = 2 + Math.random();
+            testData.$set('htmlTraffic', Math.round(testData.htmlTraffic * multiplier));
+            testData.$set('cssTraffic', Math.round(testData.cssTraffic * multiplier));
+            testData.$set('jsTraffic', Math.round(testData.jsTraffic * multiplier));
+            testData.$set('imageTraffic', Math.round(testData.imageTraffic * multiplier));
+            testData.$set('otherTraffic', Math.round(testData.otherTraffic * multiplier));
+        }
+
+        console.log('🧪 Sparkline test page loaded');
+        console.log('Test data:', testData);
+    </script>
+</body>
+
+</html>
