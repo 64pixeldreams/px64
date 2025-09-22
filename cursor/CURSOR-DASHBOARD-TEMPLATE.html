@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>px64 Dashboard Template</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .card {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .metric-change {
+            font-size: 0.875rem;
+        }
+
+        .chart-container {
+            height: 300px;
+        }
+
+        .sparkline-container {
+            height: 40px;
+        }
+
+        .microbar-container {
+            height: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid py-4" id="dashboard">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h3">Dashboard</h1>
+                <p class="text-muted">Real-time analytics with px64 + Charts</p>
+            </div>
+        </div>
+
+        <!-- KPI Cards with Sparklines -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-muted mb-2">Total Sales</h6>
+                                <div class="metric-value text-primary" data-bind="money:totalSales"></div>
+                                <div class="metric-change text-success">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span data-bind="text:salesGrowth"></span>%
+                                </div>
+                                <small class="text-muted">Updated: <span data-bind="timeago:lastUpdated"></span></small>
+                            </div>
+                            <div class="sparkline-container" style="width: 100px;">
+                                <div data-bind="sparkline:salesData" data-color="#007bff" data-type="area"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-muted mb-2">Active Users</h6>
+                                <div class="metric-value text-success" data-bind="text:activeUsers"></div>
+                                <div class="metric-change text-success">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span data-bind="text:usersGrowth"></span>%
+                                </div>
+                            </div>
+                            <div class="sparkline-container" style="width: 100px;">
+                                <div data-bind="sparkline:usersData" data-color="#28a745" data-type="line"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-muted mb-2">Conversion Rate</h6>
+                                <div class="metric-value text-warning" data-bind="text:conversionRate"></div>
+                                <div class="metric-change text-danger">
+                                    <i class="fas fa-arrow-down"></i>
+                                    <span data-bind="text:conversionChange"></span>%
+                                </div>
+                            </div>
+                            <div class="sparkline-container" style="width: 100px;">
+                                <div data-bind="sparkline:conversionData" data-color="#ffc107" data-type="bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-muted mb-2">Revenue</h6>
+                                <div class="metric-value text-info" data-bind="money:totalRevenue"></div>
+                                <div class="metric-change text-success">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span data-bind="text:revenueGrowth"></span>%
+                                </div>
+                                <small class="text-muted">Since: <span data-bind="date:createdAt"></span></small>
+                            </div>
+                            <div class="sparkline-container" style="width: 100px;">
+                                <div data-bind="sparkline:revenueData" data-color="#17a2b8" data-type="area"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Charts Row -->
+        <div class="row mb-4">
+            <div class="col-lg-8 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Sales Trends</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <div data-bind="chart:monthlyTrends" data-type="line" data-color="#007bff"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Traffic Sources</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <div data-bind="chart:trafficSources" data-type="pie"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conversion Funnel (Grouped Charts) -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Conversion Funnel</h5>
+                        <small class="text-muted">Synchronized scaling for comparison</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <h6 class="text-muted">Page Views</h6>
+                                <div class="metric-value text-primary" data-bind="text:pageViews"></div>
+                                <div data-bind="sparkline:pageViewsData" data-group="funnel" data-color="#007bff"
+                                    data-height="60"></div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <h6 class="text-muted">Clicks</h6>
+                                <div class="metric-value text-success" data-bind="text:clicks"></div>
+                                <div data-bind="sparkline:clicksData" data-group="funnel" data-color="#28a745"
+                                    data-height="60"></div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <h6 class="text-muted">Conversions</h6>
+                                <div class="metric-value text-warning" data-bind="text:conversions"></div>
+                                <div data-bind="sparkline:conversionsData" data-group="funnel" data-color="#ffc107"
+                                    data-height="60"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bootstrap Components Demo -->
+        <div class="row mb-4">
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Bootstrap Components</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Dynamic Alert -->
+                        <div data-bind="alert:alertMessage, show:alertMessage" class="alert mb-3">
+                        </div>
+
+                        <!-- Auto-Colored Badge -->
+                        <p>Status: <span data-bind="badge:badgeStatus"></span></p>
+
+                        <!-- Progress Bar -->
+                        <label>Upload Progress:</label>
+                        <div class="progress mb-3">
+                            <div data-bind="progress:uploadProgress" class="progress-bar" role="progressbar"></div>
+                        </div>
+
+                        <!-- Form Controls -->
+                        <div class="mb-3">
+                            <label class="form-label">Email:</label>
+                            <input data-bind="value:email, valid:isEmailValid, invalid:!isEmailValid" type="email"
+                                class="form-control">
+                            <div data-bind="show:!isEmailValid" class="invalid-feedback">
+                                Please enter a valid email
+                            </div>
+                        </div>
+
+                        <!-- Checkbox -->
+                        <div class="form-check mb-3">
+                            <input data-bind="checkbox:isChecked" class="form-check-input" type="checkbox" id="check1">
+                            <label class="form-check-label" for="check1">
+                                Enable notifications
+                            </label>
+                        </div>
+
+                        <!-- Processing Button -->
+                        <button data-bind="loading:isProcessing, disable:isProcessing, tap:toggleProcessing"
+                            class="btn btn-primary">
+                            <span data-bind="text:isProcessing ? 'Processing...' : 'Start Process'"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Bootstrap Auto-Wiring Demo</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Dropdown (No JS Required!) -->
+                        <div class="dropdown mb-3">
+                            <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" data-bind="tap:showSuccess">Success</a></li>
+                                <li><a class="dropdown-item" href="#" data-bind="tap:showWarning">Warning</a></li>
+                                <li><a class="dropdown-item" href="#" data-bind="tap:showError">Error</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Tabs (No JS Required!) -->
+                        <ul class="nav nav-tabs mb-3">
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab1">
+                                    Overview
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab2">
+                                    Details
+                                </button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="tab1">
+                                <p>Overview content with dates:</p>
+                                <ul class="list-unstyled">
+                                    <li><strong>Created:</strong> <span data-bind="date:createdAt"></span></li>
+                                    <li><strong>Last Login:</strong> <span data-bind="datetime:lastLogin"></span></li>
+                                    <li><strong>Updated:</strong> <span data-bind="timeago:lastUpdated"></span></li>
+                                </ul>
+                            </div>
+                            <div class="tab-pane fade" id="tab2">
+                                <p>Detail content with formatted values:</p>
+                                <ul class="list-unstyled">
+                                    <li><strong>Revenue:</strong> <span data-bind="money:totalRevenue"></span></li>
+                                    <li><strong>Growth:</strong> <span data-bind="text:revenueGrowth"></span>%</li>
+                                    <li><strong>Users:</strong> <span data-bind="text:activeUsers"></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table Example -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Employee Directory</h5>
+                        <div>
+                            <button data-bind="tap:addEmployee" class="btn btn-sm btn-primary">Add Employee</button>
+                            <button data-bind="tap:removeEmployee" class="btn btn-sm btn-outline-danger">Remove
+                                Last</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Auto-Generated Table with Sorting -->
+                        <table data-bind="table:employees"
+                            data-meta="cols:name,email,role,salary,created,status;sort:name"
+                            class="table table-striped table-hover">
+                            <!-- px64 automatically generates:
+                                 - Headers from cols: metadata
+                                 - Sortable columns (click headers)
+                                 - Rows from employees data
+                            -->
+                        </table>
+
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <strong>Table Features:</strong>
+                                Click column headers to sort •
+                                Auto-generated from data •
+                                Reactive updates
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Micro Bars -->
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Content Performance</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="me-3" style="width: 100px; font-weight: 500;">Blog Posts</span>
+                            <div data-bind="microbar:blogTraffic" data-color="#007bff" style="flex: 1;"
+                                class="microbar-container"></div>
+                            <span class="ms-3 text-muted" data-bind="text:blogTrafficFormatted"></span>
+                        </div>
+
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="me-3" style="width: 100px; font-weight: 500;">Products</span>
+                            <div data-bind="microbar:productTraffic" data-color="#28a745" style="flex: 1;"
+                                class="microbar-container"></div>
+                            <span class="ms-3 text-muted" data-bind="text:productTrafficFormatted"></span>
+                        </div>
+
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="me-3" style="width: 100px; font-weight: 500;">Landing</span>
+                            <div data-bind="microbar:landingTraffic" data-color="#ffc107" style="flex: 1;"
+                                class="microbar-container"></div>
+                            <span class="ms-3 text-muted" data-bind="text:landingTrafficFormatted"></span>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <span class="me-3" style="width: 100px; font-weight: 500;">About</span>
+                            <div data-bind="microbar:aboutTraffic" data-color="#dc3545" style="flex: 1;"
+                                class="microbar-container"></div>
+                            <span class="ms-3 text-muted" data-bind="text:aboutTrafficFormatted"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Real-time Activity</h5>
+                        <button class="btn btn-sm btn-outline-primary" data-bind="tap:toggleRealTime">
+                            <span data-bind="text:realTimeStatus"></span>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="height: 200px;">
+                            <div data-bind="sparkline:realTimeData" data-type="area" data-color="#17a2b8"></div>
+                        </div>
+                        <div class="mt-3 text-center">
+                            <small class="text-muted">Updates every 2 seconds</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="px64.js"></script>
+    <script src="px64-charts.js"></script>
+    <script>
+        // Dashboard data - COPY THIS PATTERN
+        const dashboardData = px64.observable({
+            // KPI Values (money: binder will format these)
+            totalSales: 125000.50,
+            activeUsers: 3240,
+            conversionRate: 3.2,
+            totalRevenue: 456000.75,
+
+            // Growth percentages
+            salesGrowth: 12.5,
+            usersGrowth: 8.3,
+            conversionChange: -2.1,
+            revenueGrowth: 15.2,
+
+            // Sparkline data
+            salesData: [100, 120, 110, 140, 160, 180, 200, 190, 220, 240],
+            usersData: [50, 65, 70, 85, 90, 95, 110, 105, 115, 120],
+            conversionData: [3.2, 3.4, 3.1, 3.8, 3.5, 3.9, 3.2, 3.6, 3.3, 3.7],
+            revenueData: [1200, 1400, 1300, 1600, 1800, 2000, 2200, 2100, 2300, 2500],
+
+            // Chart data
+            monthlyTrends: [120, 140, 130, 160, 180, 200, 220, 210, 240, 260, 250, 280],
+            trafficSources: [45, 25, 15, 10, 5], // Direct, Social, Search, Email, Other
+
+            // Funnel data (grouped)
+            pageViews: 45600,
+            clicks: 3240,
+            conversions: 156,
+            pageViewsData: [4000, 4200, 3800, 4500, 4100, 4300, 4600],
+            clicksData: [320, 340, 310, 360, 330, 350, 324],
+            conversionsData: [15, 16, 14, 18, 16, 17, 15],
+
+            // Micro bar data
+            blogTraffic: 2340,
+            productTraffic: 1890,
+            landingTraffic: 1240,
+            aboutTraffic: 680,
+
+            // Formatted values (computed)
+            get blogTrafficFormatted() { return this.formatValue(this.blogTraffic); },
+            get productTrafficFormatted() { return this.formatValue(this.productTraffic); },
+            get landingTrafficFormatted() { return this.formatValue(this.landingTraffic); },
+            get aboutTrafficFormatted() { return this.formatValue(this.aboutTraffic); },
+
+            // Date/time values for date binders
+            lastUpdated: new Date(),
+            createdAt: new Date('2024-01-15'),
+            lastLogin: new Date(Date.now() - 3600000), // 1 hour ago
+
+            // Bootstrap component states
+            alertMessage: '',
+            alertType: 'success',
+            badgeStatus: 'active',
+            uploadProgress: 75,
+
+            // Form states
+            email: 'user@example.com',
+            isEmailValid: true,
+            isChecked: true,
+            isProcessing: false,
+
+            // Employee table data (demonstrates table: binder)
+            employees: px64.listState([
+                {
+                    name: 'John Doe',
+                    email: 'john.doe@company.com',
+                    role: 'Senior Developer',
+                    salary: 95000,
+                    created: new Date('2023-01-15'),
+                    status: 'active'
+                },
+                {
+                    name: 'Jane Smith',
+                    email: 'jane.smith@company.com',
+                    role: 'UX Designer',
+                    salary: 78000,
+                    created: new Date('2023-03-20'),
+                    status: 'active'
+                },
+                {
+                    name: 'Mike Johnson',
+                    email: 'mike.johnson@company.com',
+                    role: 'Product Manager',
+                    salary: 105000,
+                    created: new Date('2022-11-10'),
+                    status: 'active'
+                },
+                {
+                    name: 'Sarah Wilson',
+                    email: 'sarah.wilson@company.com',
+                    role: 'Marketing Lead',
+                    salary: 82000,
+                    created: new Date('2023-07-05'),
+                    status: 'active'
+                },
+                {
+                    name: 'David Brown',
+                    email: 'david.brown@company.com',
+                    role: 'DevOps Engineer',
+                    salary: 88000,
+                    created: new Date('2023-02-28'),
+                    status: 'inactive'
+                }
+            ]),
+
+            // Real-time data
+            realTimeData: [10, 12, 8, 15, 11, 9, 14, 16, 13, 17, 12, 18, 15, 20],
+            realTimeActive: false,
+            realTimeInterval: null,
+
+            get realTimeStatus() {
+                return this.realTimeActive ? 'Stop' : 'Start';
+            },
+
+            // Helper methods
+            formatValue(value) {
+                if (value >= 1000) {
+                    return (value / 1000).toFixed(1) + 'K';
+                }
+                return value.toString();
+            },
+
+            // Actions
+            toggleRealTime() {
+                if (this.realTimeActive) {
+                    clearInterval(this.realTimeInterval);
+                    this.realTimeInterval = null;
+                    this.$set('realTimeActive', false);
+                } else {
+                    this.realTimeInterval = setInterval(() => {
+                        const newValue = Math.random() * 20 + 5;
+                        this.realTimeData.$push(Math.round(newValue));
+
+                        // Keep last 20 points
+                        if (this.realTimeData.length > 20) {
+                            this.realTimeData.$shift();
+                        }
+                    }, 2000);
+                    this.$set('realTimeActive', true);
+                }
+            },
+
+            // Bootstrap component actions
+            toggleProcessing() {
+                this.$set('isProcessing', !this.isProcessing);
+
+                // Simulate processing
+                if (this.isProcessing) {
+                    setTimeout(() => {
+                        this.$set('isProcessing', false);
+                        this.$set('alertMessage', 'Process completed successfully!');
+                        this.$set('alertType', 'success');
+                    }, 3000);
+                }
+            },
+
+            showSuccess() {
+                this.$set('alertMessage', 'Success! Operation completed.');
+                this.$set('alertType', 'success');
+                this.$set('badgeStatus', 'success');
+            },
+
+            showWarning() {
+                this.$set('alertMessage', 'Warning! Please review your settings.');
+                this.$set('alertType', 'warning');
+                this.$set('badgeStatus', 'warning');
+            },
+
+            showError() {
+                this.$set('alertMessage', 'Error! Something went wrong.');
+                this.$set('alertType', 'danger');
+                this.$set('badgeStatus', 'danger');
+            },
+
+            // Table actions
+            addEmployee() {
+                const names = ['Alex Johnson', 'Chris Lee', 'Taylor Smith', 'Jordan Davis', 'Casey Brown'];
+                const roles = ['Developer', 'Designer', 'Analyst', 'Manager', 'Engineer'];
+                const domains = ['company.com', 'corp.com', 'tech.com'];
+
+                const randomName = names[Math.floor(Math.random() * names.length)];
+                const randomRole = roles[Math.floor(Math.random() * roles.length)];
+                const randomDomain = domains[Math.floor(Math.random() * domains.length)];
+                const randomSalary = Math.floor(Math.random() * 50000) + 60000;
+
+                const newEmployee = {
+                    name: randomName,
+                    email: `${randomName.toLowerCase().replace(' ', '.')}@${randomDomain}`,
+                    role: randomRole,
+                    salary: randomSalary,
+                    created: new Date(),
+                    status: 'active'
+                };
+
+                // Add to employees list (will automatically update table)
+                const currentEmployees = this.employees.items.slice();
+                currentEmployees.push(newEmployee);
+                this.employees.setItems(currentEmployees);
+
+                // Show success message
+                this.$set('alertMessage', `Added ${randomName} to employee directory`);
+                this.$set('alertType', 'success');
+            },
+
+            removeEmployee() {
+                const currentEmployees = this.employees.items.slice();
+                if (currentEmployees.length > 0) {
+                    const removed = currentEmployees.pop();
+                    this.employees.setItems(currentEmployees);
+
+                    // Show info message
+                    this.$set('alertMessage', `Removed ${removed.name} from employee directory`);
+                    this.$set('alertType', 'info');
+                } else {
+                    this.$set('alertMessage', 'No employees to remove');
+                    this.$set('alertType', 'warning');
+                }
+            }
+        });
+
+        // Bind to DOM
+        px64.bind('#dashboard', dashboardData);
+
+        // Demo: Update data every 10 seconds
+        setInterval(() => {
+            // Simulate data updates
+            const salesIncrease = Math.random() * 100 + 50;
+            dashboardData.$set('totalSales', dashboardData.totalSales + salesIncrease);
+
+            // Add new sparkline data
+            dashboardData.salesData.$push(Math.random() * 50 + 200);
+            if (dashboardData.salesData.length > 15) {
+                dashboardData.salesData.$shift();
+            }
+        }, 10000);
+
+        console.log('🎯 Dashboard loaded with px64 + Charts!');
+        console.log('📊 All charts are reactive - data updates trigger animations');
+    </script>
+</body>
+
+</html>

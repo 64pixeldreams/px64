@@ -17,9 +17,9 @@ Bind plain JavaScript objects ("scopes") to your HTML with `data-bind` attribute
 
 | Example | Description | File |
 |---------|-------------|------|
-| **Hello World** | Dead simple binding demo | [`helloworld.html`](helloworld.html) |
-| **Todo List** | List rendering, two-way input | [`todo.html`](todo.html) |
-| **Quick Wins Demo** | Production-ready binders showcase | [`quickwins-demo.html`](quickwins-demo.html) |
+| **Hello World** | Dead simple binding demo | [`examples/helloworld.html`](examples/helloworld.html) |
+| **Todo List** | List rendering, two-way input | [`examples/todo.html`](examples/todo.html) |
+| **Quick Wins Demo** | Production-ready binders showcase | [`examples/quickwins-demo.html`](examples/quickwins-demo.html) |
 
 > 💡 **Quick Start**: Open these files directly in your browser after placing `px64.js` in your project root.
 
@@ -428,6 +428,19 @@ Issues and PRs welcome!
 2. Initial apply
 3. Hook into `$observe` for specific keys
 4. Cleanly handle `null`/`undefined`
+
+## 📚 Documentation
+
+### **Complete Documentation**
+- **[📊 Chart Engine](docs/PX64-CHARTS-README.md)** - Lightweight canvas-based charts
+- **[📋 Production Improvements](docs/PX64_PRODUCTION_IMPROVEMENTS.md)** - Roadmap and implementation details
+- **[⚡ Reactive Improvements](docs/REACTIVE_IMPROVEMENTS_SPEC.md)** - Advanced reactive patterns
+- **[🛠️ Development Guidelines](docs/DEVELOPMENT_GUIDELINES.md)** - Contributing and code standards
+- **[📈 Market Strategy](docs/market_strategy.md)** - Business positioning and competitive analysis
+
+### **Specifications**
+- **[📊 Chart Engine Specification](docs/📊%20PX64%20Chart%20Engine%20Specification.md)** - Detailed chart engine architecture
+- **[🔧 Implementation Guide](docs/IMPLEMENTATION_GUIDE.md)** - Step-by-step implementation details
 
 ## 🗺️ Roadmap
 
