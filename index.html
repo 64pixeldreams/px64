@@ -61,8 +61,17 @@
                 <ul class="navbar-nav ms-auto align-items-md-center">
                     <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
                     <li class="nav-item"><a class="nav-link" href="#demo">Demo</a></li>
-                    <li class="nav-item"><a class="nav-link" href="examples/hello.html">Hello</a></li>
-                    <li class="nav-item"><a class="nav-link" href="examples/todo.html">Todo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="helloworld.html">Hello</a></li>
+                    <li class="nav-item"><a class="nav-link" href="todo.html">Todo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="quickwins-demo.html">Quick Wins</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Tests</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="tests/test-refactored-binders.html">All Binders Test</a></li>
+                            <li><a class="dropdown-item" href="tests/html-sanitizer-demo.html">HTML Sanitizer</a></li>
+                            <li><a class="dropdown-item" href="tests/test-memory-leaks.html">Memory Leaks</a></li>
+                        </ul>
+                    </li>
                     <li class="nav-item ms-md-3">
                         <a class="btn btn-primary" href="https://github.com/inc64/px64">GitHub Repo</a>
                     </li>
@@ -184,7 +193,7 @@
                 <div class="col-lg-6">
                     <div class="card shadow-sm h-100 code-card">
                         <div class="card-header bg-white">
-                            <strong>Code</strong> (<a href="examples/hello.html">open example</a>)
+                            <strong>Code</strong> (<a href="helloworld.html">open example</a>)
                         </div>
                         <div class="card-body p-0">
                             <pre class="language-html"><code>&lt;div id="hello-app"&gt;
@@ -214,8 +223,9 @@
                 </div>
             </div>
             <div class="text-center mt-4">
-                <a class="btn btn-outline-primary me-2" href="examples/hello.html">Open Hello Example</a>
-                <a class="btn btn-outline-secondary" href="examples/todo.html">Open Todo Example</a>
+                <a class="btn btn-outline-primary me-2" href="helloworld.html">Open Hello Example</a>
+                <a class="btn btn-outline-secondary me-2" href="todo.html">Open Todo Example</a>
+                <a class="btn btn-outline-success" href="quickwins-demo.html">Quick Wins Demo</a>
             </div>
         </div>
     </section>
@@ -233,8 +243,10 @@
             <p class="mb-2 mb-md-0 text-muted">© <span id="year"></span> inc64 LLC • px64 is MIT licensed</p>
             <div class="d-flex gap-3">
                 <a href="https://github.com/inc64/px64">GitHub</a>
-                <a href="examples/hello.html">Hello</a>
-                <a href="examples/todo.html">Todo</a>
+                <a href="helloworld.html">Hello</a>
+                <a href="todo.html">Todo</a>
+                <a href="quickwins-demo.html">Quick Wins</a>
+                <a href="tests/test-refactored-binders.html">Tests</a>
                 <a href="#features">Features</a>
             </div>
         </div>
@@ -261,6 +273,9 @@
     };
     px64.bind("#hello-app", helloState);
     </script>
+    
+    <!-- Bootstrap JS for dropdown functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
