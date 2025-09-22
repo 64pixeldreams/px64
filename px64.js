@@ -354,8 +354,17 @@
     }
 
     function resolvePath(scope, path) {
-        if (!path) return scope;
-        return path.split('.').reduce((acc, k) => (acc ? acc[k] : undefined), scope);
+        if (!path || path === '') return scope;
+        
+        // Handle edge cases: remove empty segments and trailing dots
+        const keys = path.split('.').filter(k => k !== '');
+        if (keys.length === 0) return scope;
+        
+        return keys.reduce((acc, k) => {
+            // Handle null/undefined gracefully
+            if (acc === null || acc === undefined) return undefined;
+            return acc[k];
+        }, scope);
     }
 
     function applyBinds(el, scope, stack) {
@@ -467,7 +476,10 @@
         const key = path.split('.').pop();
         const apply = v => el.setAttribute(attrName, v ?? '');
         apply(resolvePath(scope, path));
-        parent.$observe && parent.$observe(key, v => apply(v));
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(key, apply);
+            registerObserver(el, unsubscribe);
+        }
     });
 
     // class:active:isActive
@@ -477,7 +489,10 @@
         const key = path.split('.').pop();
         const apply = () => el.classList.toggle(cls, !!resolvePath(scope, path));
         apply();
-        parent.$observe && parent.$observe(key, apply);
+        if (parent && parent.$observe) {
+            const unsubscribe = parent.$observe(key, apply);
+            registerObserver(el, unsubscribe);
+        }
     });
 
     // tap:logout (event delegation registered once on root)
@@ -1221,6 +1236,26 @@
             installTapDelegation(host);
             startDOMObserver(); // Start automatic cleanup observer
             return sc;
+        },
+        
+        unbind(root) {
+            const host = typeof root === 'string' ? document.querySelector(root) : root;
+            if (!host) throw new Error('px64.unbind: root not found');
+            
+            // Clean up all observers for this element and its children
+            cleanupElement(host);
+            
+            // Remove scope ID and tap delegation
+            host.removeAttribute('data-scope-id');
+            
+            // Remove all data-bind attributes to prevent re-binding
+            const elements = [host, ...host.querySelectorAll('[data-bind]')];
+            elements.forEach(el => {
+                el.removeAttribute('data-bind');
+                el.removeAttribute('data-tap');
+            });
+            
+            return true;
         },
         model,
         observable,
